@@ -1,0 +1,70 @@
+*,
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+:root {
+
+    --color-white-100: #ffffff;
+    --color-white-300: #F8F8F8;
+
+    --color-black-900: #000000;
+
+    --color-orange-100: #CFC6BC;
+    --color-orange-100-light: rgba($color: #CE6E40, $alpha: 0.1);
+    --color-orange-500: #CE6E40;
+    --color-orange-500-light: rgba($color: #CE6E40, $alpha: 0.3);
+    --color-orange-600: #C7633B;
+
+    --color-red-500: #D64646;
+
+    --color-green-200: #A7BFB0;
+    --color-green-200-light: rgba($color: #A7BFB0, $alpha: 0.5);
+    --color-green-400: #5C7866;
+
+    --color-blue-600: #263E48;
+    --color-blue-700: #1E3F49;
+
+    --color-gray-500: #707070;
+}
+
+@media (max-width: 1800px) {
+    html {
+        font-size: 75%;
+    }
+}
+
+@media (max-width: 1300px) {
+    html {
+        font-size: 60%;
+    }
+}
+
+.react-router-Link {
+    list-style: none;
+    text-decoration: none;
+}
+
+body,
+input,
+textarea,
+select,
+button {
+    font: 400 1rem 'Inter', sans-serif;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.mb-30 {
+    margin-bottom: 30px;
+}

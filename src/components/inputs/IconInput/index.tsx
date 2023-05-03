@@ -1,0 +1,28 @@
+import styles from './styles.module.scss';
+export interface IIconInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    type: string;
+    icon?: "login" | "password";
+    inputClass?: string;
+}
+import { IoPersonSharp, IoLockClosed } from 'react-icons/io5';
+
+export function IconInput({ type = "text", icon = "login", inputClass, ...rest }: IIconInputProps) {
+
+    function returnIcon(icon: string) {
+        switch (icon) {
+            case 'login':
+                return (<IoPersonSharp className={styles.icon} size="22" />)
+            case 'password':
+                return (<IoLockClosed className={styles.icon} size="22" />)
+            default:
+                break
+        }
+    }
+
+    return (
+        <div className={`${styles.input_container} ${inputClass}`}>
+            {returnIcon(icon)}
+            <input type={type} {...rest} />
+        </div>
+    )
+}
