@@ -1,7 +1,16 @@
 .main {
-    background-color: red;
     height: 100%;
     min-height: 100vh;
     display: flex;
     flex-direction: row;
+
+    .aside_container {
+        min-height: 100vh;
+        width: calc(364px);
+    }
+
+    .outlat_container {
+        min-height: 100vh;
+        width: calc(100% - 364px);
+    }
 }
