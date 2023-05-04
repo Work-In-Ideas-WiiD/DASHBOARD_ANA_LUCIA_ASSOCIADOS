@@ -4,7 +4,6 @@ import styles from './styles.module.scss';
 
 export function DashboardPage() {
 
-
     return (
         <main className={styles.main}>
             <div className={styles.aside_container}>

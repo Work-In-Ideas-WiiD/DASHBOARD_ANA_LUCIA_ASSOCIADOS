@@ -1,0 +1,10 @@
+@import "../../../../styles/Global.scss";
+
+.table {
+    width: 100%;
+
+    .table_header {
+        width: 100%;
+        @include background-opacity(var(--color-orange-500), 0.5);
+    }
+}

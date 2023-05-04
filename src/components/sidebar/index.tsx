@@ -16,7 +16,7 @@ const itens = [
         title: "Home",
         Icon: <ImHome fill="White" size={25} />,
         ActiveIcon: <ImHome fill="#1E3F49" size={25} />,
-        path: "/home"
+        path: ""
     },
     {
         title: "Administradores",
@@ -68,6 +68,7 @@ export function Sidebar() {
                 {
                     itens.map((item) => (
                         <SidebarItem
+                            key={item.title}
                             ActiveIcon={item.ActiveIcon}
                             Icon={item.Icon}
                             path={item.path}

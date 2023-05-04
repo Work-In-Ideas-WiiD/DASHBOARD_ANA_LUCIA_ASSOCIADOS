@@ -36,7 +36,7 @@ export function SidebarItem({
     }
 
     function handleRoute(route: string) {
-        navigate(route);
+        navigate('/dashboard' + route);
     }
 
     return (

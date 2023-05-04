@@ -8,8 +8,8 @@
     ],
     "module": "ESNext",
     "skipLibCheck": true,
-    "rootDir": "./",
-    "baseUrl": "./src",
+    // "rootDir": "./",
+    // "baseUrl": "./src",
     // "paths": {
     //   "@components/*": [
     //     "components/*"

@@ -14,7 +14,7 @@ html {
     --color-black-900: #000000;
 
     --color-orange-100: #CFC6BC;
-    --color-orange-100-light: rgba($color: #CE6E40, $alpha: 0.1);
+    --color-orange-100-light: rgba($color: #CFC6BC, $alpha: 0.1);
     --color-orange-500: #CE6E40;
     --color-orange-500-light: rgba($color: #CE6E40, $alpha: 0.3);
     --color-orange-600: #C7633B;
@@ -29,6 +29,12 @@ html {
     --color-blue-700: #1E3F49;
 
     --color-gray-500: #707070;
+}
+
+@mixin background-opacity($color, $opacity: 0.3) {
+    background: $color;
+    /* The Fallback */
+    background: rgba($color, $opacity);
 }
 
 @media (max-width: 1800px) {
@@ -72,5 +78,20 @@ a {
 .last_item {
     position: absolute;
     bottom: 119px;
+}
 
+.dashboard_padding {
+    padding-top: 58px;
+    padding-left: 113px;
+    padding-right: 113px;
+    padding-bottom: 90px;
+    overflow: auto;
+}
+
+.dashboard_title {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 1.25rem;
+    text-transform: uppercase;
+    color: var(--color-blue-700);
 }

@@ -19,7 +19,6 @@
         background-color: var(--color-white-100);
 
         span {
-            font-size: 1.063rem;
             color: var(--color-blue-700);
         }
 
@@ -27,5 +26,28 @@
             fill: var(--color-blue-700);
         }
 
+    }
+}
+
+.item_active {
+    width: 100%;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    padding-left: 22px;
+    cursor: pointer;
+    border-top-left-radius: 40px;
+    border-bottom-left-radius: 40px;
+    background-color: var(--color-white-100);
+
+    span {
+        font-size: 1.063rem;
+        color: var(--color-blue-700);
+    }
+
+
+    svg {
+        fill: var(--color-blue-700);
     }
 }
