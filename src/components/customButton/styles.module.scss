@@ -2,13 +2,22 @@
     font-size: 1rem;
     font-weight: 400;
     text-transform: uppercase;
-    color: var(--color-white-100);
+
     padding-top: 13px;
     padding-bottom: 13px;
     padding-left: 18px;
     padding-right: 18px;
+
+    color: var(--color-white-100);
     background-color: var(--color-orange-500);
+
     filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161));
+
     outline: none;
     border: none;
+
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
 }

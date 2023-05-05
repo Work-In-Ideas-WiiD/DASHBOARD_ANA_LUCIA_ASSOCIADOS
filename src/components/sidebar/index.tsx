@@ -16,7 +16,7 @@ const itens = [
         title: "Home",
         Icon: <ImHome fill="White" size={25} />,
         ActiveIcon: <ImHome fill="#1E3F49" size={25} />,
-        path: ""
+        path: "/home"
     },
     {
         title: "Administradores",
@@ -61,6 +61,7 @@ const itens = [
 export function Sidebar() {
 
     const { pathname } = useLocation();
+
     return (
         <aside className={styles.sidebar}>
             <img className={styles.logo} src={Logo} alt="logo" />
