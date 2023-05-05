@@ -14,6 +14,7 @@
         align-items: center;
         width: 100%;
         @include background-opacity($color-orange-100, 0.1);
+        margin-bottom: 1px;
 
         .table_title {
             font-style: normal;

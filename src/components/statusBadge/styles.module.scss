@@ -1,0 +1,23 @@
+@import "../../styles/Global.scss";
+
+.badge {
+    padding-left: 13px;
+    padding-right: 13px;
+    padding-top: 6px;
+    padding-bottom: 5px;
+    border-radius: 20px;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+}
+
+.Assinado {
+    color: var(--color-green-400);
+    @include background-opacity($color-green-200, 0.5);
+}
+
+.Pendente {
+    color: var(--color-orange-500);
+    @include background-opacity($color-orange-500, 0.3);
+}

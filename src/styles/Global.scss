@@ -7,6 +7,8 @@ html {
 }
 
 $color-orange-100: #CFC6BC;
+$color-green-200: #5C7866;
+$color-orange-500: #CE6E40;
 
 :root {
 
@@ -98,4 +100,56 @@ a {
 
 .table_style {
     width: 100%;
+    @include background-opacity($color-orange-100, 0.1);
+    border-spacing: 38px 1px;
+    border-collapse: collapse;
+
+    thead {
+        border-bottom: 1px solid white;
+
+        tr {
+            text-align: left;
+
+            th {
+                padding-top: 22px;
+                padding-bottom: 17px;
+                font-style: normal;
+                font-weight: 700;
+                font-size: 0.875rem;
+                color: var(--color-blue-700);
+            }
+
+            th:first-of-type {
+                padding-left: 38px;
+            }
+
+            th:last-of-type {
+                padding-right: 38px;
+            }
+        }
+    }
+
+    tbody {
+        tr {
+            text-align: left;
+            border-bottom: 1px solid white;
+
+            td {
+                padding-top: 15px;
+                padding-bottom: 15px;
+                font-style: normal;
+                font-weight: 400;
+                font-size: 0.875rem;
+                color: var(--color-blue-700);
+            }
+
+            td:first-of-type {
+                padding-left: 38px;
+            }
+
+            td:last-of-type {
+                padding-right: 38px;
+            }
+        }
+    }
 }
