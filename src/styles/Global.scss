@@ -6,6 +6,8 @@ html {
     font-family: 'Inter', sans-serif;
 }
 
+$color-orange-100: #CFC6BC;
+
 :root {
 
     --color-white-100: #ffffff;
@@ -14,15 +16,13 @@ html {
     --color-black-900: #000000;
 
     --color-orange-100: #CFC6BC;
-    --color-orange-100-light: rgba($color: #CFC6BC, $alpha: 0.1);
+
     --color-orange-500: #CE6E40;
-    --color-orange-500-light: rgba($color: #CE6E40, $alpha: 0.3);
     --color-orange-600: #C7633B;
 
     --color-red-500: #D64646;
 
     --color-green-200: #A7BFB0;
-    --color-green-200-light: rgba($color: #A7BFB0, $alpha: 0.5);
     --color-green-400: #5C7866;
 
     --color-blue-600: #263E48;
@@ -94,4 +94,8 @@ a {
     font-size: 1.25rem;
     text-transform: uppercase;
     color: var(--color-blue-700);
+}
+
+.table_style {
+    width: 100%;
 }
