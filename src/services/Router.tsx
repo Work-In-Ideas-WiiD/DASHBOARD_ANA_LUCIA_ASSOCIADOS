@@ -6,6 +6,7 @@ import { HomePage } from "../pages/Dashboard/Home";
 import { EmpresasPage } from "../pages/Dashboard/EmpresasPage";
 import { AdministradoresPage } from "../pages/Dashboard/AdministradoresPage";
 import { ContratosPage } from "../pages/Dashboard/ContratosPage";
+import { AssinaturasPage } from "../pages/Dashboard/AssinaturasPage";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
             {
                 path: "contratos",
                 element: <ContratosPage />
+            },
+            {
+                path: "assinaturas",
+                element: <AssinaturasPage />
             },
             {
                 path: "error",
