@@ -7,6 +7,8 @@ import { EmpresasPage } from "../pages/Dashboard/EmpresasPage";
 import { AdministradoresPage } from "../pages/Dashboard/AdministradoresPage";
 import { ContratosPage } from "../pages/Dashboard/ContratosPage";
 import { AssinaturasPage } from "../pages/Dashboard/AssinaturasPage";
+import { ContratosTable } from "../pages/Dashboard/ContratosPage/ContratosTable";
+import { NovoContrato } from "../pages/Dashboard/ContratosPage/NovoContrato";
 
 const router = createBrowserRouter([
     {
@@ -36,7 +38,17 @@ const router = createBrowserRouter([
             },
             {
                 path: "contratos",
-                element: <ContratosPage />
+                element: <ContratosPage />,
+                children: [
+                    {
+                        path: "",
+                        element: <ContratosTable />
+                    },
+                    {
+                        path: "novo",
+                        element: <NovoContrato />
+                    },
+                ]
             },
             {
                 path: "assinaturas",

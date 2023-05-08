@@ -6,7 +6,7 @@ export enum EIconCustomButton {
 }
 
 interface ICustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    value: string;
+    title: string;
     variation?: "1" | "2";
     icon?: EIconCustomButton;
 }
@@ -15,13 +15,15 @@ const Icons = {
     0: <MdCreateNewFolder size={24} color="#fff" />
 }
 
-export function CustomButton({ value, icon, variation = "1", ...rest }: ICustomButtonProps) {
+export function CustomButton({ title, icon, variation = "1", ...rest }: ICustomButtonProps) {
 
 
     function getStyleClass(variation: string) {
         switch (variation) {
             case "1":
                 return styles.button_variation_1;
+            case "2":
+                return styles.button_variation_2;
             default:
                 return styles.button_variation_1;
         }
@@ -41,7 +43,7 @@ export function CustomButton({ value, icon, variation = "1", ...rest }: ICustomB
             {...rest}
         >
             {returnIcon(icon)}
-            {value}
+            {title}
         </button>
     )
 }

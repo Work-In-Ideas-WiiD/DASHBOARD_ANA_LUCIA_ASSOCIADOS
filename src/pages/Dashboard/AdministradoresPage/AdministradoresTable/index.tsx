@@ -22,7 +22,7 @@ export function AdministradoresTable() {
                     fetching={fetching}
                 />
                 <SelectInput />
-                <CustomButton value='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
+                <CustomButton title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
             </div>
             <table className='table_style'>
                 <thead >
