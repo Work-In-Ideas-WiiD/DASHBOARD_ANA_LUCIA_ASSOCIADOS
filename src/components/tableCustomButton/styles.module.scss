@@ -1,13 +1,9 @@
-.button_variation_1 {
-    font-size: 1rem;
-    font-weight: 400;
-    text-transform: uppercase;
-
-    padding-top: 13px;
-    padding-bottom: 13px;
-    padding-left: 18px;
-    padding-right: 18px;
-
+.button {
+    font-size: 0.938rem;
+    padding-left: 19px;
+    padding-right: 25px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     color: var(--color-white-100);
     background-color: var(--color-orange-500);
 
@@ -15,11 +11,6 @@
 
     outline: none;
     border: none;
-
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-    align-items: center;
 
     &:active {
         opacity: 0.9;
