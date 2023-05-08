@@ -9,6 +9,10 @@ import { ContratosPage } from "../pages/Dashboard/ContratosPage";
 import { AssinaturasPage } from "../pages/Dashboard/AssinaturasPage";
 import { ContratosTable } from "../pages/Dashboard/ContratosPage/ContratosTable";
 import { NovoContrato } from "../pages/Dashboard/ContratosPage/NovoContrato";
+import { AdministradoresTable } from "../pages/Dashboard/AdministradoresPage/AdministradoresTable";
+import { NovoAdministrador } from "../pages/Dashboard/AdministradoresPage/NovoAdministrador";
+import { EmpresasTable } from "../pages/Dashboard/EmpresasPage/EmpresasTable";
+import { NovaEmpresa } from "../pages/Dashboard/EmpresasPage/NovaEmpresa";
 
 const router = createBrowserRouter([
     {
@@ -30,11 +34,31 @@ const router = createBrowserRouter([
             },
             {
                 path: "empresas",
-                element: <EmpresasPage />
+                element: <EmpresasPage />,
+                children: [
+                    {
+                        path: "",
+                        element: <EmpresasTable />
+                    },
+                    {
+                        path: "novo",
+                        element: <NovaEmpresa />
+                    }
+                ]
             },
             {
                 path: "admins",
-                element: <AdministradoresPage />
+                element: <AdministradoresPage />,
+                children: [
+                    {
+                        path: "",
+                        element: <AdministradoresTable />
+                    },
+                    {
+                        path: "novo",
+                        element: <NovoAdministrador />
+                    }
+                ]
             },
             {
                 path: "contratos",

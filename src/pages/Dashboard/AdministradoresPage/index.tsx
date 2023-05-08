@@ -1,11 +1,10 @@
-import { AdministradoresTable } from './AdministradoresTable';
+import { Outlet } from 'react-router-dom';
 import styles from './styles.module.scss';
 
 export function AdministradoresPage() {
     return (
         <main className={`${styles.main} dashboard_padding`}>
-            <h2 className={`${styles.title} dashboard_title`}>ADMINISTRADORES</h2>
-            <AdministradoresTable />
+            <Outlet />
         </main>
     )
 }

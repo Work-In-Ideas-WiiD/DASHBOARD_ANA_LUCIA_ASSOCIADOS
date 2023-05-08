@@ -7,7 +7,7 @@ export enum EIconCustomButton {
 
 interface ICustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     title: string;
-    variation?: "1" | "2";
+    variation?: "1" | "2" | "3";
     icon?: EIconCustomButton;
 }
 
@@ -24,6 +24,8 @@ export function CustomButton({ title, icon, variation = "1", ...rest }: ICustomB
                 return styles.button_variation_1;
             case "2":
                 return styles.button_variation_2;
+            case "3":
+                return styles.button_variation_3;
             default:
                 return styles.button_variation_1;
         }
