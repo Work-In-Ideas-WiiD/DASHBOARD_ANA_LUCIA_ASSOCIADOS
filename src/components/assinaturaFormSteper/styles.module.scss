@@ -1,0 +1,62 @@
+.steper_container {
+
+    height: 51px;
+    width: 100%;
+    position: relative;
+
+    .steper_active {
+        position: absolute;
+        top: 0;
+        width: 21px;
+        height: 21px;
+        border-radius: 50%;
+        background-color: var(--color-blue-700);
+    }
+
+    .steper {
+        width: 13px;
+        height: 13px;
+        border-radius: 50%;
+        background-color: var(--color-blue-700);
+        position: absolute;
+        top: 0;
+        transform: translateY(46%);
+    }
+
+    .first {
+        left: 0;
+    }
+
+    .last {
+        right: 0;
+    }
+
+    .last_text {
+        right: -30px;
+    }
+
+    .line {
+        position: absolute;
+        top: 10.5px;
+        width: 98%;
+        height: 1px;
+        background-color: var(--color-blue-700);
+    }
+
+    .text {
+        position: absolute;
+        font-style: normal;
+        font-weight: 400;
+        font-size: 15px;
+        color: var(--color-blue-700);
+        bottom: 0;
+    }
+
+    .text_active {
+        position: absolute;
+        bottom: 0;
+        font-weight: bold;
+        font-size: 15px;
+        color: var(--color-blue-700);
+    }
+}

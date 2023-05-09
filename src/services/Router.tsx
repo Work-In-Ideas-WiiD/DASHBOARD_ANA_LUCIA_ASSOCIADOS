@@ -13,11 +13,23 @@ import { AdministradoresTable } from "../pages/Dashboard/AdministradoresPage/Adm
 import { NovoAdministrador } from "../pages/Dashboard/AdministradoresPage/NovoAdministrador";
 import { EmpresasTable } from "../pages/Dashboard/EmpresasPage/EmpresasTable";
 import { NovaEmpresa } from "../pages/Dashboard/EmpresasPage/NovaEmpresa";
+import { Assinatura } from "../pages/Assinatura";
+import { AssinaturaForm } from "../pages/Assinatura/Form";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <LoginPage />
+    },
+    {
+        path: "/assinatura",
+        element: <Assinatura />,
+        children: [
+            {
+                path: "cadastro",
+                element: <AssinaturaForm />
+            }
+        ]
     },
     {
         path: "/dashboard",

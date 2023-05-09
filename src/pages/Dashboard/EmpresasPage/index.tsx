@@ -1,5 +1,4 @@
 import { Outlet } from 'react-router-dom';
-import { EmpresasTable } from './EmpresasTable';
 import styles from './styles.module.scss';
 
 export function EmpresasPage() {
