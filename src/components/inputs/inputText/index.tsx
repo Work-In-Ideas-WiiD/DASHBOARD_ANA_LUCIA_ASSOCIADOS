@@ -1,5 +1,6 @@
 import styles from './styles.module.scss';
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, FieldErrors } from 'react-hook-form';
+import { ErrorMessage } from '@hookform/error-message';
 
 export interface IInputText extends React.InputHTMLAttributes<HTMLInputElement> {
     title: string,
@@ -7,11 +8,22 @@ export interface IInputText extends React.InputHTMLAttributes<HTMLInputElement> 
     type?: string,
     errorMsg?: string | null,
     containerClass?: string,
-    fieldName: string;
-    control: Control<any>
+    fieldName: string,
+    control: Control<any>,
+    errors: FieldErrors
 }
 
-export function InputText({ title, placeholder, type, errorMsg, containerClass, fieldName, control, ...rest }: IInputText) {
+export function InputText({
+    title,
+    placeholder,
+    type,
+    errorMsg,
+    containerClass,
+    fieldName,
+    control,
+    errors,
+    ...rest
+}: IInputText) {
     return (
         <Controller
             name={fieldName}
@@ -27,7 +39,16 @@ export function InputText({ title, placeholder, type, errorMsg, containerClass, 
                             placeholder={placeholder}
                             {...rest}
                         />
-                        {errorMsg && <span className={styles.error_msg}>msg de erro</span>}
+                        <ErrorMessage
+                            errors={errors}
+                            name={fieldName}
+                            render={({ message }) => {
+                                return (
+                                    <span className={styles.error_msg}>{message}</span>
+                                )
+                            }}
+
+                        />
                     </div>
                 )
             }}

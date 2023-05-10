@@ -1,6 +1,7 @@
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, FieldErrors } from 'react-hook-form';
 import styles from './styles.module.scss';
 import ReactInputMask, { Props } from 'react-input-mask';
+import { ErrorMessage } from '@hookform/error-message';
 
 interface ICustomInputMask extends Props {
     title: string,
@@ -8,8 +9,9 @@ interface ICustomInputMask extends Props {
     errorMsg?: string | null,
     containerClass?: string,
     mask: string;
-    fieldName: string;
-    control: Control<any>
+    fieldName: string,
+    control: Control<any>,
+    errors: FieldErrors
 }
 
 export function CustomInputMask({
@@ -20,6 +22,7 @@ export function CustomInputMask({
     mask,
     fieldName,
     control,
+    errors,
     ...rest
 }: ICustomInputMask) {
     return (
@@ -36,7 +39,16 @@ export function CustomInputMask({
                             mask={mask}
                             {...rest}
                         />
-                        {errorMsg && <span className={styles.error_msg}>msg de erro</span>}
+                        <ErrorMessage
+                            errors={errors}
+                            name={fieldName}
+                            render={({ message }) => {
+                                return (
+                                    <span className={styles.error_msg}>{message}</span>
+                                )
+                            }}
+
+                        />
                     </div>
                 )
             }}

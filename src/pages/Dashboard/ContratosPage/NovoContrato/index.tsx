@@ -8,8 +8,12 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const formSchema = zod.object({
-    numero_contrato: zod.string(),
-    empresa: zod.string(),
+    numero_contrato: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    empresa: zod.string({
+        required_error: "Campo obrigatório",
+    }),
     chk_enviar_contrato: zod.boolean()
 })
 
@@ -33,11 +37,11 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoContrato() {
 
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            numero_contrato: '',
-            empresa: '',
+            numero_contrato: undefined,
+            empresa: undefined,
             chk_enviar_contrato: false
         }
     })
@@ -58,6 +62,7 @@ export function NovoContrato() {
                         type='tel'
                         placeholder='111111111'
                         containerClass='mb-14'
+                        errors={errors}
                     />
                     <InputText
                         control={control}
@@ -66,6 +71,7 @@ export function NovoContrato() {
                         type='tel'
                         placeholder='Empresa'
                         containerClass='mb-25'
+                        errors={errors}
                     />
                     <div className={styles.chk_wrapper}>
                         <CustomCheckbox

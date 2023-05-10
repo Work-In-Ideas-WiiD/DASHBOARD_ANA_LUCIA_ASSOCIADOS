@@ -8,41 +8,68 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 const formSchema = zod.object({
-    nome: zod.string(),
-    cpf: zod.string(),
-    nome_empresa: zod.string(),
-    cnpj: zod.string(),
-    email: zod.string(),
-    celular: zod.string(),
-    endereco: zod.string(),
-    numero: zod.string(),
-    bairro: zod.string(),
-    cidade: zod.string(),
-    estado: zod.string(),
-    complemento: zod.string(),
-    cep: zod.string(),
-})
-
+    nome: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    cpf: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    nome_empresa: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    cnpj: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    email: zod.string({
+        required_error: "Campo obrigatório",
+    }).email({
+        message: "E-mail inválido"
+    }),
+    celular: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    endereco: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    numero: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    bairro: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    cidade: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    estado: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    complemento: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    cep: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+});
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoCliente() {
 
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            nome: '',
-            cpf: '',
-            nome_empresa: '',
-            cnpj: '',
-            email: '',
-            celular: '',
-            endereco: '',
-            numero: '',
-            bairro: '',
-            cidade: '',
-            estado: '',
-            complemento: '',
-            cep: '',
+            nome: undefined,
+            cpf: undefined,
+            nome_empresa: undefined,
+            cnpj: undefined,
+            email: undefined,
+            celular: undefined,
+            endereco: undefined,
+            numero: undefined,
+            bairro: undefined,
+            cidade: undefined,
+            estado: undefined,
+            complemento: undefined,
+            cep: undefined,
         }
     })
 
@@ -61,6 +88,7 @@ export function NovoCliente() {
                             fieldName='nome'
                             title='Nome'
                             containerClass={styles.w75}
+                            errors={errors}
                         />
                         <CustomInputMask
                             fieldName='cpf'
@@ -68,6 +96,7 @@ export function NovoCliente() {
                             title='CPF'
                             containerClass={styles.w25}
                             mask='999.999.999-99'
+                            errors={errors}
                         />
                     </div>
                     <div className={styles.input_container}>
@@ -76,6 +105,7 @@ export function NovoCliente() {
                             fieldName='nome_empresa'
                             title='Nome da empresa'
                             containerClass={styles.w75}
+                            errors={errors}
                         />
                         <CustomInputMask
                             control={control}
@@ -83,6 +113,7 @@ export function NovoCliente() {
                             title='CNPJ'
                             containerClass={styles.w25}
                             mask='99.999.999/9999-99'
+                            errors={errors}
                         />
                     </div>
                     <div className={styles.input_container}>
@@ -91,6 +122,7 @@ export function NovoCliente() {
                             control={control}
                             title='E-mail'
                             containerClass={styles.w63}
+                            errors={errors}
                         />
                         <CustomInputMask
                             control={control}
@@ -98,6 +130,7 @@ export function NovoCliente() {
                             title='Celular'
                             containerClass={styles.w36}
                             mask='(99) 99999-9999'
+                            errors={errors}
                         />
                     </div>
                     <div className={styles.input_container}>
@@ -106,12 +139,14 @@ export function NovoCliente() {
                             control={control}
                             title='Endereço'
                             containerClass={styles.w77}
+                            errors={errors}
                         />
                         <InputText
                             control={control}
                             fieldName='numero'
                             title='Número'
                             containerClass={styles.w18}
+                            errors={errors}
                         />
                     </div>
                     <div className={styles.input_container}>
@@ -120,18 +155,21 @@ export function NovoCliente() {
                             fieldName='bairro'
                             title='Bairro'
                             containerClass={styles.w44}
+                            errors={errors}
                         />
                         <InputText
                             control={control}
                             fieldName='cidade'
                             title='Cidade'
                             containerClass={styles.w29}
+                            errors={errors}
                         />
                         <InputText
                             control={control}
                             fieldName='estado'
                             title='Estado'
                             containerClass={styles.w26}
+                            errors={errors}
                         />
                     </div>
                     <div className={styles.input_container}>
@@ -140,12 +178,14 @@ export function NovoCliente() {
                             control={control}
                             title='Complemento'
                             containerClass={styles.w70}
+                            errors={errors}
                         />
                         <CustomInputMask
                             control={control}
                             fieldName='cep'
                             mask="999.999.999-99"
                             title='CEP'
+                            errors={errors}
                         />
                     </div>
                     <div className={styles.btn_container}>
