@@ -1,20 +1,41 @@
 import styles from './styles.module.scss';
 import Select from 'react-select';
+import { Control, Controller } from 'react-hook-form';
 
-const options = [
-    { value: 'empresa 1', label: 'empresa 1' },
-    { value: 'empresa 2', label: 'empresa 2' },
-    { value: 'empresa 3', label: 'empresa 3' }
-]
+export interface IOptions {
+    value: string,
+    label: string
+}
 
-export function SelectInput() {
+interface ISelectInputProps {
+    options: IOptions[];
+    fieldName: string;
+    control: Control<any>
+}
+
+
+export function SelectInput({
+    options,
+    fieldName,
+    control
+}: ISelectInputProps) {
     return (
-        <Select
-            options={options}
-            className="react-select-container"
-            classNamePrefix="react-select"
-            placeholder="Tipo"
+        <Controller
+            name={fieldName}
+            control={control}
+            render={({ field }) => {
+                return (
+                    <Select
+                        onChange={field.onChange}
+                        options={options}
+                        className="react-select-container"
+                        classNamePrefix="react-select"
+                        placeholder="Tipo"
+                    />
+                )
+            }}
 
         />
+
     )
 }

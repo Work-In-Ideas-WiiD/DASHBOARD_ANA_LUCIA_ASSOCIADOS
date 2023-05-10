@@ -10,6 +10,12 @@
     width: 100%;
     max-width: 468px;
 
+    .search_btn {
+        display: flex;
+        background-color: transparent;
+        border: none;
+    }
+
     .search_icon {
         cursor: pointer;
     }

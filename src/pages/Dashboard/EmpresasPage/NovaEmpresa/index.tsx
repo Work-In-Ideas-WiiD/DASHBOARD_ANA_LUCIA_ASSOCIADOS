@@ -20,7 +20,7 @@ const formSchema = zod.object({
     estado: zod.string(),
     complemento: zod.string(),
     cep: zod.string(),
-})
+});
 
 type TFormSchema = zod.infer<typeof formSchema>;
 

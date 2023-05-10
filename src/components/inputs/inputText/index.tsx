@@ -1,5 +1,5 @@
 import styles from './styles.module.scss';
-import { Control, Controller, FieldValues } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 
 export interface IInputText extends React.InputHTMLAttributes<HTMLInputElement> {
     title: string,
