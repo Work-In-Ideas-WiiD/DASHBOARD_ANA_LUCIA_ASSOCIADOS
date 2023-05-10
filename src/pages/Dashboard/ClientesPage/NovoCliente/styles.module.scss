@@ -1,0 +1,79 @@
+@import "../../../../styles/Global.scss";
+
+.new_contract {
+    .title {
+        margin-bottom: 42px;
+    }
+
+    .form_wrapper {
+        width: 100%;
+        max-width: 1050px;
+        @include background-opacity($color-orange-100, 0.1);
+        padding: 45px 50px;
+
+        form {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 29px;
+
+            .input_container {
+                display: flex;
+                width: 100%;
+                flex-direction: row;
+                gap: 37px;
+            }
+
+            .btn_container {
+                margin-top: 45px;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+            }
+        }
+    }
+}
+
+.w25 {
+    width: 25%;
+}
+
+.w75 {
+    width: 75%;
+}
+
+.w36 {
+    width: 36.4%;
+}
+
+.w63 {
+    width: 63.6%;
+}
+
+.w18 {
+    width: 18.2%;
+}
+
+.w77 {
+    width: 77.2%;
+}
+
+.w44 {
+    width: 44.06%;
+}
+
+.w26 {
+    width: 25.99%;
+}
+
+.w29 {
+    width: 29.95%;
+}
+
+.w70 {
+    width: 70.86%;
+}
+
+.w30 {
+    width: 29.24%;
+}

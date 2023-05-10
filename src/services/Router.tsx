@@ -15,6 +15,9 @@ import { EmpresasTable } from "../pages/Dashboard/EmpresasPage/EmpresasTable";
 import { NovaEmpresa } from "../pages/Dashboard/EmpresasPage/NovaEmpresa";
 import { Assinatura } from "../pages/Assinatura";
 import { AssinaturaForm } from "../pages/Assinatura/Form";
+import { ClientesPage } from "../pages/Dashboard/ClientesPage";
+import { ClienteTable } from "../pages/Dashboard/ClientesPage/ClientesTable";
+import { NovoCliente } from "../pages/Dashboard/ClientesPage/NovoCliente";
 
 const router = createBrowserRouter([
     {
@@ -89,6 +92,20 @@ const router = createBrowserRouter([
             {
                 path: "assinaturas",
                 element: <AssinaturasPage />
+            },
+            {
+                path: "clientes",
+                element: <ClientesPage />,
+                children: [
+                    {
+                        path: "",
+                        element: <ClienteTable />
+                    },
+                    {
+                        path: "novo",
+                        element: <NovoCliente />
+                    },
+                ]
             },
             {
                 path: "error",
