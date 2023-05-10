@@ -1,4 +1,4 @@
-import styles from './styles.module.scss';
+import './styles.scss';
 import Select from 'react-select';
 import { Control, Controller } from 'react-hook-form';
 

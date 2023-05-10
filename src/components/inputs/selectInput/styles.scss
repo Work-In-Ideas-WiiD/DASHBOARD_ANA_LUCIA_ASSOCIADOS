@@ -1,0 +1,17 @@
+.react-select__control {
+    display: none;
+    border: none !important;
+    border-radius: 0 !important;
+    height: 49px;
+    width: 100%;
+    min-width: 130px;
+    box-shadow: none !important;
+}
+
+.react-select__indicators {
+    border: none !important;
+}
+
+.react-select__indicator-separator {
+    display: none;
+}

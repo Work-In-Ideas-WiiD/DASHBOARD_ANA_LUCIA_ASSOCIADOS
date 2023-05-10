@@ -47,7 +47,6 @@ export function NovaEmpresa() {
 
     function handleCreate(data: TFormSchema) {
         console.log(data);
-
     }
 
     return (

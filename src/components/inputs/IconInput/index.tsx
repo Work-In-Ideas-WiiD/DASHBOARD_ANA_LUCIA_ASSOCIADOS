@@ -1,12 +1,22 @@
+import { Control, Controller } from 'react-hook-form';
 import styles from './styles.module.scss';
 export interface IIconInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     type: string;
     icon?: "login" | "password";
     inputClass?: string;
+    fieldName: string;
+    control: Control<any>
 }
 import { IoPersonSharp, IoLockClosed } from 'react-icons/io5';
 
-export function IconInput({ type = "text", icon = "login", inputClass, ...rest }: IIconInputProps) {
+export function IconInput({
+    type = "text",
+    icon = "login",
+    inputClass,
+    fieldName,
+    control,
+    ...rest
+}: IIconInputProps) {
 
     function returnIcon(icon: string) {
         switch (icon) {
@@ -20,9 +30,22 @@ export function IconInput({ type = "text", icon = "login", inputClass, ...rest }
     }
 
     return (
-        <div className={`${styles.input_container} ${inputClass}`}>
-            {returnIcon(icon)}
-            <input type={type} {...rest} />
-        </div>
+        <Controller
+            name={fieldName}
+            control={control}
+            render={({ field }) => {
+                return (
+                    <div className={`${styles.input_container} ${inputClass}`}>
+                        {returnIcon(icon)}
+                        <input
+                            value={field.value}
+                            onChange={field.onChange}
+                            type={type}
+                            {...rest} />
+                    </div>
+                )
+            }}
+        />
+
     )
 }
