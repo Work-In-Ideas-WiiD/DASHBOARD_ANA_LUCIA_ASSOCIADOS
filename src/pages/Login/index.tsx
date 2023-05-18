@@ -1,7 +1,7 @@
 import { IconInput } from '../../components/inputs/IconInput';
 import styles from './styles.module.scss';
 import Logo from "../../assets/imgs/logo_ana.png";
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,7 +14,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function LoginPage() {
-
+    const navigate = useNavigate();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -24,7 +24,7 @@ export function LoginPage() {
     })
 
     function handleLogin(data: TFormSchema) {
-        console.log(data);
+        navigate("/dashboard/home")
     }
 
     return (

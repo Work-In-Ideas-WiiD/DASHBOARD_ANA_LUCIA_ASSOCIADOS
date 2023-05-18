@@ -1,34 +1,76 @@
+import styles from './styles.module.scss';
 import { useState } from 'react';
 import { AssinaturaFormSteper } from '../../../components/assinaturaFormSteper';
-import styles from './styles.module.scss';
 import { IoArrowBack } from 'react-icons/io5';
 import { InputText } from '../../../components/inputs/inputText';
 import { CustomInputMask } from '../../../components/inputs/customInputMask';
 import { CustomButton } from '../../../components/customButton';
 import VerificationInput from "react-verification-input";
+import * as zod from "zod";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from 'react-router-dom';
 
 type TStep = 1 | 2;
+const formSchema = zod.object({
+    nome: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    cpf: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    data: zod.string({
+        required_error: "Campo obrigatório",
+    })
+
+});
+
+type TFormSchema = zod.infer<typeof formSchema>;
 
 export function AssinaturaForm() {
-    const [step, setStep] = useState<TStep>(2)
+    const [step, setStep] = useState<TStep>(1);
+    const navigate = useNavigate();
+    const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            nome: undefined,
+            cpf: undefined,
+            data: undefined,
+        }
+    })
+    function goBack() {
+        navigate("/dashboard/assinaturas");
+    }
+    function handleStep(step: TStep) {
+        setStep(step);
+    }
 
     function returnCurrentForm(step: TStep = 1) {
         if (step === 1) {
             return (
-                <form>
-                    <AssinaturaFormSteper active={1} />
+                <form onSubmit={handleSubmit(() => { handleStep(2) })}>
+                    <AssinaturaFormSteper active={step} />
                     <h2>Confirme seus dados</h2>
                     <div className={styles.container_inputs}>
                         <InputText
+                            errors={errors}
+                            control={control}
                             title='Nome completo'
+                            fieldName='nome'
                         />
                         <CustomInputMask
+                            control={control}
                             title='CPF'
                             mask='999.999.999-99'
+                            errors={errors}
+                            fieldName='cpf'
                         />
                         <CustomInputMask
+                            fieldName='data'
+                            control={control}
                             title='Data de nascimento (DD/MM/AAAA)'
                             mask='99/99/9999'
+                            errors={errors}
                         />
                     </div>
                     <div className={styles.btn_container}>
@@ -76,7 +118,9 @@ export function AssinaturaForm() {
 
     return (
         <section className={styles.container}>
-            <div className={styles.back_btn}>
+            <div className={styles.back_btn}
+                onClick={goBack}
+            >
                 <IoArrowBack color="#A7BFB0" size={34} />
             </div>
             {

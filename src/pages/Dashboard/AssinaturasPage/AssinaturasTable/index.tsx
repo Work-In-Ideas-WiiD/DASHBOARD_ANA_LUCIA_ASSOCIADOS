@@ -2,8 +2,15 @@ import styles from './styles.module.scss';
 import { StatusBadge } from '../../../../components/statusBadge/statusBadge';
 import { TableCustomButton } from '../../../../components/tableCustomButton';
 import { FaTrash } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 export function AssinaturasTable() {
+
+    const navigate = useNavigate();
+
+    function handleNavigate() {
+        navigate("/assinatura/cadastro");
+    }
 
     return (
         <section className={styles.table}>
@@ -32,14 +39,17 @@ export function AssinaturasTable() {
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Clínica Médica Nobel S.A  </td>
+                        <td onClick={handleNavigate} className='pointer'>Clínica Médica Nobel S.A  </td>
                         <td>Allan Ferreira Neto </td>
                         <td><StatusBadge status='Assinado' /></td>
                         <td><StatusBadge status='Assinado' /></td>
                         <td>27/01/2023</td>
                         <td><TableCustomButton title='Reenviar e-mails' /></td>
                         <td>
-                            <button type='button' className={styles.delete_button}>
+                            <button
+                                type='button'
+                                className={styles.delete_button}
+                            >
                                 <FaTrash color="#D64646" size={19} />
                             </button>
                         </td>
