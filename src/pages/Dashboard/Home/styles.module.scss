@@ -11,10 +11,9 @@
     .info_cards {
         width: 100%;
         margin-bottom: 43px;
-        display: flex;
-        flex-direction: row;
+        display: grid;
         gap: 20px;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+
     }
 }

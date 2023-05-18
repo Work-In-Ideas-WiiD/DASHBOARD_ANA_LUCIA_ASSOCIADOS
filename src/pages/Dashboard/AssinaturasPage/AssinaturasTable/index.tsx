@@ -25,11 +25,8 @@ export function AssinaturasTable() {
                         <th>
                             Data do envio
                         </th>
-                        <th>
-
-                        </th>
-                        <th>
-
+                        <th colSpan={2}>
+                            Ações
                         </th>
                     </tr>
                 </thead>

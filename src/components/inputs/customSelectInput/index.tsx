@@ -1,43 +1,49 @@
 import styles from './styles.module.scss';
+import Select from 'react-select';
 import { Control, Controller, FieldErrors } from 'react-hook-form';
 import { ErrorMessage } from '@hookform/error-message';
 
-export interface IInputText extends React.InputHTMLAttributes<HTMLInputElement> {
-    title: string,
-    placeholder?: string,
-    type?: string,
-    errorMsg?: string | null,
-    containerClass?: string,
-    fieldName: string,
-    control: Control<any>,
-    errors: FieldErrors,
+export interface IOptions {
+    value: string,
+    label: string
 }
 
-export function InputText({
+interface ICustomSelectInputProps {
+    title: string,
+    placeholder?: string,
+    options: IOptions[];
+    fieldName: string;
+    control: Control<any>
+    errors: FieldErrors,
+    containerClass?: string,
+}
+
+
+export function CustomSelectInput({
     title,
     placeholder,
-    type,
-    errorMsg,
-    containerClass,
+    options,
     fieldName,
     control,
     errors,
-    ...rest
-}: IInputText) {
+    containerClass
+}: ICustomSelectInputProps) {
     return (
         <Controller
             name={fieldName}
             control={control}
             render={({ field }) => {
                 return (
+
                     <div className={`${styles.input_wrapper} ${containerClass}`}>
                         <label>{title}</label>
-                        <input
+                        <Select
                             onChange={field.onChange}
-                            value={field.value}
-                            type={type}
+                            options={options}
+                            className="custom-select-container"
+                            classNamePrefix="custom-select"
                             placeholder={placeholder}
-                            {...rest}
+
                         />
                         <ErrorMessage
                             errors={errors}
@@ -52,6 +58,7 @@ export function InputText({
                     </div>
                 )
             }}
+
         />
 
     )

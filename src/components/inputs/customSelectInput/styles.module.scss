@@ -1,0 +1,23 @@
+.input_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    width: 100%;
+    position: relative;
+
+    label {
+        font-style: normal;
+        font-weight: 400;
+        font-size: 0.875rem;
+        margin-bottom: 11px;
+        color: var(--color-blue-700);
+    }
+
+
+    .error_msg {
+        position: absolute;
+        bottom: -20px;
+        color: var(--color-red-500);
+        font-size: 1rem;
+    }
+}

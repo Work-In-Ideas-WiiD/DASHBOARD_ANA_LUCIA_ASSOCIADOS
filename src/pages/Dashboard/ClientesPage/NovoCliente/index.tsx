@@ -81,7 +81,11 @@ export function NovoCliente() {
         <section className={styles.new_contract}>
             <h2 className={`${styles.title} dashboard_title`}>NOVO CADASTRO</h2>
             <div className={styles.form_wrapper}>
-                <form onSubmit={handleSubmit(handleCreate)}>
+                <form
+                    onSubmit={handleSubmit(handleCreate)}
+                    autoComplete="off"
+                    autoCapitalize="off"
+                >
                     <div className={styles.input_container}>
                         <InputText
                             control={control}

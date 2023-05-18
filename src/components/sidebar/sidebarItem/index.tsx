@@ -36,6 +36,9 @@ export function SidebarItem({
     }
 
     function handleRoute(route: string) {
+        if (route === "/logout") {
+            return navigate('/');
+        }
         navigate('/dashboard' + route);
     }
 

@@ -14,7 +14,7 @@ interface ISelectInputProps {
 }
 
 
-export function SelectInput({
+export function TableSelectInput({
     options,
     fieldName,
     control
