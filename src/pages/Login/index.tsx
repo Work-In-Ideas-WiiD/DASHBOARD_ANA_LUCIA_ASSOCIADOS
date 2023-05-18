@@ -31,24 +31,26 @@ export function LoginPage() {
         <main className={styles.main}>
             <form onSubmit={handleSubmit(handleLogin)}>
                 <img src={Logo} alt="logo" />
-                <IconInput
-                    fieldName='email'
-                    control={control}
-                    type='text'
-                    icon='login'
-                    placeholder='Usuario'
-                    inputClass='mb-30'
-                ></IconInput>
-                <IconInput
-                    fieldName='password'
-                    control={control}
-                    type='password'
-                    icon='password'
-                    placeholder='Senha'
-                ></IconInput>
+                <div className={styles.input_container}>
+                    <IconInput
+                        fieldName='email'
+                        control={control}
+                        type='text'
+                        icon='login'
+                        placeholder='Usuario'
+                    ></IconInput>
+                    <IconInput
+                        fieldName='password'
+                        control={control}
+                        type='password'
+                        icon='password'
+                        placeholder='Senha'
+                    ></IconInput>
+                </div>
+
                 <Link className={`react-router-Link ${styles.forgot_password}`} to={'/'}>Esqueci a senha.</Link>
                 <button type='submit' className={styles.submit_button}>
-                    Salvar
+                    Entrar
                 </button>
                 <Link className={`react-router-Link ${styles.first_access}`} to={'/'}>É seu primeiro acesso? <span>Cadastrar senha.</span></Link>
             </form>
