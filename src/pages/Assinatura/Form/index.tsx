@@ -11,7 +11,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 
-type TStep = 1 | 2;
+type TStep = 1 | 2;   
 const formSchema = zod.object({
     nome: zod.string({
         required_error: "Campo obrigatório",

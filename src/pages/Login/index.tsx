@@ -23,7 +23,7 @@ export function LoginPage() {
         }
     })
 
-    function handleLogin(data: TFormSchema) {
+    function handleLogin(_data: TFormSchema) {
         navigate("/dashboard/home")
     }
 
