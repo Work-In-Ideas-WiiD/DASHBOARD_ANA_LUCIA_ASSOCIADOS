@@ -6,6 +6,8 @@ import { InputText } from '../../../../components/inputs/inputText';
 import { CustomInputMask } from '../../../../components/inputs/customInputMask';
 import { CustomButton } from '../../../../components/customButton';
 import { CustomSelectInput } from '../../../../components/inputs/customSelectInput';
+import { PageTitle } from '../../../../components/pageTitle';
+import { useNavigate } from 'react-router-dom';
 
 const selectOptions = [
     { value: 'master', label: 'Administrador Master' },
@@ -35,6 +37,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoAdministrador() {
+    const navigate = useNavigate();
     const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -48,9 +51,18 @@ export function NovoAdministrador() {
     function handleCreate(data: TFormSchema) {
         console.log(data);
     }
+
+    function goBack() {
+        navigate("/dashboard/empresas");
+    }
+
     return (
         <section className={styles.new_contract}>
-            <h2 className={`${styles.title} dashboard_title`}>NOVO CADASTRO</h2>
+            <PageTitle
+                backFunction={goBack}
+                title='NOVO CADASTRO'
+                showBackButton={true}
+            />
             <div className={styles.form_wrapper}>
                 <form onSubmit={handleSubmit(handleCreate)}>
                     <InputText

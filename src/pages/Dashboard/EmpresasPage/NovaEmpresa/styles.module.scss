@@ -1,11 +1,9 @@
 @import "../../../../styles/Global.scss";
 
 .new_contract {
-    .title {
-        margin-bottom: 42px;
-    }
 
     .form_wrapper {
+        margin-top: 42px;
         width: 100%;
         max-width: 1050px;
         @include background-opacity($color-orange-100, 0.1);

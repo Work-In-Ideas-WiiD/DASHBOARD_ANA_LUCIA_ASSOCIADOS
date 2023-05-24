@@ -6,6 +6,8 @@ import { FaFileUpload } from 'react-icons/fa';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from 'react-router-dom';
+import { PageTitle } from '../../../../components/pageTitle';
 
 const formSchema = zod.object({
     numero_contrato: zod.string({
@@ -36,7 +38,7 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 
 export function NovoContrato() {
-
+    const navigate = useNavigate();
     const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -50,9 +52,17 @@ export function NovoContrato() {
         console.log(data);
     }
 
+    function goBack() {
+        navigate("/dashboard/contratos");
+    }
+
     return (
         <section className={styles.new_contract}>
-            <h2 className={`${styles.title} dashboard_title`}>NOVO CADASTRO</h2>
+            <PageTitle
+                backFunction={goBack}
+                title='NOVO CADASTRO'
+                showBackButton={true}
+            />
             <div className={styles.form_wrapper}>
                 <form onSubmit={handleSubmit(handleCreate)}>
                     <InputText

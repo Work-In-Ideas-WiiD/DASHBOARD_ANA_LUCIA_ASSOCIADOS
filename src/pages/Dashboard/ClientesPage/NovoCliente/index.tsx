@@ -6,6 +6,8 @@ import { CustomButton } from '../../../../components/customButton';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useNavigate } from 'react-router-dom';
+import { PageTitle } from '../../../../components/pageTitle';
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -53,7 +55,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoCliente() {
-
+    const navigate = useNavigate();
     const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -77,9 +79,19 @@ export function NovoCliente() {
         console.log(data);
 
     }
+
+    function goBack() {
+        navigate("/dashboard/clientes");
+    }
+
     return (
         <section className={styles.new_contract}>
-            <h2 className={`${styles.title} dashboard_title`}>NOVO CADASTRO</h2>
+            <PageTitle
+                backFunction={goBack}
+                title='NOVO CADASTRO'
+                showBackButton={true}
+            />
+
             <div className={styles.form_wrapper}>
                 <form
                     onSubmit={handleSubmit(handleCreate)}

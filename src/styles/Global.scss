@@ -111,7 +111,7 @@ a {
     }
 
     @media (max-width: 420px) {
-        padding-top: 58px;
+        padding-top: 20px;
         padding-left: 13px;
         padding-right: 13px;
         padding-bottom: 90px;
@@ -204,4 +204,35 @@ a {
 
 .pointer {
     cursor: pointer;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: #CFC6BC;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+.gap-10 {
+    gap: 10px;
 }

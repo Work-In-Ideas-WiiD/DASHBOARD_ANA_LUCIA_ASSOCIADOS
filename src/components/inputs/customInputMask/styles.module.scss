@@ -11,6 +11,10 @@
         font-size: 0.875rem;
         margin-bottom: 11px;
         color: var(--color-blue-700);
+
+        @media (max-width: 900px) {
+            margin-bottom: 5px;
+        }
     }
 
     input {
@@ -30,12 +34,13 @@
 
     .error_msg {
         position: absolute;
-        bottom: -20px;
+        bottom: -16px;
         color: var(--color-red-500);
-        font-size: 1rem;
+        font-size: .875rem;
 
         @media (max-width: 900px) {
             bottom: -13px;
+            right: 0;
         }
     }
 }
