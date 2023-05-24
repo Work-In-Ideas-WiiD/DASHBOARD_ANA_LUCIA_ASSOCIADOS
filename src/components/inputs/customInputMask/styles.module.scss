@@ -33,5 +33,9 @@
         bottom: -20px;
         color: var(--color-red-500);
         font-size: 1rem;
+
+        @media (max-width: 900px) {
+            bottom: -13px;
+        }
     }
 }

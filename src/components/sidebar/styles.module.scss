@@ -4,6 +4,7 @@
     background-color: var(--color-blue-700);
     position: fixed;
     overflow-y: auto;
+    overflow-x: hidden;
 
     .logo {
         display: block;

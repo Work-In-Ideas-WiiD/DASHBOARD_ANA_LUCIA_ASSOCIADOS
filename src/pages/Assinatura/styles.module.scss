@@ -10,5 +10,13 @@
         justify-content: center;
         align-items: center;
         background-color: var(--color-blue-700);
+
+        @media (max-width: 900px) {
+            height: auto;
+
+            img {
+                height: 80px;
+            }
+        }
     }
 }

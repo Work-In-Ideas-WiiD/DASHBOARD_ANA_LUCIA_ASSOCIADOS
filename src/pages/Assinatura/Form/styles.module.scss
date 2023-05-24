@@ -2,6 +2,10 @@
     width: 100%;
     position: relative;
 
+    @media (max-width: 900px) {
+        padding: 13px;
+    }
+
     .back_btn {
         width: 40px;
         height: 40px;
@@ -13,6 +17,12 @@
         left: 27px;
         top: 48px;
         cursor: pointer;
+
+        @media (max-width: 900px) {
+            position: initial;
+            align-items: flex-start;
+            justify-content: flex-start;
+        }
     }
 
     form {
@@ -20,6 +30,10 @@
         max-width: 440px;
         margin: 0 auto;
         padding-top: 53px;
+
+        @media (max-width: 900px) {
+            padding-top: 10px;
+        }
 
         .f2_title {
             font-style: normal;

@@ -18,7 +18,7 @@ export function InputText({
     placeholder,
     type,
     errorMsg,
-    containerClass,
+    containerClass = "",
     fieldName,
     control,
     errors,

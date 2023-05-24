@@ -33,6 +33,10 @@
 
     .last_text {
         right: -30px;
+
+        @media (max-width: 500px) {
+            right: 0;
+        }
     }
 
     .line {
