@@ -2,8 +2,10 @@
 
 .table {
     width: 100%;
+    overflow: auto;
 
     .table_header {
+        min-width: 600px;
         padding-left: 38px;
         padding-top: 38px;
         padding-right: 38px;

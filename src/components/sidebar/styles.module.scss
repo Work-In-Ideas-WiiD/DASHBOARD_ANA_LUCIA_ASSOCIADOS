@@ -3,6 +3,7 @@
     height: 100%;
     background-color: var(--color-blue-700);
     position: fixed;
+    overflow-y: auto;
 
     .logo {
         display: block;
@@ -10,6 +11,7 @@
     }
 
     nav {
+        min-height: 500px;
         width: 100%;
         padding-left: 34px;
         display: flex;

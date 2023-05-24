@@ -102,10 +102,18 @@ a {
     padding-bottom: 90px;
     overflow: auto;
 
-    @media (max-width: 900px) {
+    @media (max-width: 1250px) {
         padding-top: 58px;
         padding-left: 20px;
         padding-right: 20px;
+        padding-bottom: 90px;
+        overflow: auto;
+    }
+
+    @media (max-width: 420px) {
+        padding-top: 58px;
+        padding-left: 13px;
+        padding-right: 13px;
         padding-bottom: 90px;
         overflow: auto;
     }
@@ -124,6 +132,7 @@ a {
     @include background-opacity($color-orange-100, 0.1);
     border-spacing: 38px 1px;
     border-collapse: collapse;
+    min-width: 600px;
 
     thead {
         border-bottom: 1px solid white;
