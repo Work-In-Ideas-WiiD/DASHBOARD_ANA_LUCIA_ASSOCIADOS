@@ -5,6 +5,10 @@ import { Link, useNavigate } from 'react-router-dom'
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { postLogin, postMe } from '../../services/http/auth';
+import { toast } from 'react-toastify';
+import { useAuth } from '../../hooks/useAuth';
+import { IPostLoginRes } from '../../services/http/auth/auth.dto';
 
 const formSchema = zod.object({
     email: zod.string(),
@@ -15,16 +19,41 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function LoginPage() {
     const navigate = useNavigate();
+    const { setUseToken, setUserData } = useAuth();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: '',
-            password: '',
+            email: 'wcostaprijo@hotmail.com',
+            password: '123456789',
         }
     })
 
-    function handleLogin(_data: TFormSchema) {
-        navigate("/dashboard/home")
+    async function handleLogin(_data: TFormSchema) {
+
+        try {
+            const { data } = await postLogin(_data.email, _data.password);
+            saveToken(data);
+            const { data: user } = await postMe(data.access_token);
+            setUserData(user);
+            navigate("/dashboard/home");
+        } catch (error) {
+            console.log(error);
+            toast.error("E-mail ou senha inválidos.");
+        }
+
+    }
+
+    function saveToken(data: IPostLoginRes) {
+        setUseToken(data.access_token);
+        localStorage.setItem(
+            '@auth',
+            JSON.stringify({
+                access_token: data.access_token,
+                token_type: data.token_type,
+                expires_in: data.expires_in,
+                login_time: new Date().getTime(),
+            })
+        );
     }
 
     return (
