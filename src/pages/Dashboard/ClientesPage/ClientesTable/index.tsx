@@ -1,12 +1,15 @@
 import styles from './styles.module.scss';
 import { CustomButton, EIconCustomButton } from "../../../../components/customButton";
 import { SearchBar } from '../../../../components/inputs/searchBar';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TableSelectInput } from '../../../../components/inputs/tableSelectInput';
 import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IUserReqProps } from '../../../../services/http/user/user.dto';
+import { useAuth } from '../../../../hooks/useAuth';
+import { getUsersList } from '../../../../services/http/user';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -23,9 +26,22 @@ const selectOptions = [
     { value: 'empresas', label: 'Empresas' },
 ]
 export function ClienteTable() {
-
+    const { token } = useAuth();
     const [fetching, setFetching] = useState(false);
     const navigate = useNavigate();
+    const [users, setUsers] = useState<IUserReqProps[]>([]);
+
+    useEffect(() => {
+
+        getData();
+
+    }, []);
+
+    async function getData() {
+        const { data } = await getUsersList(token);
+        setUsers(data.data);
+    }
+
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -36,11 +52,27 @@ export function ClienteTable() {
     function searchData(data: TFormSchema) {
         //setFetching(true);
         console.log(data);
-
     }
 
     function goTo() {
         navigate("novo");
+    }
+
+    function _renderItem(itens: IUserReqProps[]) {
+        return itens.map((item) => {
+
+            const documentId = item.cnpj ? item.cnpj : item.cpf;
+
+            return (
+                <tr key={item.id}>
+                    <td>{item.nome} </td>
+                    <td>{item.nome_empresa}</td>
+                    <td>{documentId}</td>
+                    <td>{item.email}</td>
+                    <td>{item.contato}</td>
+                </tr>
+            )
+        })
     }
 
     return (
@@ -81,20 +113,9 @@ export function ClienteTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Marisa Teixeira dos Santos Lima </td>
-                        <td>Clínica Médica Nobel S.A </td>
-                        <td>055298841-30</td>
-                        <td>marisa124123@gmail.com</td>
-                        <td>062 9852-5468</td>
-                    </tr>
-                    <tr>
-                        <td>Marisa Teixeira dos Santos Lima </td>
-                        <td>Clínica Médica Nobel S.A </td>
-                        <td>055298841-30</td>
-                        <td>marisa124123@gmail.com</td>
-                        <td>062 9852-5468</td>
-                    </tr>
+                    {
+                        _renderItem(users)
+                    }
                 </tbody>
             </table>
         </section>
