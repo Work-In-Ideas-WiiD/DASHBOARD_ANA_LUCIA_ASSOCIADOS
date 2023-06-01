@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 import styles from './styles.module.scss';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 
 interface ISidebarItemProps {
     title: string,
@@ -20,6 +21,7 @@ export function SidebarItem({
     classname = ''
 }: ISidebarItemProps) {
     const navigate = useNavigate();
+    const { signOut } = useAuth();
     function returnCurrentIcon(active: boolean) {
         if (active) {
             return ActiveIcon;
@@ -37,7 +39,7 @@ export function SidebarItem({
 
     function handleRoute(route: string) {
         if (route === "/logout") {
-            return navigate('/');
+            return signOut();
         }
         navigate('/dashboard' + route);
     }

@@ -26,19 +26,19 @@ const selectOptions = [
     { value: 'empresas', label: 'Empresas' },
 ]
 export function ClienteTable() {
-    const { token } = useAuth();
     const [fetching, setFetching] = useState(false);
     const navigate = useNavigate();
     const [users, setUsers] = useState<IUserReqProps[]>([]);
 
     useEffect(() => {
+        console.log("use effect");
 
         getData();
 
     }, []);
 
     async function getData() {
-        const { data } = await getUsersList(token);
+        const { data } = await getUsersList();
         setUsers(data.data);
     }
 

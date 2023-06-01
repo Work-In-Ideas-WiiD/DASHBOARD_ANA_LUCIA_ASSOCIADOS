@@ -1,14 +1,12 @@
 import { IconInput } from '../../components/inputs/IconInput';
 import styles from './styles.module.scss';
 import Logo from "../../assets/imgs/logo_ana.png";
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { postLogin, postMe } from '../../services/http/auth';
-import { toast } from 'react-toastify';
 import { useAuth } from '../../hooks/useAuth';
-import { IPostLoginRes } from '../../services/http/auth/auth.dto';
+import { RotatingLines } from 'react-loader-spinner';
 
 const formSchema = zod.object({
     email: zod.string(),
@@ -18,8 +16,8 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function LoginPage() {
-    const navigate = useNavigate();
-    const { setUseToken, setUserData } = useAuth();
+
+    const { signIn, fetching } = useAuth();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -29,31 +27,23 @@ export function LoginPage() {
     })
 
     async function handleLogin(_data: TFormSchema) {
-
-        try {
-            const { data } = await postLogin(_data.email, _data.password);
-            saveToken(data);
-            const { data: user } = await postMe(data.access_token);
-            setUserData(user);
-            navigate("/dashboard/home");
-        } catch (error) {
-            console.log(error);
-            toast.error("E-mail ou senha inválidos.");
-        }
-
+        await signIn(_data.email, _data.password);
     }
 
-    function saveToken(data: IPostLoginRes) {
-        setUseToken(data.access_token);
-        localStorage.setItem(
-            '@auth',
-            JSON.stringify({
-                access_token: data.access_token,
-                token_type: data.token_type,
-                expires_in: data.expires_in,
-                login_time: new Date().getTime(),
-            })
-        );
+    function _renderBtnContent(title: string, loading: boolean) {
+        if (loading) {
+            return (
+                <RotatingLines
+                    strokeColor="grey"
+                    strokeWidth="5"
+                    animationDuration="1.00"
+                    width="24"
+                    visible={true}
+                />
+            )
+        }
+
+        return title;
     }
 
     return (
@@ -79,7 +69,9 @@ export function LoginPage() {
 
                 <Link className={`react-router-Link ${styles.forgot_password}`} to={'/'}>Esqueci a senha.</Link>
                 <button type='submit' className={styles.submit_button}>
-                    Entrar
+                    {
+                        _renderBtnContent("Entrar", fetching)
+                    }
                 </button>
                 <Link className={`react-router-Link ${styles.first_access}`} to={'/'}>É seu primeiro acesso? <span>Cadastrar senha.</span></Link>
             </form>

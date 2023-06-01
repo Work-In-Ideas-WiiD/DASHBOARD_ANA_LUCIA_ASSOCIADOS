@@ -18,98 +18,104 @@ import { AssinaturaForm } from "../pages/Assinatura/Form";
 import { ClientesPage } from "../pages/Dashboard/ClientesPage";
 import { ClienteTable } from "../pages/Dashboard/ClientesPage/ClientesTable";
 import { NovoCliente } from "../pages/Dashboard/ClientesPage/NovoCliente";
+import { ContextRoute } from "../pages/ContextRoute";
 
 const router = createBrowserRouter([
     {
-        path: "/",
-        element: <LoginPage />
-    },
-    {
-        path: "/assinatura",
-        element: <Assinatura />,
+        element: <ContextRoute />,
         children: [
             {
-                path: "cadastro",
-                element: <AssinaturaForm />
-            }
-        ]
-    },
-    {
-        path: "/dashboard",
-        element: <DashboardPage />,
-        errorElement: <DashboardErrorPage />,
-        children: [
-            {
-                path: "",
-                element: <HomePage />,
+                path: "/",
+                element: <LoginPage />
             },
             {
-                path: "home",
-                element: <HomePage />,
-            },
-            {
-                path: "empresas",
-                element: <EmpresasPage />,
+                path: "/assinatura",
+                element: <Assinatura />,
                 children: [
                     {
-                        path: "",
-                        element: <EmpresasTable />
-                    },
-                    {
-                        path: "novo",
-                        element: <NovaEmpresa />
+                        path: "cadastro",
+                        element: <AssinaturaForm />
                     }
                 ]
             },
             {
-                path: "admins",
-                element: <AdministradoresPage />,
+                path: "/dashboard",
+                element: <DashboardPage />,
+                errorElement: <DashboardErrorPage />,
                 children: [
                     {
                         path: "",
-                        element: <AdministradoresTable />
+                        element: <HomePage />,
                     },
                     {
-                        path: "novo",
-                        element: <NovoAdministrador />
+                        path: "home",
+                        element: <HomePage />,
+                    },
+                    {
+                        path: "empresas",
+                        element: <EmpresasPage />,
+                        children: [
+                            {
+                                path: "",
+                                element: <EmpresasTable />
+                            },
+                            {
+                                path: "novo",
+                                element: <NovaEmpresa />
+                            }
+                        ]
+                    },
+                    {
+                        path: "admins",
+                        element: <AdministradoresPage />,
+                        children: [
+                            {
+                                path: "",
+                                element: <AdministradoresTable />
+                            },
+                            {
+                                path: "novo",
+                                element: <NovoAdministrador />
+                            }
+                        ]
+                    },
+                    {
+                        path: "contratos",
+                        element: <ContratosPage />,
+                        children: [
+                            {
+                                path: "",
+                                element: <ContratosTable />
+                            },
+                            {
+                                path: "novo",
+                                element: <NovoContrato />
+                            },
+                        ]
+                    },
+                    {
+                        path: "assinaturas",
+                        element: <AssinaturasPage />
+                    },
+                    {
+                        path: "clientes",
+                        element: <ClientesPage />,
+                        children: [
+                            {
+                                path: "",
+                                element: <ClienteTable />
+                            },
+                            {
+                                path: "novo",
+                                element: <NovoCliente />
+                            },
+                        ]
+                    },
+                    {
+                        path: "error",
+                        element: <DashboardErrorPage />,
                     }
                 ]
-            },
-            {
-                path: "contratos",
-                element: <ContratosPage />,
-                children: [
-                    {
-                        path: "",
-                        element: <ContratosTable />
-                    },
-                    {
-                        path: "novo",
-                        element: <NovoContrato />
-                    },
-                ]
-            },
-            {
-                path: "assinaturas",
-                element: <AssinaturasPage />
-            },
-            {
-                path: "clientes",
-                element: <ClientesPage />,
-                children: [
-                    {
-                        path: "",
-                        element: <ClienteTable />
-                    },
-                    {
-                        path: "novo",
-                        element: <NovoCliente />
-                    },
-                ]
-            },
-            {
-                path: "error",
-                element: <DashboardErrorPage />,
             }
         ]
     }

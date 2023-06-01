@@ -8,6 +8,10 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { PageTitle } from '../../../../components/pageTitle';
+import { IPostUserData } from '../../../../services/http/user/user.dto';
+import { postUserStore } from '../../../../services/http/user';
+import { useAuth } from '../../../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -27,7 +31,7 @@ const formSchema = zod.object({
     }).email({
         message: "E-mail inválido"
     }),
-    celular: zod.string({
+    contato: zod.string({
         required_error: "Campo obrigatório",
     }),
     endereco: zod.string({
@@ -55,6 +59,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoCliente() {
+    const { handleFetching, fetching } = useAuth();
     const navigate = useNavigate();
     const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -64,7 +69,7 @@ export function NovoCliente() {
             nome_empresa: undefined,
             cnpj: undefined,
             email: undefined,
-            celular: undefined,
+            contato: undefined,
             endereco: undefined,
             numero: undefined,
             bairro: undefined,
@@ -75,9 +80,41 @@ export function NovoCliente() {
         }
     })
 
-    function handleCreate(data: TFormSchema) {
-        console.log(data);
+    async function handleCreate(_data: TFormSchema) {
+        if (fetching) {
+            return
+        }
+        try {
+            handleFetching(true);
+            const model: IPostUserData = {
+                type: 'cliente',
+                nome: _data.nome,
+                nome_empresa: _data.nome_empresa,
+                cpf: _data.nome_empresa,
+                email: _data.email,
+                contato: _data.contato,
+                cnpj: _data.cnpj,
+                endereco: {
+                    bairro: _data.bairro,
+                    cep: _data.cep,
+                    cidade: _data.cidade,
+                    estado: _data.estado,
+                    rua: _data.endereco
+                }
+            }
 
+            await postUserStore(model);
+            handleFetching(false);
+            toast("Cliente cadastrado!");
+            setTimeout(() => {
+                goBack();
+            }, 3000);
+
+        } catch (error) {
+            handleFetching(false);
+            console.log(error);
+            toast.error("Erro ao cadastrar novo cliente");
+        }
     }
 
     function goBack() {
@@ -142,7 +179,7 @@ export function NovoCliente() {
                         />
                         <CustomInputMask
                             control={control}
-                            fieldName='celular'
+                            fieldName='contato'
                             title='Celular'
                             containerClass={styles.w36}
                             mask='(99) 99999-9999'
@@ -199,7 +236,7 @@ export function NovoCliente() {
                         <CustomInputMask
                             control={control}
                             fieldName='cep'
-                            mask="999.999.999-99"
+                            mask="99999-999"
                             title='CEP'
                             errors={errors}
                         />

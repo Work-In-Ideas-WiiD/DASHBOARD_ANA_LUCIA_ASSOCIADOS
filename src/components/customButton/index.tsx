@@ -1,5 +1,7 @@
+import { RotatingLines } from 'react-loader-spinner';
 import styles from './styles.module.scss';
 import { MdCreateNewFolder } from 'react-icons/md';
+import { useAuth } from '../../hooks/useAuth';
 
 export enum EIconCustomButton {
     MdCreateNewFolder = 0
@@ -16,7 +18,7 @@ const Icons = {
 }
 
 export function CustomButton({ title, icon, variation = "1", ...rest }: ICustomButtonProps) {
-
+    const { fetching } = useAuth();
 
     function getStyleClass(variation: string) {
         switch (variation) {
@@ -39,13 +41,29 @@ export function CustomButton({ title, icon, variation = "1", ...rest }: ICustomB
         return (<></>)
     }
 
+    function _renderContent(title: string, loading: boolean) {
+        if (loading) {
+            return (
+                <RotatingLines
+                    strokeColor="grey"
+                    strokeWidth="5"
+                    animationDuration="1.00"
+                    width="24"
+                    visible={true}
+                />
+            )
+        }
+
+        return title;
+    }
+
     return (
         <button
             className={getStyleClass(variation)}
             {...rest}
         >
             {returnIcon(icon)}
-            {title}
+            {_renderContent(title, fetching)}
         </button>
     )
 }

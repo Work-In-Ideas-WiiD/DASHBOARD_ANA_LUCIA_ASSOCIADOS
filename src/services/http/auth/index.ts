@@ -1,9 +1,8 @@
 import { AxiosResponse } from "axios";
-import { api, setToken } from "../api";
+import { api } from "../api";
 import { IPostLoginRes, IUserProps } from "./auth.dto";
 
-export async function postMe(token: string): Promise<AxiosResponse<IUserProps, any>> {
-    setToken(token);
+export async function postMe(): Promise<AxiosResponse<IUserProps, any>> {
     const res = await api.post("/auth/me");
 
     return res;
@@ -18,8 +17,7 @@ export async function postLogin(email: string, password: string): Promise<AxiosR
     return res;
 }
 
-export async function postLogout(token: string): Promise<AxiosResponse<any, any>> {
-    setToken(token);
+export async function postLogout(): Promise<AxiosResponse<any, any>> {
     const res = await api.post("/auth/logout");
 
     return res;

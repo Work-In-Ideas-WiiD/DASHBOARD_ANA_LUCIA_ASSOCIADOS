@@ -1,4 +1,6 @@
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
+import { signOut } from '../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const controller = new AbortController();
 
@@ -7,7 +9,7 @@ const api = axios.create({
     signal: controller.signal
 });
 
-function setToken(token: string) {
+function setAuthToken(token: string) {
     api.defaults.headers.common['Authorization'] = "Bearer" + token;
 }
 
@@ -15,4 +17,15 @@ function abortRequest() {
     controller.abort();
 }
 
-export { api, setToken, abortRequest };
+api.interceptors.response.use(response => {
+    return response
+}, (error: AxiosError) => {
+    if (error.status === 401) {
+        toast.error("Sessão expirada");
+        signOut();
+    }
+
+    return Promise.reject(error);
+})
+
+export { api, abortRequest, setAuthToken };
