@@ -8,50 +8,45 @@ import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IUserReqProps } from '../../../../services/http/user/user.dto';
-import { useAuth } from '../../../../hooks/useAuth';
-import { getUsersList } from '../../../../services/http/user';
+import { getClientes } from '../../../../services/http/clientes';
+import { IGetClientesDataRes } from '../../../../services/http/clientes/cliente.dto';
 
 const formSchema = zod.object({
     search: zod.string(),
-    type: zod.object({
-        value: zod.string(),
-        label: zod.string()
-    })
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-const selectOptions = [
-    { value: 'clientes', label: 'Clientes' },
-    { value: 'empresas', label: 'Empresas' },
-]
 export function ClienteTable() {
+
     const [fetching, setFetching] = useState(false);
+    const [page, setPage] = useState(1);
     const navigate = useNavigate();
-    const [users, setUsers] = useState<IUserReqProps[]>([]);
-
-    useEffect(() => {
-        console.log("use effect");
-
-        getData();
-
-    }, []);
-
-    async function getData() {
-        const { data } = await getUsersList();
-        setUsers(data.data);
-    }
-
+    const [customers, setCustomers] = useState<IGetClientesDataRes[]>([]);
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
         }
     })
+    useEffect(() => {
+        getData(page);
+    }, []);
 
-    function searchData(data: TFormSchema) {
-        //setFetching(true);
-        console.log(data);
+    async function getData(pageParam: number, likeParam: string = "") {
+        try {
+            setFetching(true);
+            const { data } = await getClientes(pageParam, likeParam);
+            setCustomers(data.data);
+            setFetching(false);
+        } catch (error) {
+            setFetching(false);
+            console.log(error);
+        }
+    }
+
+    async function searchData(_data: TFormSchema) {
+        await getData(page, _data.search);
     }
 
     function goTo() {
@@ -61,14 +56,17 @@ export function ClienteTable() {
     function _renderItem(itens: IUserReqProps[]) {
         return itens.map((item) => {
 
-            const documentId = item.cnpj ? item.cnpj : item.cpf;
+            let documentId = item.cnpj ? item.cnpj : item.cpf;
+            if (!item.cnpj && !item.cpf) documentId = "n/a";
+            const company_name = item.nome_empresa ? item.nome_empresa : 'n/a';
+            const email = item.email ? item.email : 'n/a';
 
             return (
                 <tr key={item.id}>
                     <td>{item.nome} </td>
-                    <td>{item.nome_empresa}</td>
+                    <td>{company_name}</td>
                     <td>{documentId}</td>
-                    <td>{item.email}</td>
+                    <td>{email}</td>
                     <td>{item.contato}</td>
                 </tr>
             )
@@ -84,11 +82,6 @@ export function ClienteTable() {
                     fieldName='search'
                     placeholder='Pesquisar por ID, nome, e-mail e número de documento…'
                     fetching={fetching}
-                />
-                <TableSelectInput
-                    options={selectOptions}
-                    fieldName='type'
-                    control={control}
                 />
                 <CustomButton onClick={goTo} title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
             </form>
@@ -114,7 +107,7 @@ export function ClienteTable() {
                 </thead>
                 <tbody>
                     {
-                        _renderItem(users)
+                        _renderItem(customers)
                     }
                 </tbody>
             </table>

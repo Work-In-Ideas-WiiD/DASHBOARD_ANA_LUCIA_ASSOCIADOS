@@ -1,7 +1,7 @@
-export interface IPostUserData {
+export interface IPostEmpresaModel {
     type: "cliente" | "empresa" | "administrador",
     email: string,
-    cpf: string | null,
+    cpf?: string | null,
     nome: string,
     contato: string,
     cnpj?: null | string,
@@ -15,9 +15,10 @@ export interface IPostUserData {
     }
 }
 
-export interface IGetUserListRes {
+
+export interface IGetEmpresasRes {
     current_page: number,
-    data: IUserReqProps[],
+    data: IGetEmpresasDataRes[],
     from: number,
     last_page: number,
     per_page: number,
@@ -25,17 +26,12 @@ export interface IGetUserListRes {
     total: number,
 }
 
-export interface IUserReqProps {
+export interface IGetEmpresasDataRes {
     id: string,
     nome: string,
     email: string,
-    email_verified_at: null | string,
-    type: string,
-    cpf: null | string,
-    contato: null | string,
-    cnpj: null | string,
-    nome_empresa: null | string,
-    clicksign_key: null | string,
-    endereco_id: null | string,
-    endereco: null | string,
+    cpf: string | null,
+    contato: string | null,
+    cnpj: string | null,
+    nome_empresa: string | null,
 }

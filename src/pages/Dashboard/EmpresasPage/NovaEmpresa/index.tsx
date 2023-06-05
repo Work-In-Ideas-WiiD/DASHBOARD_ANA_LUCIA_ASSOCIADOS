@@ -8,26 +8,25 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BackButton } from '../../../../components/backButton';
 import { PageTitle } from '../../../../components/pageTitle';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../../hooks/useAuth';
+import { IPostEmpresaModel } from '../../../../services/http/empresas/empresas.dto';
+import { postEmpresaStore } from '../../../../services/http/empresas';
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 const formSchema = zod.object({
     nome: zod.string({
         required_error: "Campo obrigatório",
     }),
-    cpf: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    nome_empresa: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    cnpj: zod.string({
-        required_error: "Campo obrigatório",
-    }),
+    cpf: zod.string({}).optional(),
+    nome_empresa: zod.string({}).optional(),
+    cnpj: zod.string({}).optional(),
     email: zod.string({
         required_error: "Campo obrigatório",
     }).email({
         message: "E-mail inválido"
     }),
-    celular: zod.string({
+    contato: zod.string({
         required_error: "Campo obrigatório",
     }),
     endereco: zod.string({
@@ -51,12 +50,45 @@ const formSchema = zod.object({
     cep: zod.string({
         required_error: "Campo obrigatório",
     }),
-});
+}).superRefine((val, ctx) => {
+
+    if (!val.cnpj && val.nome_empresa) {
+        ctx.addIssue({
+            message: "Informe o CNPJ da empresa",
+            path: ["cnpj"],
+            code: 'custom'
+        });
+        return zod.NEVER;
+    }
+
+    if (val.cnpj && !val.nome_empresa) {
+        ctx.addIssue({
+            message: "Informe o nome da empresa",
+            path: ["nome_empresa"],
+            code: 'custom'
+        });
+        return zod.NEVER;
+    }
+
+    if (!val.cpf && !val.cnpj) {
+        ctx.addIssue({
+            message: "Informe CPF ou CNPJ",
+            path: ["cpf"],
+            code: 'custom'
+        });
+        ctx.addIssue({
+            message: "Informe CPF ou CNPJ",
+            path: ["cnpj"],
+            code: 'custom'
+        });
+    }
+})
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovaEmpresa() {
     const navigate = useNavigate();
+    const { handleFetching, fetching } = useAuth();
     const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -65,7 +97,7 @@ export function NovaEmpresa() {
             nome_empresa: undefined,
             cnpj: undefined,
             email: undefined,
-            celular: undefined,
+            contato: undefined,
             endereco: undefined,
             numero: undefined,
             bairro: undefined,
@@ -76,12 +108,54 @@ export function NovaEmpresa() {
         }
     })
 
-    function handleCreate(data: TFormSchema) {
-        console.log(data);
+
+    async function handleCreate(_data: TFormSchema) {
+        if (fetching) {
+            return
+        }
+        try {
+            handleFetching(true);
+            const model: IPostEmpresaModel = {
+                type: 'empresa',
+                nome: _data.nome,
+                nome_empresa: _data.nome_empresa,
+                cpf: _data.cpf,
+                email: _data.email,
+                contato: _data.contato,
+                cnpj: _data.cnpj,
+                endereco: {
+                    bairro: _data.bairro,
+                    cep: _data.cep,
+                    cidade: _data.cidade,
+                    estado: _data.estado,
+                    rua: _data.endereco
+                }
+            }
+
+            await postEmpresaStore(model);
+            handleFetching(false);
+            toast("Cliente cadastrado!");
+            setTimeout(() => {
+                goBack();
+            }, 3000);
+
+        } catch (error) {
+            console.log(error);
+            handleFetching(false);
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data.message) {
+                    return toast.error(error.response?.data.message);
+                }
+                toast.error("Erro ao cadastrar novo cliente");
+            }
+            toast.error("Erro ao cadastrar novo cliente");
+        }
     }
+
     function goBack() {
         navigate("/dashboard/empresas");
     }
+
     return (
         <section className={styles.new_contract}>
             <PageTitle
@@ -135,8 +209,8 @@ export function NovaEmpresa() {
                         />
                         <CustomInputMask
                             control={control}
-                            fieldName='celular'
-                            title='Celular'
+                            fieldName='contato'
+                            title='contato'
                             containerClass={styles.w36}
                             mask='(99) 99999-9999'
                             errors={errors}
@@ -154,6 +228,7 @@ export function NovaEmpresa() {
                             control={control}
                             fieldName='numero'
                             title='Número'
+                            type='tel'
                             containerClass={styles.w18}
                             errors={errors}
                         />
@@ -192,7 +267,7 @@ export function NovaEmpresa() {
                         <CustomInputMask
                             control={control}
                             fieldName='cep'
-                            mask="999.999.999-99"
+                            mask="99999-999"
                             title='CEP'
                             errors={errors}
                         />

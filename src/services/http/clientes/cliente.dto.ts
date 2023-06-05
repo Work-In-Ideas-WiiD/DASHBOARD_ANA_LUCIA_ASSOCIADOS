@@ -1,4 +1,4 @@
-export interface IPostUserData {
+export interface IPostClienteModel {
     type: "cliente" | "empresa" | "administrador",
     email: string,
     cpf: string | null,
@@ -15,9 +15,9 @@ export interface IPostUserData {
     }
 }
 
-export interface IGetUserListRes {
+export interface IGetClientesRes {
     current_page: number,
-    data: IUserReqProps[],
+    data: IGetClientesDataRes[],
     from: number,
     last_page: number,
     per_page: number,
@@ -25,7 +25,7 @@ export interface IGetUserListRes {
     total: number,
 }
 
-export interface IUserReqProps {
+export interface IGetClientesDataRes {
     id: string,
     nome: string,
     email: string,

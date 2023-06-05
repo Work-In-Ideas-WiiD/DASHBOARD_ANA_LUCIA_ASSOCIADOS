@@ -9,9 +9,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { PageTitle } from '../../../../components/pageTitle';
 import { IPostUserData } from '../../../../services/http/user/user.dto';
-import { postUserStore } from '../../../../services/http/user';
+
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
+import { IPostClienteModel } from '../../../../services/http/clientes/cliente.dto';
+import { postClienteStore } from '../../../../services/http/clientes';
+import axios from 'axios';
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -86,11 +89,11 @@ export function NovoCliente() {
         }
         try {
             handleFetching(true);
-            const model: IPostUserData = {
+            const model: IPostClienteModel = {
                 type: 'cliente',
                 nome: _data.nome,
                 nome_empresa: _data.nome_empresa,
-                cpf: _data.nome_empresa,
+                cpf: _data.cpf,
                 email: _data.email,
                 contato: _data.contato,
                 cnpj: _data.cnpj,
@@ -103,7 +106,7 @@ export function NovoCliente() {
                 }
             }
 
-            await postUserStore(model);
+            await postClienteStore(model);
             handleFetching(false);
             toast("Cliente cadastrado!");
             setTimeout(() => {
@@ -111,8 +114,14 @@ export function NovoCliente() {
             }, 3000);
 
         } catch (error) {
-            handleFetching(false);
             console.log(error);
+            handleFetching(false);
+            if (axios.isAxiosError(error)) {
+                if (error.response?.data.message) {
+                    return toast.error(error.response?.data.message);
+                }
+                toast.error("Erro ao cadastrar novo cliente");
+            }
             toast.error("Erro ao cadastrar novo cliente");
         }
     }

@@ -20,6 +20,8 @@ function abortRequest() {
 api.interceptors.response.use(response => {
     return response
 }, (error: AxiosError) => {
+    console.log(error.status);
+
     if (error.status === 401) {
         toast.error("Sessão expirada");
         signOut();
@@ -29,3 +31,15 @@ api.interceptors.response.use(response => {
 })
 
 export { api, abortRequest, setAuthToken };
+
+// {
+//     "message": "The given data was invalid.",
+//         "errors": {
+//         "type": [
+//             "The selected type is invalid."
+//         ],
+//             "cpf": [
+//                 "CPF inválido"
+//             ]
+//     }
+// }

@@ -21,8 +21,8 @@ export function LoginPage() {
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: '',
-            password: '',
+            email: 'wcostaprijo@hotmail.com',
+            password: '123456789',
         }
     })
     // email: 'wcostaprijo@hotmail.com',
@@ -53,6 +53,7 @@ export function LoginPage() {
                 <img src={Logo} alt="logo" />
                 <div className={styles.input_container}>
                     <IconInput
+                        autoComplete="email"
                         fieldName='email'
                         control={control}
                         type='text'
@@ -60,6 +61,7 @@ export function LoginPage() {
                         placeholder='Usuario'
                     ></IconInput>
                     <IconInput
+                        autoComplete="current-password"
                         fieldName='password'
                         control={control}
                         type='password'

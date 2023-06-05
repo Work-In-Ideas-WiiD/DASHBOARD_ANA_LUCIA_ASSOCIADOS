@@ -1,31 +1,26 @@
 import styles from './styles.module.scss';
 import { CustomButton, EIconCustomButton } from "../../../../components/customButton";
 import { SearchBar } from '../../../../components/inputs/searchBar';
-import { useState } from 'react';
-import { TableSelectInput } from '../../../../components/inputs/tableSelectInput';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { getEmpresas } from '../../../../services/http/empresas';
+import { IGetEmpresasDataRes, IGetEmpresasRes } from '../../../../services/http/empresas/empresas.dto';
 
 const formSchema = zod.object({
     search: zod.string(),
-    type: zod.object({
-        value: zod.string(),
-        label: zod.string()
-    })
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-const selectOptions = [
-    { value: 'clientes', label: 'Clientes' },
-    { value: 'empresas', label: 'Empresas' },
-]
 
 export function EmpresasTable() {
 
     const [fetching, setFetching] = useState(false);
+    const [page, setPage] = useState(1);
+    const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
     const navigate = useNavigate();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -34,13 +29,49 @@ export function EmpresasTable() {
         }
     })
 
-    function searchData(data: TFormSchema) {
-        //setFetching(true);
-        console.log(data);
+    useEffect(() => {
+        getData(page);
+    }, [])
 
+    async function getData(pageParam: number, likeParam: string = "") {
+        try {
+            setFetching(true);
+            const { data } = await getEmpresas(pageParam, likeParam);
+            setCompanies(data.data);
+            setFetching(false);
+        } catch (error) {
+            setFetching(false);
+            console.log(error);
+        }
     }
+
+    async function searchData(_data: TFormSchema) {
+        await getData(page, _data.search);
+    }
+
     function goTo() {
         navigate("novo");
+    }
+
+
+    function _renderItem(itens: IGetEmpresasDataRes[]) {
+        return itens.map((item) => {
+
+            let documentId = item.cnpj ? item.cnpj : item.cpf;
+            if (!item.cnpj && !item.cpf) documentId = "n/a";
+            const company_name = item.nome_empresa ? item.nome_empresa : 'n/a';
+            const email = item.email ? item.email : 'n/a';
+            const phone = item.contato ? item.contato : 'n/a';
+            return (
+                <tr key={item.id}>
+                    <td>{item.nome} </td>
+                    <td>{company_name}</td>
+                    <td>{documentId}</td>
+                    <td>{email}</td>
+                    <td>{phone}</td>
+                </tr>
+            )
+        })
     }
 
     return (
@@ -52,11 +83,6 @@ export function EmpresasTable() {
                     fieldName='search'
                     placeholder='Pesquisar por ID, nome, e-mail e número de documento…'
                     fetching={fetching}
-                />
-                <TableSelectInput
-                    options={selectOptions}
-                    fieldName='type'
-                    control={control}
                 />
                 <CustomButton onClick={goTo} title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
             </form>
@@ -81,22 +107,9 @@ export function EmpresasTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Marisa Teixeira dos Santos Lima </td>
-                        <td>Clínica Médica Nobel S.A </td>
-                        <td>055298841-30</td>
-                        <td>marisa124123@gmail.com</td>
-                        <td>062 9852-5468</td>
-
-                    </tr>
-                    <tr>
-                        <td>Marisa Teixeira dos Santos Lima </td>
-                        <td>Clínica Médica Nobel S.A </td>
-                        <td>055298841-30</td>
-                        <td>marisa124123@gmail.com</td>
-                        <td>062 9852-5468</td>
-
-                    </tr>
+                    {
+                        _renderItem(companies)
+                    }
                 </tbody>
             </table>
         </section>
