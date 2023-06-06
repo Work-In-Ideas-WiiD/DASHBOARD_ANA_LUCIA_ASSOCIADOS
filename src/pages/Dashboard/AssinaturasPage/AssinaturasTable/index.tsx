@@ -3,17 +3,72 @@ import { StatusBadge } from '../../../../components/statusBadge/statusBadge';
 import { TableCustomButton } from '../../../../components/tableCustomButton';
 import { FaTrash } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { SearchBar } from '../../../../components/inputs/searchBar';
+import * as zod from "zod";
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useState } from 'react';
+import { getAssinaturas } from '../../../../services/http/assinaturas';
+
+
+const formSchema = zod.object({
+    search: zod.string(),
+    type: zod.object({
+        value: zod.string(),
+        label: zod.string()
+    })
+});
+
+type TFormSchema = zod.infer<typeof formSchema>;
+
 
 export function AssinaturasTable() {
 
+    const [fetching, setFetching] = useState(false);
     const navigate = useNavigate();
+    const [page, setPage] = useState(1);
+    const [signatures, setSignatures] = useState([]);
+    const { handleSubmit, control } = useForm<TFormSchema>({
+        resolver: zodResolver(formSchema),
+        defaultValues: {
+            search: '',
+        }
+    });
+
+    useEffect(() => {
+        getData(page);
+    }, []);
+
+    async function getData(pageParam: number, likeParam: string = "") {
+        try {
+            setFetching(true);
+            const { data } = await getAssinaturas(pageParam, likeParam);
+            setSignatures(data.data);
+            setFetching(false);
+        } catch (error) {
+            setFetching(false);
+            console.log(error);
+        }
+    }
 
     function handleNavigate() {
         navigate("/assinatura/cadastro");
     }
 
+    async function searchData(_data: TFormSchema) {
+        await getData(page, _data.search);
+    }
+
     return (
         <section className={styles.table}>
+            <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
+                <SearchBar
+                    control={control}
+                    fieldName='search'
+                    placeholder='Pesquisar por ID, nome, e-mail e número de documento…'
+                    fetching={fetching}
+                />
+            </form>
             <table className='table_style'>
                 <thead >
                     <tr>
