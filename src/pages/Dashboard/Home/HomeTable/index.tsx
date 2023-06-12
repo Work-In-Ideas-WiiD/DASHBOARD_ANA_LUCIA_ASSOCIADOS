@@ -12,7 +12,7 @@ export function HomeTable() {
     const [contracts, setContracts] = useState<IGetHomeContratosRes[]>([]);
     const navigate = useNavigate();
     useEffect(() => {
-        // getData();
+        getData();
     }, [])
 
     async function getData() {

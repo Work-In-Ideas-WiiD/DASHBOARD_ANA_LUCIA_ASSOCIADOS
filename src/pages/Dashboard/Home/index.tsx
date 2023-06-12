@@ -16,7 +16,7 @@ export function HomePage() {
     });
 
     useEffect(() => {
-        //getData();
+        getData();
     }, [])
 
     async function getData() {

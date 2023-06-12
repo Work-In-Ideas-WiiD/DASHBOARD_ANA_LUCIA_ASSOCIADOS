@@ -11,6 +11,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getContratos } from '../../../../services/http/contratos';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
+import { useAuth } from '../../../../hooks/useAuth';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -27,7 +28,7 @@ const selectOptions = [
     { value: 'empresas', label: 'Empresas' },
 ]
 export function ContratosTable() {
-
+    const { isAdmin } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [contracts, setContracts] = useState<IGetContratosDataRes[]>([]);
@@ -38,7 +39,6 @@ export function ContratosTable() {
             search: '',
         }
     })
-
 
     useEffect(() => {
         getData(page);
@@ -67,14 +67,14 @@ export function ContratosTable() {
     function _renderItem(data: IGetContratosDataRes[]) {
         return data.map((item) => {
 
-            const assinado = setIsSigned(item);
-
+            const signed = setIsSigned(item);
+            const btn_text = isAdmin ? "Enviar para empresa" : "Enviar para cliente"
             return (
                 <tr>
                     <td>{item.empresa.nome} </td>
                     <td>{item.empresa.cnpj}</td>
-                    <td><StatusBadge status={assinado} /></td>
-                    <td><TableCustomButton title='Enviar para empresa' /></td>
+                    <td><StatusBadge status={signed} /></td>
+                    <td><TableCustomButton title={btn_text} /></td>
                 </tr>
             )
         })
@@ -88,6 +88,20 @@ export function ContratosTable() {
         }
 
         return "Assinado";
+    }
+
+    function renderAdminOptions(value: boolean) {
+
+        if (value) {
+            return (
+                <>
+                    <CustomButton onClick={navigateTo} title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
+                </>
+            )
+        }
+        return (
+            <></>
+        )
     }
 
     return (
@@ -106,7 +120,7 @@ export function ContratosTable() {
                     fieldName='type'
                     control={control}
                 />
-                <CustomButton onClick={navigateTo} title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
+                {renderAdminOptions(isAdmin)}
             </form>
             <table className='table_style'>
                 <thead >

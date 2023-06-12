@@ -5,7 +5,6 @@ import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import { setAuthToken } from '../services/http/api';
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Navigate } from 'react-router-dom';
 import router from "../services/Router";
 
 interface IAuthContextDataProps {
@@ -19,6 +18,7 @@ interface IAuthContextData {
     signOut: () => void,
     me: IUserProps,
     fetching: boolean,
+    isAdmin: boolean
 }
 
 export function signOut() {
@@ -46,6 +46,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
         updated_at: "",
         endereco: "",
     })
+    const [isAdmin, setIsAdmin] = useState(false);
     const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
@@ -56,6 +57,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             postMe().then((response) => {
                 const { data: user_data } = response;
                 setUserData(user_data);
+                setIsAdmin(user_data.type == 'administrador');
                 navigate("/dashboard/home");
             }).catch(() => {
                 destroyCookie(undefined, 'ana_lucia.token');
@@ -79,6 +81,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             const { data: login_data } = await postLogin(email, password);
             setAuthToken(login_data.access_token);
             const { data: user } = await postMe();
+            setIsAdmin(user.type == 'administrador');
             setUserData(user);
             setCookie(undefined, "ana_lucia.token", login_data.access_token, {
                 maxAge: 60 * 60,
@@ -122,7 +125,8 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
         signIn,
         signOut,
         me,
-        fetching
+        fetching,
+        isAdmin
     }}>
         {children}
     </AuthContext.Provider>
