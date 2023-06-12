@@ -6,6 +6,7 @@ import { setAuthToken } from '../services/http/api';
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Navigate } from 'react-router-dom';
+import router from "../services/Router";
 
 interface IAuthContextDataProps {
     children: ReactNode
@@ -23,7 +24,7 @@ interface IAuthContextData {
 export function signOut() {
     destroyCookie(undefined, 'ana_lucia.token');
     setAuthToken(" ");
-    Navigate({ to: "/" })
+    router.navigate("/");
 }
 
 export function AuthContextData({ children }: IAuthContextDataProps) {
@@ -55,11 +56,12 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             postMe().then((response) => {
                 const { data: user_data } = response;
                 setUserData(user_data);
+                navigate("/dashboard/home");
             }).catch(() => {
                 destroyCookie(undefined, 'ana_lucia.token');
                 navigate("/");
             });
-            navigate("/dashboard/home");
+
         }
     }, [])
 

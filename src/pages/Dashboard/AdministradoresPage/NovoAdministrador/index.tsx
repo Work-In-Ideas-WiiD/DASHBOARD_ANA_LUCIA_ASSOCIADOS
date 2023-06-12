@@ -5,14 +5,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { InputText } from '../../../../components/inputs/inputText';
 import { CustomInputMask } from '../../../../components/inputs/customInputMask';
 import { CustomButton } from '../../../../components/customButton';
-import { CustomSelectInput } from '../../../../components/inputs/customSelectInput';
 import { PageTitle } from '../../../../components/pageTitle';
 import { useNavigate } from 'react-router-dom';
-
-const selectOptions = [
-    { value: 'master', label: 'Administrador Master' },
-    { value: 'empresa', label: 'Administrador - Empresa' },
-];
+import { postAdministrador } from '../../../../services/http/administradores';
+import { IPostAdministradorModel } from '../../../../services/http/administradores/administradores.dto';
+import { useAuth } from '../../../../hooks/useAuth';
+import { toast } from 'react-toastify';
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -21,39 +19,60 @@ const formSchema = zod.object({
     cpf: zod.string({
         required_error: "Campo obrigatório",
     }),
+    contato: zod.string({
+        required_error: "Campo obrigatório",
+    }),
     email: zod.string({
         required_error: "Campo obrigatório",
     }).email({
         message: "E-mail inválido"
-    }),
-    tipo: zod.object({
-        value: zod.string(),
-        label: zod.string()
-    }, {
-        required_error: "Campo obrigatório",
     })
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoAdministrador() {
+    const { handleFetching, fetching } = useAuth();
     const navigate = useNavigate();
     const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             nome: undefined,
             cpf: undefined,
+            contato: undefined,
             email: undefined,
-            tipo: undefined,
         }
     })
 
-    function handleCreate(data: TFormSchema) {
-        console.log(data);
+    async function handleCreate(data: TFormSchema) {
+        if (fetching) {
+            return
+        }
+        try {
+            handleFetching(true);
+            const model: IPostAdministradorModel = {
+                nome: data.nome,
+                cpf: data.cpf,
+                contato: data.contato,
+                email: data.email,
+                type: "administrador"
+            }
+            const res = await postAdministrador(model);
+            handleFetching(false);
+            toast.success("Administrador cadastrado");
+            setTimeout(() => {
+                goBack();
+            }, 3000);
+        } catch (err) {
+            toast.error("Erro ao cadastrar administrador")
+            handleFetching(false);
+            console.log(err);
+        }
+
     }
 
     function goBack() {
-        navigate("/dashboard/empresas");
+        navigate("/dashboard/admins");
     }
 
     return (
@@ -80,20 +99,20 @@ export function NovoAdministrador() {
                         errors={errors}
                     />
                     <CustomInputMask
+                        control={control}
+                        fieldName='contato'
+                        title='Contato'
+                        type='text'
+                        mask='(99)9 9999-9999'
+                        errors={errors}
+                    />
+                    <CustomInputMask
                         fieldName='cpf'
                         control={control}
                         title='CPF'
                         containerClass={styles.w25}
                         mask='999.999.999-99'
                         errors={errors}
-                    />
-                    <CustomSelectInput
-                        title='Tipo'
-                        placeholder=""
-                        errors={errors}
-                        fieldName='tipo'
-                        options={selectOptions}
-                        control={control}
                     />
                     <div className={styles.btn_container}>
                         <CustomButton
