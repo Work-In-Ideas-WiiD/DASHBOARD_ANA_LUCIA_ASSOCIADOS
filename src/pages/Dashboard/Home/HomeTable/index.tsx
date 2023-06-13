@@ -6,11 +6,14 @@ import styles from './styles.module.scss';
 import { toast } from 'react-toastify';
 import { IGetHomeContratosRes } from '../../../../services/http/home/home.dto';
 import { useNavigate } from 'react-router-dom';
+import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 
 export function HomeTable() {
 
     const [contracts, setContracts] = useState<IGetHomeContratosRes[]>([]);
     const navigate = useNavigate();
+    const [noContent, setNoContent] = useState(false);
+
     useEffect(() => {
         getData();
     }, [])
@@ -19,6 +22,7 @@ export function HomeTable() {
         try {
             const { data } = await getHomeContratos();
             setContracts(data);
+            setNoContent(data.length == 0);
         } catch (error) {
             console.log(error);
             toast.error("Ocorreu um erro ao obter dados.");
@@ -73,6 +77,7 @@ export function HomeTable() {
                     {_renderItem(contracts)}
                 </tbody>
             </table>
+            <TableEmptyMessage show={noContent} />
         </section>
 
     )

@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getContratos } from '../../../../services/http/contratos';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
+import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -31,6 +32,7 @@ export function ContratosTable() {
     const { isAdmin } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [noContent, setNoContent] = useState(false);
     const [contracts, setContracts] = useState<IGetContratosDataRes[]>([]);
     const navigate = useNavigate();
     const { handleSubmit, control } = useForm<TFormSchema>({
@@ -49,6 +51,7 @@ export function ContratosTable() {
             setFetching(true);
             const { data } = await getContratos(pageParam, likeParam);
             setContracts(data.data);
+            setNoContent(data.data.length == 0);
             setFetching(false);
         } catch (error) {
             setFetching(false);
@@ -143,6 +146,7 @@ export function ContratosTable() {
                     {_renderItem(contracts)}
                 </tbody>
             </table>
+            <TableEmptyMessage show={noContent} />
         </section>
     )
 }

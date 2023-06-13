@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { getAssinaturas } from '../../../../services/http/assinaturas';
+import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 
 
 const formSchema = zod.object({
@@ -28,6 +29,7 @@ export function AssinaturasTable() {
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
     const [signatures, setSignatures] = useState([]);
+    const [noContent, setNoContent] = useState(false);
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -44,6 +46,7 @@ export function AssinaturasTable() {
             setFetching(true);
             const { data } = await getAssinaturas(pageParam, likeParam);
             setSignatures(data.data);
+            setNoContent(data.data.length == 0);
             setFetching(false);
         } catch (error) {
             setFetching(false);
@@ -111,6 +114,7 @@ export function AssinaturasTable() {
                     </tr>
                 </tbody>
             </table>
+            <TableEmptyMessage show={noContent} />
         </section>
     )
 }

@@ -1,0 +1,17 @@
+ @import "../../styles/Global.scss";
+
+ .container {
+     width: 100%;
+     min-width: 600px;
+     @include background-opacity($color-orange-100, 0.1);
+     text-align: center;
+
+     h2 {
+         padding-top: 15px;
+         padding-bottom: 15px;
+         font-style: normal;
+         font-weight: 400;
+         font-size: 1rem;
+         color: var(--color-blue-700);
+     }
+ }

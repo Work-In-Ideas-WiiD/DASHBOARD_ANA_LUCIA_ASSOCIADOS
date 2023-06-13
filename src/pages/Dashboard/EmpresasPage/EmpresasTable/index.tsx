@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getEmpresas } from '../../../../services/http/empresas';
 import { IGetEmpresasDataRes, IGetEmpresasRes } from '../../../../services/http/empresas/empresas.dto';
+import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -22,6 +23,7 @@ export function EmpresasTable() {
     const [page, setPage] = useState(1);
     const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
     const navigate = useNavigate();
+    const [noContent, setNoContent] = useState(false);
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -38,6 +40,7 @@ export function EmpresasTable() {
             setFetching(true);
             const { data } = await getEmpresas(pageParam, likeParam);
             setCompanies(data.data);
+            setNoContent(data.data.length == 0);
             setFetching(false);
         } catch (error) {
             setFetching(false);
@@ -112,6 +115,7 @@ export function EmpresasTable() {
                     }
                 </tbody>
             </table>
+            <TableEmptyMessage show={noContent} />
         </section>
     )
 }

@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IUserReqProps } from '../../../../services/http/user/user.dto';
 import { getClientes } from '../../../../services/http/clientes';
 import { IGetClientesDataRes } from '../../../../services/http/clientes/cliente.dto';
+import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -22,6 +23,7 @@ export function ClienteTable() {
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const navigate = useNavigate();
+    const [noContent, setNoContent] = useState(false);
     const [customers, setCustomers] = useState<IGetClientesDataRes[]>([]);
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -38,6 +40,7 @@ export function ClienteTable() {
             setFetching(true);
             const { data } = await getClientes(pageParam, likeParam);
             setCustomers(data.data);
+            setNoContent(data.data.length == 0);
             setFetching(false);
         } catch (error) {
             setFetching(false);
@@ -111,6 +114,7 @@ export function ClienteTable() {
                     }
                 </tbody>
             </table>
+            <TableEmptyMessage show={noContent} />
         </section>
     )
 }

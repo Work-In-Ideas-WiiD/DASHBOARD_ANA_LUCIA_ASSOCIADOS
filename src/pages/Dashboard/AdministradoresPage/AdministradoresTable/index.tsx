@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getAdministradores } from '../../../../services/http/administradores';
 import { IGetAdministradoresDataRes } from '../../../../services/http/administradores/administradores.dto';
+import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -22,6 +23,7 @@ export function AdministradoresTable() {
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [admins, setAdmins] = useState<IGetAdministradoresDataRes[]>([]);
+    const [noContent, setNoContent] = useState(false);
     const navigate = useNavigate();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -39,6 +41,8 @@ export function AdministradoresTable() {
             setFetching(true);
             const { data } = await getAdministradores(pageParam, likeParam);
             setAdmins(data.data);
+            console.log(data.data.length == 0);
+            setNoContent(!!data.data);
             setFetching(false);
         } catch (error) {
             setFetching(false);
@@ -104,7 +108,9 @@ export function AdministradoresTable() {
                 <tbody>
                     {_renderItem(admins)}
                 </tbody>
+
             </table>
+            <TableEmptyMessage show={noContent} />
         </section>
     )
 }
