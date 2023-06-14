@@ -38,11 +38,56 @@
                 }
             }
 
+            .input_search {
+                position: relative;
+                width: 100%;
+                margin-bottom: 25px;
+
+                .company_list {
+
+                    background-color: var(--color-white-100);
+                    width: 100%;
+                    position: absolute;
+                    bottom: 0;
+                    overflow: auto;
+                    max-height: 100px;
+                    transform: translateY(100%);
+
+                    .item {
+                        height: 33px;
+                        display: flex;
+                        align-items: center;
+                        padding-left: 21px;
+                        width: 100%;
+
+                        span {
+                            font-weight: 400;
+                            font-size: 0.938rem;
+                            color: var(--color-blue-700);
+                        }
+                    }
+                }
+            }
+
             .input_file_wrapper {
                 display: flex;
                 justify-content: center;
+                flex-direction: column;
+                align-items: center;
+                gap: 12px;
                 margin-top: 39px;
                 margin-bottom: 93px;
+
+                .error_msg {
+
+                    color: var(--color-red-500);
+                    font-size: .875rem;
+
+                    @media (max-width: 900px) {
+                        bottom: -13px;
+                        right: 0;
+                    }
+                }
 
                 input {
                     opacity: 0;

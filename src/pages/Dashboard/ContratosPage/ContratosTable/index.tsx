@@ -71,11 +71,13 @@ export function ContratosTable() {
         return data.map((item) => {
 
             const signed = setIsSigned(item);
-            const btn_text = isAdmin ? "Enviar para empresa" : "Enviar para cliente"
+            const btn_text = isAdmin ? "Re-enviar para empresa" : "Enviar para cliente"
+            const nome_empresa = item.empresa ? item.empresa.nome : 'n/a';
+            const cnpj_empresa = item.empresa ? item.empresa.cnpj : 'n/a';
             return (
                 <tr>
-                    <td>{item.empresa.nome} </td>
-                    <td>{item.empresa.cnpj}</td>
+                    <td>{nome_empresa} </td>
+                    <td>{cnpj_empresa}</td>
                     <td><StatusBadge status={signed} /></td>
                     <td><TableCustomButton title={btn_text} /></td>
                 </tr>
@@ -84,8 +86,11 @@ export function ContratosTable() {
     }
 
     function setIsSigned(data: IGetContratosDataRes) {
-        for (let cliente of data.clientes) {
-            if (cliente.has_signed == false) {
+        if (!data.empresa || data.assinantes.length == 0) {
+            return "Pendente";
+        }
+        for (let assiantes of data.assinantes) {
+            if (assiantes.has_signed == false) {
                 return "Pendente";
             }
         }

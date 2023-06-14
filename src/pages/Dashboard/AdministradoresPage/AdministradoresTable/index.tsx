@@ -41,8 +41,7 @@ export function AdministradoresTable() {
             setFetching(true);
             const { data } = await getAdministradores(pageParam, likeParam);
             setAdmins(data.data);
-            console.log(data.data.length == 0);
-            setNoContent(!!data.data);
+            setNoContent(data.data.length == 0);
             setFetching(false);
         } catch (error) {
             setFetching(false);

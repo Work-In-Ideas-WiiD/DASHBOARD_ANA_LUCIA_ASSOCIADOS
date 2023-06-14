@@ -26,8 +26,8 @@ export interface IGetContratosDataRes {
         nome_empresa: null | string,
         created_at: string,
         updated_at: string,
-    },
-    clientes: {
+    } | null,
+    assinantes: {
         has_signed: boolean,
         cliente: {
             id: string,
@@ -42,4 +42,11 @@ export interface IGetContratosDataRes {
         }
     }[]
 
+}
+
+export interface IPostContratoRes {
+    path: string,
+    descricao: string,
+    id: string,
+    url: string,
 }

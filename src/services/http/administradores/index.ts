@@ -26,3 +26,12 @@ export async function postAdministrador(model: IPostAdministradorModel): Promise
 
     return res;
 }
+
+export async function postAddEmpresaToContratoOrArquivo(empresa_id: string, arquivo_contrato_id: string) {
+    const res = await api.post('/add/empresa/contrato/arquivo', {
+        empresa_id,
+        arquivo_contrato_id
+    })
+
+    return res;
+}

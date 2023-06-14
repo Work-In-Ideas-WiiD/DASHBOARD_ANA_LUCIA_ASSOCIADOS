@@ -29,6 +29,7 @@
     "react-toastify": "^9.1.3",
     "react-verification-input": "^3.3.0",
     "sass": "^1.62.1",
+    "use-debounce": "^9.0.4",
     "zod": "^3.21.4"
   },
   "devDependencies": {

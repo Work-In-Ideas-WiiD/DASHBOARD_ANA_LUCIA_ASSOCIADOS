@@ -153,7 +153,7 @@ export function NovaEmpresa() {
     }
 
     function goBack() {
-        navigate("/dashboard/admins");
+        navigate("/dashboard/empresas");
     }
 
     return (
