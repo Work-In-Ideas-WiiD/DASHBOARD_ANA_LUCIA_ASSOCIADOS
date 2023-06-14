@@ -22,3 +22,11 @@ export async function postContrato(formData: FormData): Promise<AxiosResponse<IP
 
     return res;
 }
+
+export async function postAddUserContract(contractId: string, usersId: string[]): Promise<AxiosResponse<IPostContratoRes, AxiosError>> {
+    const res = await api.post(`/contrato/${contractId}/add/users`, {
+        clientes: usersId
+    });
+
+    return res;
+}

@@ -9,10 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getContratos } from '../../../../services/http/contratos';
+import { getContratos, postAddUserContract } from '../../../../services/http/contratos';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
+import { toast } from 'react-toastify';
+import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -71,7 +73,7 @@ export function ContratosTable() {
         return data.map((item) => {
 
             const signed = setIsSigned(item);
-            const btn_text = isAdmin ? "Re-enviar para empresa" : "Enviar para cliente"
+            const btn_text = isAdmin ? "re-enviar para empresa" : "enviar para cliente"
             const nome_empresa = item.empresa ? item.empresa.nome : 'n/a';
             const cnpj_empresa = item.empresa ? item.empresa.cnpj : 'n/a';
             return (
@@ -83,6 +85,39 @@ export function ContratosTable() {
                 </tr>
             )
         })
+    }
+
+    async function checkBtnAction(data: IGetContratosDataRes) {
+        if (isAdmin) {
+            await reSendContractToCompany(data)
+        } else {
+
+        }
+    }
+
+    async function reSendContractToCustomer(data: IGetContratosDataRes) {
+        //criar portal da modal
+        //criar modal com lista 
+
+        if (!data.empresa) {
+            return toast.error("Falha ao re-enviar contrato");
+        }
+        try {
+            //  await postAddUserContract(data.empresa.id, data.id);
+        } catch (error) {
+            toast.error("Falha ao re-enviar contrato");
+        }
+    }
+
+    async function reSendContractToCompany(data: IGetContratosDataRes) {
+        if (!data.empresa) {
+            return toast.error("Falha ao re-enviar contrato");
+        }
+        try {
+            await postAddEmpresaToContratoOrArquivo(data.empresa.id, data.id);
+        } catch (error) {
+            toast.error("Falha ao re-enviar contrato");
+        }
     }
 
     function setIsSigned(data: IGetContratosDataRes) {
