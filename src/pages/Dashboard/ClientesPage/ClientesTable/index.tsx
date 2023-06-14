@@ -19,10 +19,9 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ClienteTable() {
-
+    const navigate = useNavigate();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
-    const navigate = useNavigate();
     const [noContent, setNoContent] = useState(false);
     const [customers, setCustomers] = useState<IGetClientesDataRes[]>([]);
     const { handleSubmit, control } = useForm<TFormSchema>({

@@ -4,7 +4,7 @@ import styles from './styles.module.scss';
 import { MobileHeader } from '../../components/mobileHeader';
 import { useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import { Modal } from '../../components/modal';
+
 
 export function DashboardPage() {
     const { me } = useAuth();
@@ -18,7 +18,7 @@ export function DashboardPage() {
 
     return (
         <main className={styles.main}>
-            <Modal />
+
             <div className={styles.aside_container}>
                 <Sidebar />
             </div>

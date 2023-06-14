@@ -1,0 +1,30 @@
+@import "../../../../../styles/Global.scss";
+
+.table {
+    width: 100%;
+    overflow: auto;
+
+
+    .table_header {
+        min-width: 600px;
+        padding-left: 38px;
+        padding-top: 38px;
+        padding-right: 38px;
+        padding-bottom: 42px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 100%;
+        @include background-opacity($color-orange-100, 0.1);
+        margin-bottom: 1px;
+        gap: 30px;
+        justify-content: center;
+
+        .table_title {
+            font-style: normal;
+            font-weight: 400;
+            font-size: 1.25rem;
+            color: var(--color-blue-700);
+        }
+    }
+}

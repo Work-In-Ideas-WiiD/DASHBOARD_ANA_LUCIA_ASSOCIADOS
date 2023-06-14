@@ -15,6 +15,8 @@ import { useAuth } from '../../../../hooks/useAuth';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { toast } from 'react-toastify';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
+import { Modal } from '../../../../components/modal';
+import { ModalAddCustomer } from '../components/modalAddCustomer';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -34,6 +36,7 @@ export function ContratosTable() {
     const { isAdmin } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noContent, setNoContent] = useState(false);
     const [contracts, setContracts] = useState<IGetContratosDataRes[]>([]);
     const navigate = useNavigate();
@@ -47,6 +50,10 @@ export function ContratosTable() {
     useEffect(() => {
         getData(page);
     }, [])
+
+    function handleModal(option: boolean) {
+        setModalIsOpen(option);
+    }
 
     async function getData(pageParam: number, likeParam: string = "") {
         try {
@@ -150,6 +157,7 @@ export function ContratosTable() {
     return (
 
         <section className={styles.table}>
+            <ModalAddCustomer handleModal={handleModal} />
             <h2 className={`${styles.title} dashboard_title`}>CONTRATOS</h2>
             <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
                 <SearchBar
