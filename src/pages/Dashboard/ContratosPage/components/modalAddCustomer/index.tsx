@@ -14,6 +14,7 @@ import { TableEmptyMessage } from "../../../../../components/tableEmptyMessage";
 interface IProps {
     handleModal(option: boolean): void,
     showModal: boolean,
+    handleSubmitForm(customerId: string): Promise<void>
 }
 const formSchema = zod.object({
     search: zod.string(),
@@ -22,7 +23,7 @@ const formSchema = zod.object({
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-export function ModalAddCustomer({ handleModal, showModal }: IProps) {
+export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: IProps) {
 
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
@@ -90,8 +91,11 @@ export function ModalAddCustomer({ handleModal, showModal }: IProps) {
     }
 
     function handleSendData(_data: TFormSchema) {
-        console.log("test");
-
+        if (_data.customerId == "") {
+            return
+        }
+        handleSubmitForm(_data.customerId);
+        handleModal(false);
     }
 
     if (!showModal) {

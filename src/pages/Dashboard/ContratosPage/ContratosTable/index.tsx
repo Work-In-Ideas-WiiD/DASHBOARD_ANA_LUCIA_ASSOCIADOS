@@ -9,13 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getContratos } from '../../../../services/http/contratos';
+import { getContratos, postAddUserContract } from '../../../../services/http/contratos';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { toast } from 'react-toastify';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
-import { Modal } from '../../../../components/modal';
 import { ModalAddCustomer } from '../components/modalAddCustomer';
 
 const formSchema = zod.object({
@@ -40,6 +39,7 @@ export function ContratosTable() {
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noContent, setNoContent] = useState(false);
     const [contracts, setContracts] = useState<IGetContratosDataRes[]>([]);
+    const [currentContract, setCurrentContract] = useState<IGetContratosDataRes>()
     const navigate = useNavigate();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -78,11 +78,21 @@ export function ContratosTable() {
         navigate('novo');
     }
 
+    function checkTableBtnText(data: IGetContratosDataRes) {
+        if (isAdmin) {
+            return "re-enviar para empresa";
+        }
+        if (data.assinantes.length > 0) {
+            return "re-enviar para cliente";
+        }
+        return "enviar para cliente";
+    }
+
     function _renderItem(data: IGetContratosDataRes[]) {
         return data.map((item) => {
 
             const signed = setIsSigned(item);
-            const btn_text = isAdmin ? "re-enviar para empresa" : "enviar para cliente"
+            const btn_text = checkTableBtnText(item);
             const nome_empresa = item.empresa ? item.empresa.nome : 'n/a';
             const cnpj_empresa = item.empresa ? item.empresa.cnpj : 'n/a';
             return (
@@ -97,36 +107,58 @@ export function ContratosTable() {
     }
 
     async function checkBtnAction(data: IGetContratosDataRes) {
-        handleModal(true);
+
         if (isAdmin) {
-            // await reSendContractToCompany(data);
+            await reSendContractToCompany(data);
         } else {
-            handleModal(true);
+            if (data.assinantes.length == 0) {
+                setCurrentContract(data);
+                handleModal(true);
+            } else {
+                await reSendContractToCustomer(data.empresa!.id, data.assinantes[0].cliente.id);
+            }
+
         }
     }
 
-    async function reSendContractToCustomer(data: IGetContratosDataRes) {
-        //criar portal da modal
-        //criar modal com lista 
-
-        if (!data.empresa) {
-            return toast.error("Falha ao re-enviar contrato");
+    async function handleSubmitContractToCustomer(customerId: string) {
+        const contract = currentContract!;
+        if (!contract.empresa) {
+            toast.error("Falha ao re-enviar contrato");
+            return
         }
+
+        await reSendContractToCustomer(contract.empresa.id, customerId);
+    }
+
+    async function reSendContractToCustomer(companyId: string, customerId: string) {
+
         try {
-            //  await postAddUserContract(data.empresa.id, data.id);
+            setFetching(true);
+            await postAddUserContract(companyId, [customerId]);
+            toast.success("Contrato enviado para o cliente");
+            setFetching(false);
+            await getData(page);
         } catch (error) {
+            setFetching(false);
             toast.error("Falha ao re-enviar contrato");
         }
     }
 
     async function reSendContractToCompany(data: IGetContratosDataRes) {
+        if (fetching) {
+            return
+        }
         if (!data.empresa) {
             return toast.error("Falha ao re-enviar contrato");
         }
         try {
+            setFetching(true);
             await postAddEmpresaToContratoOrArquivo(data.empresa.id, data.id);
+            setFetching(false);
         } catch (error) {
             toast.error("Falha ao re-enviar contrato");
+            setFetching(false);
         }
     }
 
@@ -160,7 +192,7 @@ export function ContratosTable() {
     return (
 
         <section className={styles.table}>
-            <ModalAddCustomer showModal={modalIsOpen} handleModal={handleModal} />
+            <ModalAddCustomer handleSubmitForm={handleSubmitContractToCustomer} showModal={modalIsOpen} handleModal={handleModal} />
             <h2 className={`${styles.title} dashboard_title`}>CONTRATOS</h2>
             <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
                 <SearchBar
