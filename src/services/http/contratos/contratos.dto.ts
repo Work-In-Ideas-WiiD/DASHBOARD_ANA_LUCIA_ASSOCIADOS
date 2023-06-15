@@ -28,17 +28,13 @@ export interface IGetContratosDataRes {
         updated_at: string,
     } | null,
     assinantes: {
+        tipo: "empresa" | "cliente",
         has_signed: boolean,
-        cliente: {
-            id: string,
+        dados: {
             nome: string,
             email: string,
-            cpf: string,
+            documento: string,
             contato: string,
-            cnpj: null | string,
-            nome_empresa: null | string,
-            created_at: string,
-            updated_at: string,
         }
     }[]
 

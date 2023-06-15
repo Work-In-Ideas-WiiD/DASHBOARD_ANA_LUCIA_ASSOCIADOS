@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getContratos, postAddUserContract } from '../../../../services/http/contratos';
+import { getContratos, postAddUserContract, postSendToClicksign } from '../../../../services/http/contratos';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
@@ -27,6 +27,17 @@ const formSchema = zod.object({
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
+
+interface IFindCustomerRes {
+    tipo: "cliente" | "empresa",
+    has_signed: boolean,
+    dados: {
+        nome: string,
+        email: string,
+        documento: string,
+        contato: string,
+    }
+}
 
 const selectOptions = [
     { value: 'clientes', label: 'Clientes' },
@@ -82,7 +93,7 @@ export function ContratosTable() {
         if (isAdmin) {
             return "re-enviar para empresa";
         }
-        if (data.assinantes.length > 0) {
+        if (data.assinantes.length > 1) {
             return "re-enviar para cliente";
         }
         return "enviar para cliente";
@@ -106,18 +117,30 @@ export function ContratosTable() {
         })
     }
 
-    async function checkBtnAction(data: IGetContratosDataRes) {
+    async function checkBtnAction(contract: IGetContratosDataRes) {
 
         if (isAdmin) {
-            await reSendContractToCompany(data);
+            await addCompanyToContract(contract);
         } else {
-            if (data.assinantes.length == 0) {
-                setCurrentContract(data);
+            if (contract.assinantes.length <= 1) {
+                setCurrentContract(contract);
                 handleModal(true);
             } else {
-                await reSendContractToCustomer(data.empresa!.id, data.assinantes[0].cliente.id);
+                await sendContractToSign(contract.id);
             }
 
+        }
+    }
+
+    async function sendContractToSign(contractId: string) {
+        try {
+            setFetching(true);
+            await postSendToClicksign(contractId);
+            toast.success("Enviado para assinatura");
+            setFetching(false);
+        } catch (error) {
+            setFetching(false);
+            toast.error("Erro ao enviar para assinatura");
         }
     }
 
@@ -128,24 +151,25 @@ export function ContratosTable() {
             return
         }
 
-        await reSendContractToCustomer(contract.empresa.id, customerId);
+        await addCustomerToContract(contract.id, customerId);
+        await sendContractToSign(contract.id);
+        await getData(page);
     }
 
-    async function reSendContractToCustomer(companyId: string, customerId: string) {
-
+    async function addCustomerToContract(contractId: string, customerId: string) {
         try {
             setFetching(true);
-            await postAddUserContract(companyId, [customerId]);
+            await postAddUserContract(contractId, [customerId]);
             toast.success("Contrato enviado para o cliente");
             setFetching(false);
-            await getData(page);
+
         } catch (error) {
             setFetching(false);
             toast.error("Falha ao re-enviar contrato");
         }
     }
 
-    async function reSendContractToCompany(data: IGetContratosDataRes) {
+    async function addCompanyToContract(data: IGetContratosDataRes) {
         if (fetching) {
             return
         }
@@ -163,7 +187,7 @@ export function ContratosTable() {
     }
 
     function setIsSigned(data: IGetContratosDataRes) {
-        if (!data.empresa || data.assinantes.length == 0) {
+        if (!data.empresa || data.assinantes.length <= 1) {
             return "Pendente";
         }
         for (let assiantes of data.assinantes) {

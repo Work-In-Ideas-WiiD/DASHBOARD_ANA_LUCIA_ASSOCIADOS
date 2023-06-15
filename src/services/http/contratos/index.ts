@@ -30,3 +30,9 @@ export async function postAddUserContract(contractId: string, usersId: string[])
 
     return res;
 }
+
+export async function postSendToClicksign(contractId: string): Promise<AxiosResponse<IPostContratoRes, AxiosError>> {
+    const res = await api.post(`/contrato/${contractId}/send`);
+
+    return res;
+}

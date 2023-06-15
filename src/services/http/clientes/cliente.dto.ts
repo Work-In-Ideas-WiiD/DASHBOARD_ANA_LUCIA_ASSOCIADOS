@@ -1,7 +1,7 @@
 export interface IPostClienteModel {
     type: "cliente" | "empresa" | "administrador",
     email: string,
-    cpf: string | null,
+    cpf?: string | null,
     nome: string,
     contato: string,
     cnpj?: null | string,

@@ -8,7 +8,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
 import { PageTitle } from '../../../../components/pageTitle';
-import { IPostUserData } from '../../../../services/http/user/user.dto';
 
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
@@ -20,15 +19,9 @@ const formSchema = zod.object({
     nome: zod.string({
         required_error: "Campo obrigatório",
     }),
-    cpf: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    nome_empresa: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    cnpj: zod.string({
-        required_error: "Campo obrigatório",
-    }),
+    cpf: zod.string({}).optional(),
+    nome_empresa: zod.string({}).optional(),
+    cnpj: zod.string({}).optional(),
     email: zod.string({
         required_error: "Campo obrigatório",
     }).email({
@@ -58,7 +51,41 @@ const formSchema = zod.object({
     cep: zod.string({
         required_error: "Campo obrigatório",
     }),
-});
+}).superRefine((val, ctx) => {
+
+    if (!val.cnpj && val.nome_empresa) {
+        ctx.addIssue({
+            message: "Informe o CNPJ da empresa",
+            path: ["cnpj"],
+            code: 'custom'
+        });
+        return zod.NEVER;
+    }
+
+    if (val.cnpj && !val.nome_empresa) {
+        ctx.addIssue({
+            message: "Informe o nome da empresa",
+            path: ["nome_empresa"],
+            code: 'custom'
+        });
+        return zod.NEVER;
+    }
+
+    if (!val.cpf && !val.cnpj) {
+        ctx.addIssue({
+            message: "Informe CPF ou CNPJ",
+            path: ["cpf"],
+            code: 'custom'
+        });
+        ctx.addIssue({
+            message: "Informe CPF ou CNPJ",
+            path: ["cnpj"],
+            code: 'custom'
+        });
+    }
+})
+
+
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoCliente() {
