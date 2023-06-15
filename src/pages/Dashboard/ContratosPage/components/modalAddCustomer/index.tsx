@@ -8,12 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { IUserReqProps } from "../../../../../services/http/user/user.dto";
 import { SearchBar } from "../../../../../components/inputs/searchBar";
-import { CustomButton } from "../../../../../components/customButton";
+import { CustomButton, EIconCustomButton } from "../../../../../components/customButton";
 import { TableEmptyMessage } from "../../../../../components/tableEmptyMessage";
-import { CustomCheckbox } from "../../../../../components/inputs/customCheckbox";
+
 interface IProps {
     handleModal(option: boolean): void,
-
+    showModal: boolean,
 }
 const formSchema = zod.object({
     search: zod.string(),
@@ -22,7 +22,7 @@ const formSchema = zod.object({
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-export function ModalAddCustomer({ handleModal }: IProps) {
+export function ModalAddCustomer({ handleModal, showModal }: IProps) {
 
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
@@ -32,7 +32,7 @@ export function ModalAddCustomer({ handleModal }: IProps) {
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
-            customerId: undefined
+            customerId: ''
         }
     });
 
@@ -67,9 +67,19 @@ export function ModalAddCustomer({ handleModal }: IProps) {
 
             return (
                 <tr key={item.id}>
-                    <td>
-                        <input type="checkbox" />
-                    </td>
+                    <Controller
+                        name="customerId"
+                        control={control}
+                        render={({ field }) => {
+                            return (
+                                <input
+                                    checked={field.value == item.id}
+                                    type="checkbox"
+                                    onClick={() => { setValue("customerId", item.id) }}
+                                />
+                            )
+                        }}
+                    />
                     <td>{item.nome} </td>
                     <td>{documentId}</td>
                     <td>{email}</td>
@@ -79,8 +89,13 @@ export function ModalAddCustomer({ handleModal }: IProps) {
         })
     }
 
-    function checkValue(id: string) {
-        setValue("customerId", id);
+    function handleSendData(_data: TFormSchema) {
+        console.log("test");
+
+    }
+
+    if (!showModal) {
+        return <></>
     }
 
     return (
@@ -93,7 +108,7 @@ export function ModalAddCustomer({ handleModal }: IProps) {
                         placeholder='Pesquisar por ID, nome, e-mail e número de documento…'
                         fetching={fetching}
                     />
-
+                    <CustomButton onClick={handleSubmit(handleSendData)} title='Adicionar' icon={EIconCustomButton.IoPersonSharp} type='button' />
                 </form>
                 <table className='table_style'>
                     <thead>
@@ -119,33 +134,6 @@ export function ModalAddCustomer({ handleModal }: IProps) {
                         {
                             _renderItem(customers)
                         }
-                        <tr >
-                            <td>
-                                <input type="checkbox" />
-                            </td>
-                            <td>nome</td>
-                            <td>222222</td>
-                            <td>email@email.com</td>
-                            <td>419922992-29299</td>
-                        </tr>
-                        <tr >
-                            <td>
-                                <input type="checkbox" />
-                            </td>
-                            <td>nome</td>
-                            <td>222222</td>
-                            <td>email@email.com</td>
-                            <td>419922992-29299</td>
-                        </tr>
-                        <tr >
-                            <td>
-                                <input type="checkbox" />
-                            </td>
-                            <td>nome</td>
-                            <td>222222</td>
-                            <td>email@email.com</td>
-                            <td>419922992-29299</td>
-                        </tr>
                     </tbody>
                 </table>
                 <TableEmptyMessage show={noContent} />

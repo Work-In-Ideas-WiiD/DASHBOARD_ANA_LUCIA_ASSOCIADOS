@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getContratos, postAddUserContract } from '../../../../services/http/contratos';
+import { getContratos } from '../../../../services/http/contratos';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
@@ -23,7 +23,8 @@ const formSchema = zod.object({
     type: zod.object({
         value: zod.string(),
         label: zod.string()
-    })
+    }),
+    contractId: zod.string()
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
@@ -44,6 +45,7 @@ export function ContratosTable() {
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
+            contractId: ''
         }
     })
 
@@ -88,17 +90,18 @@ export function ContratosTable() {
                     <td>{nome_empresa} </td>
                     <td>{cnpj_empresa}</td>
                     <td><StatusBadge status={signed} /></td>
-                    <td><TableCustomButton title={btn_text} /></td>
+                    <td><TableCustomButton title={btn_text} onClick={() => { checkBtnAction(item) }} /></td>
                 </tr>
             )
         })
     }
 
     async function checkBtnAction(data: IGetContratosDataRes) {
+        handleModal(true);
         if (isAdmin) {
-            await reSendContractToCompany(data)
+            // await reSendContractToCompany(data);
         } else {
-
+            handleModal(true);
         }
     }
 
@@ -157,7 +160,7 @@ export function ContratosTable() {
     return (
 
         <section className={styles.table}>
-            <ModalAddCustomer handleModal={handleModal} />
+            <ModalAddCustomer showModal={modalIsOpen} handleModal={handleModal} />
             <h2 className={`${styles.title} dashboard_title`}>CONTRATOS</h2>
             <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
                 <SearchBar

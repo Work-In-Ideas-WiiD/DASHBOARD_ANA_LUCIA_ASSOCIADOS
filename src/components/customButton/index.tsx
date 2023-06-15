@@ -2,9 +2,10 @@ import { RotatingLines } from 'react-loader-spinner';
 import styles from './styles.module.scss';
 import { MdCreateNewFolder } from 'react-icons/md';
 import { useAuth } from '../../hooks/useAuth';
-
+import { IoPersonSharp } from 'react-icons/io5';
 export enum EIconCustomButton {
-    MdCreateNewFolder = 0
+    MdCreateNewFolder = 0,
+    IoPersonSharp,
 }
 
 interface ICustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -14,7 +15,8 @@ interface ICustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const Icons = {
-    0: <MdCreateNewFolder size={24} color="#fff" />
+    0: <MdCreateNewFolder size={24} color="#fff" />,
+    1: <IoPersonSharp fill="#fff" size={23} />,
 }
 
 export function CustomButton({ title, icon, variation = "1", ...rest }: ICustomButtonProps) {
