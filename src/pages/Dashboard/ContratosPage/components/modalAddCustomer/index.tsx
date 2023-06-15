@@ -5,7 +5,7 @@ import { getClientes } from "../../../../../services/http/clientes";
 import { IGetClientesDataRes } from "../../../../../services/http/clientes/cliente.dto";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { IUserReqProps } from "../../../../../services/http/user/user.dto";
 import { SearchBar } from "../../../../../components/inputs/searchBar";
 import { CustomButton } from "../../../../../components/customButton";
@@ -17,6 +17,7 @@ interface IProps {
 }
 const formSchema = zod.object({
     search: zod.string(),
+    customerId: zod.string()
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
@@ -27,10 +28,11 @@ export function ModalAddCustomer({ handleModal }: IProps) {
     const [page, setPage] = useState(1);
     const [noContent, setNoContent] = useState(false);
     const [customers, setCustomers] = useState<IGetClientesDataRes[]>([]);
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, control, setValue } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
+            customerId: undefined
         }
     });
 
@@ -77,6 +79,9 @@ export function ModalAddCustomer({ handleModal }: IProps) {
         })
     }
 
+    function checkValue(id: string) {
+        setValue("customerId", id);
+    }
 
     return (
         <Modal title="Adicionar cliente" handleModal={handleModal} >
@@ -114,6 +119,24 @@ export function ModalAddCustomer({ handleModal }: IProps) {
                         {
                             _renderItem(customers)
                         }
+                        <tr >
+                            <td>
+                                <input type="checkbox" />
+                            </td>
+                            <td>nome</td>
+                            <td>222222</td>
+                            <td>email@email.com</td>
+                            <td>419922992-29299</td>
+                        </tr>
+                        <tr >
+                            <td>
+                                <input type="checkbox" />
+                            </td>
+                            <td>nome</td>
+                            <td>222222</td>
+                            <td>email@email.com</td>
+                            <td>419922992-29299</td>
+                        </tr>
                         <tr >
                             <td>
                                 <input type="checkbox" />
