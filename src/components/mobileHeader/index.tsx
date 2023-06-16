@@ -5,7 +5,7 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { MdOutlineClose } from "react-icons/md";
 import { ImHome } from 'react-icons/im';
 import { FaBuilding, FaPenAlt } from 'react-icons/fa';
-import { IoDocument } from 'react-icons/io5';
+import { IoDocument, IoFileTrayStackedSharp } from 'react-icons/io5';
 import { IoPersonSharp } from 'react-icons/io5';
 import { BsPersonVcardFill } from 'react-icons/bs';
 import { AsideItem } from './asideItem';
@@ -49,6 +49,13 @@ const itens: IItens[] = [
         Icon: <IoDocument fill="White" size={20} />,
         ActiveIcon: <IoDocument fill="#1E3F49" size={20} />,
         path: "/contratos",
+        adm: false
+    },
+    {
+        title: "Arquivos",
+        Icon: <IoFileTrayStackedSharp fill="White" size={20} />,
+        ActiveIcon: <IoFileTrayStackedSharp fill="#1E3F49" size={20} />,
+        path: "/arquivos",
         adm: false
     },
     {

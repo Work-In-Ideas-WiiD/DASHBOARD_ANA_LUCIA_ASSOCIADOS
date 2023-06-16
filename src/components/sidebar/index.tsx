@@ -4,10 +4,9 @@ import Logo from "../../assets/imgs/logo_ana.png";
 import { ImHome } from 'react-icons/im';
 import { FaBuilding, FaPenAlt } from 'react-icons/fa';
 import { IoDocument } from 'react-icons/io5';
-import { IoPersonSharp } from 'react-icons/io5';
+import { IoPersonSharp, IoFileTrayStackedSharp } from 'react-icons/io5';
 import { BsPersonVcardFill } from 'react-icons/bs';
 import { SlLogout } from 'react-icons/sl';
-
 import { SidebarItem } from './sidebarItem';
 import { useLocation } from 'react-router-dom';
 import { ReactNode } from 'react';
@@ -49,6 +48,13 @@ const itens: IItens[] = [
         Icon: <IoDocument fill="White" size={25} />,
         ActiveIcon: <IoDocument fill="#1E3F49" size={25} />,
         path: "/contratos",
+        adm: false
+    },
+    {
+        title: "Arquivos",
+        Icon: <IoFileTrayStackedSharp fill="White" size={25} />,
+        ActiveIcon: <IoFileTrayStackedSharp fill="#1E3F49" size={25} />,
+        path: "/arquivos",
         adm: false
     },
     {

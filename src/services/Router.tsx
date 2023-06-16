@@ -19,6 +19,9 @@ import { ClientesPage } from "../pages/Dashboard/ClientesPage";
 import { ClienteTable } from "../pages/Dashboard/ClientesPage/ClientesTable";
 import { NovoCliente } from "../pages/Dashboard/ClientesPage/NovoCliente";
 import { ContextRoute } from "../pages/ContextRoute";
+import { ArquivosPage } from "../pages/Dashboard/ArquivosPage";
+import { ArquivosTable } from "../pages/Dashboard/ArquivosPage/ArquivosTable";
+import { NovoArquivo } from "../pages/Dashboard/ArquivosPage/NovoArquivo";
 
 const router = createBrowserRouter([
     {
@@ -90,6 +93,20 @@ const router = createBrowserRouter([
                             {
                                 path: "novo",
                                 element: <NovoContrato />
+                            },
+                        ]
+                    },
+                    {
+                        path: "arquivos",
+                        element: <ArquivosPage />,
+                        children: [
+                            {
+                                path: "",
+                                element: <ArquivosTable />
+                            },
+                            {
+                                path: "novo",
+                                element: <NovoArquivo />
                             },
                         ]
                     },
