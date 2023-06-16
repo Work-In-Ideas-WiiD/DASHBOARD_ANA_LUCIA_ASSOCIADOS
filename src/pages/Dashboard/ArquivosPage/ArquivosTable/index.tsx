@@ -108,7 +108,7 @@ export function ArquivosTable() {
                 <tr>
                     <td>{item.descricao} </td>
                     <td>{cnpj_empresa}</td>
-                    <td><StatusBadge status={signed} /></td>
+                    {/* <td><StatusBadge status={signed} /></td> */}
                     <td><TableCustomButton title={btn_text} onClick={() => { checkBtnAction(item) }} /></td>
                     <td>
                         <button
@@ -125,6 +125,9 @@ export function ArquivosTable() {
     }
 
     async function checkBtnAction(contract: IGetContratosDataRes) {
+        //botao apenas para adm
+        //abrir modal e selecionar empresa
+        //enviar para empresa
 
         if (isAdmin) {
             await addCompanyToContract(contract);
@@ -225,13 +228,10 @@ export function ArquivosTable() {
                 <thead >
                     <tr>
                         <th>
-                            Contrato
+                            Arquivo
                         </th>
                         <th>
                             Empresa
-                        </th>
-                        <th>
-                            Status
                         </th>
                         <th colSpan={2}>
                             Ações
