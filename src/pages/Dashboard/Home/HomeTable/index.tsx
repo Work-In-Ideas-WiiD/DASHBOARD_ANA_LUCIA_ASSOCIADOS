@@ -64,7 +64,7 @@ export function HomeTable() {
             const statusSignatureCompany = checkSignature(item, "empresa");
             const signatureDate = new Date(item.updated_at).toLocaleDateString();
             return (
-                <tr>
+                <tr key={item.id}>
                     <td>{item.descricao}</td>
                     <td>{checkName(item, "empresa")}</td>
                     <td>{checkName(item, "cliente")}</td>

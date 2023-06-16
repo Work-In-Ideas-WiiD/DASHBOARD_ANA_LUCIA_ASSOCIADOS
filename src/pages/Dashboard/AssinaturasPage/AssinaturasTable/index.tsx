@@ -1,7 +1,7 @@
 import styles from './styles.module.scss';
 import { StatusBadge } from '../../../../components/statusBadge/statusBadge';
 import { TableCustomButton } from '../../../../components/tableCustomButton';
-import { FaTrash } from 'react-icons/fa';
+import { MdDownload } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { SearchBar } from '../../../../components/inputs/searchBar';
 import * as zod from "zod";
@@ -10,6 +10,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { getAssinaturas } from '../../../../services/http/assinaturas';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
+import { IGetAssinaturasData } from '../../../../services/http/assinaturas/assinaturas.dto';
+import { toast } from 'react-toastify';
+import { postSendToClicksign } from '../../../../services/http/contratos';
+import { openFile } from '../../../../utils/openFIle';
 
 
 const formSchema = zod.object({
@@ -28,7 +32,7 @@ export function AssinaturasTable() {
     const [fetching, setFetching] = useState(false);
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
-    const [signatures, setSignatures] = useState([]);
+    const [signatures, setSignatures] = useState<IGetAssinaturasData[]>([]);
     const [noContent, setNoContent] = useState(false);
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -61,6 +65,80 @@ export function AssinaturasTable() {
     async function searchData(_data: TFormSchema) {
         await getData(page, _data.search);
     }
+    function checkSignature(data: IGetAssinaturasData, param: "cliente" | "empresa") {
+        if (data.assinantes.length == 0) {
+            return "Pendente";
+        }
+
+        const index = data.assinantes.findIndex((item) => item.tipo == param && item.has_signed);
+
+        if (index == -1) {
+            return "Pendente";
+        }
+
+        return "Assinado"
+    }
+
+    function checkName(data: IGetAssinaturasData, param: "cliente" | "empresa") {
+        if (data.assinantes.length == 0) {
+            return "n/a";
+        }
+
+        const index = data.assinantes.findIndex((item) => item.tipo == param);
+
+        if (index == -1) {
+            return "n/a";
+        }
+
+        return data.assinantes[index].dados.nome;
+    }
+
+    async function sendContractToSign(contractId: string) {
+        try {
+            setFetching(true);
+            await postSendToClicksign(contractId);
+            toast.success("Enviado para assinatura");
+            setFetching(false);
+        } catch (error) {
+            setFetching(false);
+            toast.error("Erro ao enviar para assinatura");
+        }
+    }
+
+    function renderItem(data: IGetAssinaturasData[]) {
+        return data.map((item) => {
+
+            const signatureDate = new Date(item.updated_at).toLocaleDateString();
+            const statusSignatureCustomer = checkSignature(item, "cliente");
+            const statusSignatureCompany = checkSignature(item, "empresa");
+            const renderButton = statusSignatureCompany == "Assinado" && statusSignatureCompany == "Assinado" ?
+                <TableCustomButton title='Reenviar e-mails' onClick={() => { sendContractToSign(item.id) }} />
+                : <></>;
+
+            return (
+                <tr>
+                    <td>{item.descricao}</td>
+                    <td>{checkName(item, "empresa")}</td>
+                    <td>{checkName(item, "cliente")}</td>
+                    <td><StatusBadge status={statusSignatureCompany} /></td>
+                    <td><StatusBadge status={statusSignatureCustomer} /></td>
+                    <td>{signatureDate}</td>
+                    <td>
+                        {renderButton}
+                    </td>
+                    <td>
+                        <button
+                            type='button'
+                            className={styles.download_button}
+                            onClick={() => { openFile(item.url) }}
+                        >
+                            <MdDownload color="#C7633B" size={19} />
+                        </button>
+                    </td>
+                </tr>
+            )
+        })
+    }
 
     return (
         <section className={styles.table}>
@@ -75,6 +153,9 @@ export function AssinaturasTable() {
             <table className='table_style'>
                 <thead >
                     <tr>
+                        <th>
+                            Nome do contrato
+                        </th>
                         <th>
                             Nome da empresa
                         </th>
@@ -96,22 +177,7 @@ export function AssinaturasTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td onClick={handleNavigate} className='pointer'>Clínica Médica Nobel S.A  </td>
-                        <td>Allan Ferreira Neto </td>
-                        <td><StatusBadge status='Assinado' /></td>
-                        <td><StatusBadge status='Assinado' /></td>
-                        <td>27/01/2023</td>
-                        <td><TableCustomButton title='Reenviar e-mails' /></td>
-                        <td>
-                            <button
-                                type='button'
-                                className={styles.delete_button}
-                            >
-                                <FaTrash color="#D64646" size={19} />
-                            </button>
-                        </td>
-                    </tr>
+                    {renderItem(signatures)}
                 </tbody>
             </table>
             <TableEmptyMessage show={noContent} />

@@ -1,5 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { api } from "../api";
+import { IGetAssinaturasRes } from "./assinaturas.dto";
 
 export async function getAssinatura(id: string): Promise<AxiosResponse<any, AxiosError>> {
 
@@ -8,7 +9,7 @@ export async function getAssinatura(id: string): Promise<AxiosResponse<any, Axio
     return res;
 }
 
-export async function getAssinaturas(page: number = 1, like: string = ""): Promise<AxiosResponse<any, AxiosError>> {
+export async function getAssinaturas(page: number = 1, like: string = ""): Promise<AxiosResponse<IGetAssinaturasRes, AxiosError>> {
 
     const res = await api.get(`/assinatura`, {
         params: {

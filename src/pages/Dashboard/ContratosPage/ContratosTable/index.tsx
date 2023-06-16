@@ -1,48 +1,32 @@
 import styles from './styles.module.scss';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { CustomButton, EIconCustomButton } from "../../../../components/customButton";
 import { SearchBar } from '../../../../components/inputs/searchBar';
-import { useEffect, useState } from 'react';
 import { TableSelectInput } from '../../../../components/inputs/tableSelectInput';
 import { StatusBadge } from '../../../../components/statusBadge/statusBadge';
 import { TableCustomButton } from '../../../../components/tableCustomButton';
-import { useNavigate } from 'react-router-dom';
+import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
+import { ModalAddCustomer } from '../components/modalAddCustomer';
 import * as zod from "zod";
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
 import { getContratos, postAddUserContract, postSendToClicksign } from '../../../../services/http/contratos';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
-import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { toast } from 'react-toastify';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
-import { ModalAddCustomer } from '../components/modalAddCustomer';
+import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
+import { MdDownload } from "react-icons/md";
+import { openFile } from '../../../../utils/openFIle';
 
 const formSchema = zod.object({
     search: zod.string(),
-    type: zod.object({
-        value: zod.string(),
-        label: zod.string()
-    }),
     contractId: zod.string()
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-interface IFindCustomerRes {
-    tipo: "cliente" | "empresa",
-    has_signed: boolean,
-    dados: {
-        nome: string,
-        email: string,
-        documento: string,
-        contato: string,
-    }
-}
-
-const selectOptions = [
-    { value: 'clientes', label: 'Clientes' },
-    { value: 'empresas', label: 'Empresas' },
-]
 export function ContratosTable() {
     const { isAdmin } = useAuth();
     const [fetching, setFetching] = useState(false);
@@ -89,29 +73,51 @@ export function ContratosTable() {
         navigate('novo');
     }
 
-    function checkTableBtnText(data: IGetContratosDataRes) {
-        if (isAdmin) {
-            return "re-enviar para empresa";
-        }
-        if (data.assinantes.length > 1) {
-            return "re-enviar para cliente";
-        }
-        return "enviar para cliente";
-    }
-
     function _renderItem(data: IGetContratosDataRes[]) {
+
+        function checkTableBtnText(data: IGetContratosDataRes) {
+            if (isAdmin) {
+                return "re-enviar para empresa";
+            }
+            if (data.assinantes.length > 1) {
+                return "re-enviar para cliente";
+            }
+            return "enviar para cliente";
+        }
+
+        function setIsSigned(data: IGetContratosDataRes) {
+            if (!data.empresa || data.assinantes.length <= 1) {
+                return "Pendente";
+            }
+            for (let assiantes of data.assinantes) {
+                if (assiantes.has_signed == false) {
+                    return "Pendente";
+                }
+            }
+
+            return "Assinado";
+        }
+
         return data.map((item) => {
 
             const signed = setIsSigned(item);
             const btn_text = checkTableBtnText(item);
-            const nome_empresa = item.empresa ? item.empresa.nome : 'n/a';
-            const cnpj_empresa = item.empresa ? item.empresa.cnpj : 'n/a';
+            const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
             return (
                 <tr>
-                    <td>{nome_empresa} </td>
+                    <td>{item.descricao} </td>
                     <td>{cnpj_empresa}</td>
                     <td><StatusBadge status={signed} /></td>
                     <td><TableCustomButton title={btn_text} onClick={() => { checkBtnAction(item) }} /></td>
+                    <td>
+                        <button
+                            type='button'
+                            className={styles.download_button}
+                            onClick={() => { openFile(item.url) }}
+                        >
+                            <MdDownload color="#C7633B" size={19} />
+                        </button>
+                    </td>
                 </tr>
             )
         })
@@ -186,18 +192,7 @@ export function ContratosTable() {
         }
     }
 
-    function setIsSigned(data: IGetContratosDataRes) {
-        if (!data.empresa || data.assinantes.length <= 1) {
-            return "Pendente";
-        }
-        for (let assiantes of data.assinantes) {
-            if (assiantes.has_signed == false) {
-                return "Pendente";
-            }
-        }
 
-        return "Assinado";
-    }
 
     function renderAdminOptions(value: boolean) {
 
@@ -213,6 +208,7 @@ export function ContratosTable() {
         )
     }
 
+
     return (
 
         <section className={styles.table}>
@@ -224,11 +220,6 @@ export function ContratosTable() {
                     fieldName='search'
                     placeholder='Pesquisar por ID, nome, e-mail e número de documento…'
                     fetching={fetching}
-                />
-                <TableSelectInput
-                    options={selectOptions}
-                    fieldName='type'
-                    control={control}
                 />
                 {renderAdminOptions(isAdmin)}
             </form>
@@ -244,7 +235,7 @@ export function ContratosTable() {
                         <th>
                             Status
                         </th>
-                        <th>
+                        <th colSpan={2}>
                             Ações
                         </th>
                     </tr>
