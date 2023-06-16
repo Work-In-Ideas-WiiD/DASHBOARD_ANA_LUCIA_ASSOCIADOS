@@ -10,50 +10,68 @@ import { SlLogout } from 'react-icons/sl';
 
 import { SidebarItem } from './sidebarItem';
 import { useLocation } from 'react-router-dom';
+import { ReactNode } from 'react';
+import { useAuth } from '../../hooks/useAuth';
 
-const itens = [
+interface IItens {
+    title: string,
+    Icon: ReactNode,
+    ActiveIcon: ReactNode,
+    path: string,
+    classname?: string,
+    adm: boolean
+}
+
+const itens: IItens[] = [
     {
         title: "Home",
         Icon: <ImHome fill="White" size={25} />,
         ActiveIcon: <ImHome fill="#1E3F49" size={25} />,
-        path: "/home"
+        path: "/home",
+        adm: false
     },
     {
         title: "Administradores",
         Icon: <BsPersonVcardFill fill="White" size={25} />,
         ActiveIcon: <BsPersonVcardFill fill="#1E3F49" size={25} />,
-        path: "/admins"
+        path: "/admins",
+        adm: true
     },
     {
         title: "Empresas",
         Icon: <FaBuilding fill="White" size={25} />,
         ActiveIcon: <FaBuilding fill="#1E3F49" size={25} />,
-        path: "/empresas"
+        path: "/empresas",
+        adm: true
     },
     {
         title: "Contratos",
         Icon: <IoDocument fill="White" size={25} />,
         ActiveIcon: <IoDocument fill="#1E3F49" size={25} />,
-        path: "/contratos"
+        path: "/contratos",
+        adm: false
     },
     {
         title: "Assinaturas",
         Icon: <FaPenAlt fill="White" size={25} />,
         ActiveIcon: <FaPenAlt fill="#1E3F49" size={25} />,
-        path: "/assinaturas"
+        path: "/assinaturas",
+        adm: false
     },
     {
         title: "Clientes",
         Icon: <IoPersonSharp fill="White" size={25} />,
         ActiveIcon: <IoPersonSharp fill="#1E3F49" size={25} />,
-        path: "/clientes"
+        path: "/clientes",
+        adm: false
     },
     {
         title: "Sair",
         Icon: <SlLogout fill="White" size={25} />,
         ActiveIcon: <SlLogout fill="#1E3F49" size={25} />,
         path: "/logout",
-        classname: "last_item"
+        classname: "last_item",
+        adm: false
     },
 
 ]
@@ -61,23 +79,37 @@ const itens = [
 export function Sidebar() {
 
     const { pathname } = useLocation();
+    const { isAdmin } = useAuth();
+
+    function _renderItem(_data: IItens[]) {
+        return _data.map((item) => {
+
+            if (item.adm && !isAdmin) {
+                return (
+                    <></>
+                )
+            }
+
+            return (
+                <SidebarItem
+                    key={item.title}
+                    ActiveIcon={item.ActiveIcon}
+                    Icon={item.Icon}
+                    path={item.path}
+                    title={item.title}
+                    active={pathname.includes(item.path)}
+                    classname={item.classname}
+                />
+            )
+        })
+    }
 
     return (
         <aside className={styles.sidebar}>
             <img className={styles.logo} src={Logo} alt="logo" />
             <nav>
                 {
-                    itens.map((item) => (
-                        <SidebarItem
-                            key={item.title}
-                            ActiveIcon={item.ActiveIcon}
-                            Icon={item.Icon}
-                            path={item.path}
-                            title={item.title}
-                            active={pathname.includes(item.path)}
-                            classname={item.classname}
-                        />
-                    ))
+                    _renderItem(itens)
                 }
             </nav>
         </aside>

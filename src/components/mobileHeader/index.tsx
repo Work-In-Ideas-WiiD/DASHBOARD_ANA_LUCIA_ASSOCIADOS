@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import Logo from '../../assets/imgs/logo_ana.png';
 import styles from './styles.module.scss';
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -11,50 +11,67 @@ import { BsPersonVcardFill } from 'react-icons/bs';
 import { AsideItem } from './asideItem';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
+import { useAuth } from '../../hooks/useAuth';
 
-const itens = [
+interface IItens {
+    title: string,
+    Icon: ReactNode,
+    ActiveIcon: ReactNode,
+    path: string,
+    classname?: string,
+    adm: boolean
+}
+
+const itens: IItens[] = [
     {
         title: "Home",
         Icon: <ImHome fill="White" size={20} />,
         ActiveIcon: <ImHome fill="#1E3F49" size={20} />,
-        path: "/home"
+        path: "/home",
+        adm: false
     },
     {
         title: "Administradores",
         Icon: <BsPersonVcardFill fill="White" size={20} />,
         ActiveIcon: <BsPersonVcardFill fill="#1E3F49" size={20} />,
-        path: "/admins"
+        path: "/admins",
+        adm: true
     },
     {
         title: "Empresas",
         Icon: <FaBuilding fill="White" size={20} />,
         ActiveIcon: <FaBuilding fill="#1E3F49" size={20} />,
-        path: "/empresas"
+        path: "/empresas",
+        adm: true
     },
     {
         title: "Contratos",
         Icon: <IoDocument fill="White" size={20} />,
         ActiveIcon: <IoDocument fill="#1E3F49" size={20} />,
-        path: "/contratos"
+        path: "/contratos",
+        adm: false
     },
     {
         title: "Assinaturas",
         Icon: <FaPenAlt fill="White" size={20} />,
         ActiveIcon: <FaPenAlt fill="#1E3F49" size={20} />,
-        path: "/assinaturas"
+        path: "/assinaturas",
+        adm: false
     },
     {
         title: "Clientes",
         Icon: <IoPersonSharp fill="White" size={20} />,
         ActiveIcon: <IoPersonSharp fill="#1E3F49" size={20} />,
-        path: "/clientes"
+        path: "/clientes",
+        adm: false
     },
     {
         title: "Sair",
         Icon: <RiLogoutBoxRLine fill="White" size={20} />,
         ActiveIcon: <RiLogoutBoxRLine fill="#1E3F49" size={20} />,
         path: "/logout",
-        classname: "last_item"
+        classname: "last_item",
+        adm: false
     },
 
 ]
@@ -64,6 +81,7 @@ export function MobileHeader() {
     const { pathname } = useLocation();
     const [menuIsOpen, setMenuIsOpen] = useState<TMenuIsOpen>("menu_mobile_close");
     const navigate = useNavigate();
+    const { isAdmin } = useAuth();
 
     function handleClick(option: TMenuIsOpen) {
         setMenuIsOpen(option);
@@ -87,6 +105,31 @@ export function MobileHeader() {
         )
     }
 
+
+    function _renderItem(_data: IItens[]) {
+        return _data.map((item) => {
+
+            if (item.adm && !isAdmin) {
+                return (
+                    <></>
+                )
+            }
+
+            return (
+                <AsideItem
+                    key={item.title}
+                    ActiveIcon={item.ActiveIcon}
+                    Icon={item.Icon}
+                    path={item.path}
+                    title={item.title}
+                    active={pathname.includes(item.path)}
+                    classname={item.classname}
+                    handleRoute={handleRoute}
+                />
+            )
+        })
+    }
+
     return (
         <>
             <header className={styles.header}>
@@ -105,18 +148,7 @@ export function MobileHeader() {
                 </div>
                 <nav className={styles.item_list}>
                     {
-                        itens.map((item) => (
-                            <AsideItem
-                                key={item.title}
-                                ActiveIcon={item.ActiveIcon}
-                                Icon={item.Icon}
-                                path={item.path}
-                                title={item.title}
-                                active={pathname.includes(item.path)}
-                                classname={item.classname}
-                                handleRoute={handleRoute}
-                            />
-                        ))
+                        _renderItem(itens)
                     }
                 </nav>
             </aside>
