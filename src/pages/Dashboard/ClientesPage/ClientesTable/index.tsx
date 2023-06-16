@@ -11,6 +11,7 @@ import { IUserReqProps } from '../../../../services/http/user/user.dto';
 import { getClientes } from '../../../../services/http/clientes';
 import { IGetClientesDataRes } from '../../../../services/http/clientes/cliente.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
+import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -58,7 +59,7 @@ export function ClienteTable() {
     function _renderItem(itens: IUserReqProps[]) {
         return itens.map((item) => {
 
-            let documentId = item.cnpj ? item.cnpj : item.cpf;
+            let documentId = item.cpf ? formatCnpjCpf(item.cpf!) : formatCnpjCpf(item.cnpj!);
             if (!item.cnpj && !item.cpf) documentId = "n/a";
             const company_name = item.nome_empresa ? item.nome_empresa : 'n/a';
             const email = item.email ? item.email : 'n/a';

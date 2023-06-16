@@ -9,6 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getEmpresas } from '../../../../services/http/empresas';
 import { IGetEmpresasDataRes, IGetEmpresasRes } from '../../../../services/http/empresas/empresas.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
+import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -60,7 +61,7 @@ export function EmpresasTable() {
     function _renderItem(itens: IGetEmpresasDataRes[]) {
         return itens.map((item) => {
 
-            let documentId = item.cnpj ? item.cnpj : item.cpf;
+            let documentId = item.cnpj ? formatCnpjCpf(item.cnpj) : formatCnpjCpf(item.cpf!);
             if (!item.cnpj && !item.cpf) documentId = "n/a";
             const company_name = item.nome_empresa ? item.nome_empresa : 'n/a';
             const email = item.email ? item.email : 'n/a';

@@ -10,6 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getAdministradores } from '../../../../services/http/administradores';
 import { IGetAdministradoresDataRes } from '../../../../services/http/administradores/administradores.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
+import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -60,7 +61,7 @@ export function AdministradoresTable() {
     function _renderItem(_data: IGetAdministradoresDataRes[]) {
         return _data.map((item) => {
 
-            let documentId = item.cnpj ? item.cnpj : item.cpf;
+            let documentId = item.cnpj ? formatCnpjCpf(item.cnpj!) : formatCnpjCpf(item.cpf!);
             if (!item.cnpj && !item.cpf) documentId = "n/a";
             const email = item.email ? item.email : 'n/a';
 
