@@ -19,10 +19,11 @@ import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/adm
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
+import { getArquivos } from '../../../../services/http/arquivos';
 
 const formSchema = zod.object({
     search: zod.string(),
-    contractId: zod.string()
+    fileId: zod.string()
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
@@ -33,14 +34,14 @@ export function ArquivosTable() {
     const [page, setPage] = useState(1);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noContent, setNoContent] = useState(false);
-    const [contracts, setContracts] = useState<IGetContratosDataRes[]>([]);
-    const [currentContract, setCurrentContract] = useState<IGetContratosDataRes>()
+    const [files, setFiles] = useState<IGetContratosDataRes[]>([]);
+    const [currentFile, setCurrentFile] = useState<IGetContratosDataRes>()
     const navigate = useNavigate();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
-            contractId: ''
+            fileId: ''
         }
     })
 
@@ -55,8 +56,8 @@ export function ArquivosTable() {
     async function getData(pageParam: number, likeParam: string = "") {
         try {
             setFetching(true);
-            const { data } = await getContratos(pageParam, likeParam);
-            setContracts(data.data);
+            const { data } = await getArquivos(pageParam, likeParam);
+            setFiles(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
         } catch (error) {
@@ -129,7 +130,7 @@ export function ArquivosTable() {
             await addCompanyToContract(contract);
         } else {
             if (contract.assinantes.length <= 1) {
-                setCurrentContract(contract);
+                setCurrentFile(contract);
                 handleModal(true);
             } else {
                 await sendContractToSign(contract.id);
@@ -138,10 +139,10 @@ export function ArquivosTable() {
         }
     }
 
-    async function sendContractToSign(contractId: string) {
+    async function sendContractToSign(fileId: string) {
         try {
             setFetching(true);
-            await postSendToClicksign(contractId);
+            await postSendToClicksign(fileId);
             toast.success("Enviado para assinatura");
             setFetching(false);
         } catch (error) {
@@ -151,7 +152,7 @@ export function ArquivosTable() {
     }
 
     async function handleSubmitContractToCustomer(customerId: string) {
-        const contract = currentContract!;
+        const contract = currentFile!;
         if (!contract.empresa) {
             toast.error("Falha ao re-enviar contrato");
             return
@@ -162,10 +163,10 @@ export function ArquivosTable() {
         await getData(page);
     }
 
-    async function addCustomerToContract(contractId: string, customerId: string) {
+    async function addCustomerToContract(fileId: string, customerId: string) {
         try {
             setFetching(true);
-            await postAddUserContract(contractId, [customerId]);
+            await postAddUserContract(fileId, [customerId]);
             toast.success("Contrato enviado para o cliente");
             setFetching(false);
 
@@ -192,8 +193,6 @@ export function ArquivosTable() {
         }
     }
 
-
-
     function renderAdminOptions(value: boolean) {
 
         if (value) {
@@ -207,7 +206,6 @@ export function ArquivosTable() {
             <></>
         )
     }
-
 
     return (
 
@@ -241,7 +239,7 @@ export function ArquivosTable() {
                     </tr>
                 </thead>
                 <tbody>
-                    {_renderItem(contracts)}
+                    {_renderItem(files)}
                 </tbody>
             </table>
             <TableEmptyMessage show={noContent} />

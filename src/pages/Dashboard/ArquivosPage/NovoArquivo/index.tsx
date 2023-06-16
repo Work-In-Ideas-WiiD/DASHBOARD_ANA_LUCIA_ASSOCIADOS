@@ -1,5 +1,4 @@
 import { CustomButton } from '../../../../components/customButton';
-import { CustomCheckbox } from '../../../../components/inputs/customCheckbox';
 import { InputText } from '../../../../components/inputs/inputText';
 import styles from './styles.module.scss';
 import { FaFileUpload } from 'react-icons/fa';
@@ -15,26 +14,24 @@ import { IGetEmpresasDataRes } from '../../../../services/http/empresas/empresas
 import { ErrorMessage } from '@hookform/error-message';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../../../hooks/useAuth';
-import { postContrato } from '../../../../services/http/contratos';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
+import { postArquivo } from '../../../../services/http/arquivos';
 // validacao de arquivo
 
 const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = ["application/pdf"];
+const ACCEPTED_IMAGE_TYPES = ["application/pdf", "image/png", "image/jpeg", "audio/mp3", "video/mp4", "audio/wav"];
 
 const formSchema = zod.object({
     descricao: zod.string({
         required_error: "Campo obrigatório",
     }),
-    empresa: zod.string({
-        required_error: "Campo obrigatório",
-    }),
+    empresa: zod.string({}).optional(),
     file: zod.any()
         .refine((files) => files?.length == 1, "Arquivo obrigatório.")
         .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Tamanho maximo do arquivo é 50mb.`)
         .refine(
             (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-            "Apenas arquivos no formato pdf são válidos."
+            "Arquivo no formato inválido, arquivos válidos: .png, .jpeg, .mp3, .wav, .pdf, .mp4"
         ),
 })
 
@@ -56,38 +53,37 @@ export function NovoArquivo() {
     })
 
     useEffect(() => {
-        searchCompany()
+        searchCompany();
     }, [debouncedText])
 
     async function handleCreate(data: TFormSchema) {
         if (fetching) {
             return
         }
-        if (!companyId) {
-            return toast.error("Selecione uma empresa");
-        }
+
         try {
             handleFetching(true);
             const formData = new FormData();
             formData.append("descricao", data.descricao);
             formData.append("file", data.file[0]);
-            const { data: contractRes } = await postContrato(formData);//registra o contrato
-            await postAddEmpresaToContratoOrArquivo(companyId, contractRes.id);//marca empresa no contrato
-            toast.success("Contrato cadastrado!")
+            const { data: fileRes } = await postArquivo(formData);//registra o contrato
+            if (companyId) {
+                await postAddEmpresaToContratoOrArquivo(companyId, fileRes.id);//marca empresa no contrato
+            }
+            toast.success("Arquivo cadastrado!")
             handleFetching(false);
             setTimeout(() => {
                 goBack();
-            }, 3000);
-
+            }, 1000);
         } catch (err) {
             handleFetching(false);
-            toast.error("Erro ao cadastrar contrato");
+            toast.error("Erro ao cadastrar arquivo");
             console.log(err);
         }
     }
 
     function goBack() {
-        navigate("/dashboard/contratos");
+        navigate("/dashboard/arquivos");
     }
 
 
@@ -148,7 +144,7 @@ export function NovoArquivo() {
                         fieldName='descricao'
                         title='Nome'
                         type='text'
-                        placeholder='Nome do contrato'
+                        placeholder='Nome do arquivo'
                         containerClass='mb-25'
                         errors={errors}
                     />
@@ -159,7 +155,7 @@ export function NovoArquivo() {
                             fieldName='empresa'
                             title='Empresa'
                             type='tel'
-                            placeholder='Empresa'
+                            placeholder='Empresa (opcional)'
                             errors={errors}
                             onChange={setDebounce}
                         />
@@ -187,7 +183,7 @@ export function NovoArquivo() {
                             control={control}
                             render={({ field }) => {
                                 return (
-                                    <input type="file" id='upload-file' accept='application/pdf' onChange={(event) => {
+                                    <input type="file" id='upload-file' onChange={(event) => {
                                         field.onChange(event.target.files)
                                     }} />
                                 )
@@ -196,7 +192,7 @@ export function NovoArquivo() {
                         />
                     </div>
                     <CustomButton
-                        title='Adicionar contrato'
+                        title='Adicionar arquivo'
                         variation='2'
                     />
                 </form>
