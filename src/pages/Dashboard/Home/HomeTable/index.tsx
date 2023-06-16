@@ -29,15 +29,48 @@ export function HomeTable() {
         }
     }
 
+    function checkSignature(data: IGetHomeContratosRes, param: "cliente" | "empresa") {
+        if (data.assinantes.length == 0) {
+            return "Pendente";
+        }
+
+        const index = data.assinantes.findIndex((item) => item.tipo == param && item.has_signed);
+
+        if (index == -1) {
+            return "Pendente";
+        }
+
+        return "Assinado"
+    }
+
+    function checkName(data: IGetHomeContratosRes, param: "cliente" | "empresa") {
+        if (data.assinantes.length == 0) {
+            return "n/a";
+        }
+
+        const index = data.assinantes.findIndex((item) => item.tipo == param);
+
+        if (index == -1) {
+            return "n/a";
+        }
+
+        return data.assinantes[index].dados.nome;
+    }
+
     function _renderItem(data: IGetHomeContratosRes[]) {
         return data.map((item) => {
+
+            const statusSignatureCustomer = checkSignature(item, "cliente");
+            const statusSignatureCompany = checkSignature(item, "empresa");
+            const signatureDate = new Date(item.updated_at).toLocaleDateString();
             return (
                 <tr>
-                    <td>Clínica Médica Nobel S.A </td>
-                    <td>Allan Ferreira Neto</td>
-                    <td><StatusBadge status='Assinado' /></td>
-                    <td><StatusBadge status='Assinado' /></td>
-                    <td>27/01/2023</td>
+                    <td>{item.descricao}</td>
+                    <td>{checkName(item, "empresa")}</td>
+                    <td>{checkName(item, "cliente")}</td>
+                    <td><StatusBadge status={statusSignatureCompany} /></td>
+                    <td><StatusBadge status={statusSignatureCustomer} /></td>
+                    <td>{signatureDate}</td>
                 </tr>
             )
         })
@@ -57,10 +90,13 @@ export function HomeTable() {
                 <thead >
                     <tr>
                         <th>
+                            Nome do contrato
+                        </th>
+                        <th>
                             Nome da empresa
                         </th>
                         <th>
-                            Nome do cliente final
+                            Nome do cliente
                         </th>
                         <th>
                             Status - Empresa

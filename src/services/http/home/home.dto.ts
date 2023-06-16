@@ -12,8 +12,17 @@ export interface IGetHomeContratosRes {
     descricao: string,
     path: string,
     status: "pendente" | "assinado",
-    url: string,
-    clientes: string[],
-    updated_at: string,
     created_at: string,
+    updated_at: string,
+    url: string,
+    assinantes: {
+        has_signed: boolean,
+        tipo: "empresa" | "cliente",
+        dados: {
+            nome: string,
+            email: string,
+            documento: string,
+            contato: string,
+        }
+    }[]
 }
