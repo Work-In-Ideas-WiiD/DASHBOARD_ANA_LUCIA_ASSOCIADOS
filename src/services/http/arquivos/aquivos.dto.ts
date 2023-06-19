@@ -12,6 +12,16 @@ export interface IGetArquivosRes {
 export interface IGetArquivosDataRes {
     id: string,
     descricao: string,
+    empresa?: {
+        id: string,
+        nome: string,
+        email: string,
+        contato: string,
+        cnpj: string,
+        nome_empresa: string,
+        created_at: string,
+        updated_at: string,
+    }
     path: string,
     status: "pendente" | "assinado",
     created_at: string,

@@ -1,7 +1,8 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { api } from "../api";
+import { IGetArquivosRes } from "./aquivos.dto";
 
-export async function getArquivos(page: number = 1, like: string = ""): Promise<AxiosResponse<any, AxiosError>> {
+export async function getArquivos(page: number = 1, like: string = ""): Promise<AxiosResponse<IGetArquivosRes, AxiosError>> {
     const res = await api.get(`/arquivo`, {
         params: {
             like: like,

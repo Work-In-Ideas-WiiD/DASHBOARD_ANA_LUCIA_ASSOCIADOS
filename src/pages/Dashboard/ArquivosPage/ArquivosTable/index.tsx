@@ -3,24 +3,21 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CustomButton, EIconCustomButton } from "../../../../components/customButton";
 import { SearchBar } from '../../../../components/inputs/searchBar';
-import { TableSelectInput } from '../../../../components/inputs/tableSelectInput';
-import { StatusBadge } from '../../../../components/statusBadge/statusBadge';
 import { TableCustomButton } from '../../../../components/tableCustomButton';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import * as zod from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import { getContratos, postAddUserContract, postSendToClicksign } from '../../../../services/http/contratos';
-import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
-import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
 import { getArquivos } from '../../../../services/http/arquivos';
 import { ModalAddCompany } from '../components/modalAddCompany';
 import { IGetArquivosDataRes } from '../../../../services/http/arquivos/aquivos.dto';
+import { TablePaginator } from '../../../../components/tablePaginator';
+import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -33,12 +30,13 @@ export function ArquivosTable() {
     const { isAdmin } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(0);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noContent, setNoContent] = useState(false);
     const [files, setFiles] = useState<IGetArquivosDataRes[]>([]);
     const [currentFile, setCurrentFile] = useState<IGetArquivosDataRes>()
     const navigate = useNavigate();
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, control, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
@@ -47,8 +45,8 @@ export function ArquivosTable() {
     })
 
     useEffect(() => {
-        getData(page);
-    }, [])
+        getData(page, getValues("search"));
+    }, [page])
 
     function handleModal(option: boolean) {
         setModalIsOpen(option);
@@ -58,6 +56,7 @@ export function ArquivosTable() {
         try {
             setFetching(true);
             const { data } = await getArquivos(pageParam, likeParam);
+            setPages(data.total);
             setFiles(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
@@ -81,29 +80,25 @@ export function ArquivosTable() {
             if (!isAdmin) {
                 return (<></>)
             }
+
+            if (data.empresa?.cnpj) {
+                return (<></>)
+            }
             return (
                 <TableCustomButton title={"enviar para empresa"} onClick={() => { checkBtnAction(data) }} />
             )
 
         }
 
-        function setIsSigned(data: IGetArquivosDataRes) {
-            if (data.status == "assinado") {
-                return "Assinado";
-            }
-
-            return "Pendente";
-        }
-
         return data.map((item) => {
 
-            const signed = setIsSigned(item);
-            //const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
+            const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
+            const company_name = item.empresa && item.empresa.nome_empresa ? item.empresa.nome_empresa : 'n/a';
             return (
                 <tr>
                     <td>{item.descricao} </td>
-                    <td>{'n/a'}</td>
-                    <td><StatusBadge status={signed} /></td>
+                    <td>{company_name} </td>
+                    <td>{cnpj_empresa}</td>
                     <td>
                         {renderButton(item)}
                     </td>
@@ -126,22 +121,22 @@ export function ArquivosTable() {
         handleModal(true);
     }
 
-    async function handleAddCompanyToFile(customerId: string) {
+    async function handleAddCompanyToFile(companyId: string) {
         const file = currentFile!;
-        await addCompanyToFile(file.id, customerId);
+        await addCompanyToFile(file.id, companyId);
         await getData(page);
     }
 
     async function addCompanyToFile(fileId: string, companyId: string) {
         try {
             setFetching(true);
-            await postAddEmpresaToContratoOrArquivo(fileId, companyId);
-            toast.success("Contrato enviado para o cliente");
+            await postAddEmpresaToContratoOrArquivo(companyId, fileId);
+            toast.success("Arquivo enviado");
             setFetching(false);
 
         } catch (error) {
             setFetching(false);
-            toast.error("Falha ao re-enviar contrato");
+            toast.error("Falha ao enviar arquivo");
         }
     }
 
@@ -185,6 +180,9 @@ export function ArquivosTable() {
                         <th>
                             Empresa
                         </th>
+                        <th>
+                            CNPJ
+                        </th>
                         <th colSpan={2}>
                             Ações
                         </th>
@@ -195,6 +193,7 @@ export function ArquivosTable() {
                 </tbody>
             </table>
             <TableEmptyMessage show={noContent} />
+            <TablePaginator pageCount={pages} onPageChange={setPage} />
         </section>
     )
 }
