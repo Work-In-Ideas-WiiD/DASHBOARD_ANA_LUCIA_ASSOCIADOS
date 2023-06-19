@@ -2,7 +2,6 @@ import styles from './styles.module.scss';
 import { CustomButton, EIconCustomButton } from "../../../../components/customButton";
 import { SearchBar } from '../../../../components/inputs/searchBar';
 import { useEffect, useState } from 'react';
-import { TableSelectInput } from '../../../../components/inputs/tableSelectInput';
 import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
@@ -12,6 +11,7 @@ import { getClientes } from '../../../../services/http/clientes';
 import { IGetClientesDataRes } from '../../../../services/http/clientes/cliente.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
+import { TablePaginator } from '../../../../components/tablePaginator';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -23,22 +23,24 @@ export function ClienteTable() {
     const navigate = useNavigate();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(0);
     const [noContent, setNoContent] = useState(false);
     const [customers, setCustomers] = useState<IGetClientesDataRes[]>([]);
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, control, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
         }
     })
     useEffect(() => {
-        getData(page);
-    }, []);
+        getData(page, getValues("search"));
+    }, [page])
 
     async function getData(pageParam: number, likeParam: string = "") {
         try {
             setFetching(true);
             const { data } = await getClientes(pageParam, likeParam);
+            setPages(data.from);
             setCustomers(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
@@ -115,6 +117,7 @@ export function ClienteTable() {
                 </tbody>
             </table>
             <TableEmptyMessage show={noContent} />
+            <TablePaginator pageCount={pages} onPageChange={setPage} />
         </section>
     )
 }

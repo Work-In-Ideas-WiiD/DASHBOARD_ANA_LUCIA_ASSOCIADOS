@@ -19,6 +19,7 @@ import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/adm
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
+import { TablePaginator } from '../../../../components/tablePaginator';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -31,12 +32,13 @@ export function ContratosTable() {
     const { isAdmin } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(0);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noContent, setNoContent] = useState(false);
     const [contracts, setContracts] = useState<IGetContratosDataRes[]>([]);
     const [currentContract, setCurrentContract] = useState<IGetContratosDataRes>()
     const navigate = useNavigate();
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, control, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
@@ -45,8 +47,8 @@ export function ContratosTable() {
     })
 
     useEffect(() => {
-        getData(page);
-    }, [])
+        getData(page, getValues("search"));
+    }, [page])
 
     function handleModal(option: boolean) {
         setModalIsOpen(option);
@@ -56,6 +58,7 @@ export function ContratosTable() {
         try {
             setFetching(true);
             const { data } = await getContratos(pageParam, likeParam);
+            setPages(data.from);
             setContracts(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
@@ -245,6 +248,7 @@ export function ContratosTable() {
                 </tbody>
             </table>
             <TableEmptyMessage show={noContent} />
+            <TablePaginator pageCount={pages} onPageChange={setPage} />
         </section>
     )
 }

@@ -56,7 +56,7 @@ export function ArquivosTable() {
         try {
             setFetching(true);
             const { data } = await getArquivos(pageParam, likeParam);
-            setPages(data.total);
+            setPages(data.from);
             setFiles(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);

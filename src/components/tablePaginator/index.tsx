@@ -12,7 +12,6 @@ export function TablePaginator({ onPageChange, pageCount }: ITablePaginatorProps
             pageCount={pageCount}
             previousLabel="<"
             nextLabel=">"
-            initialPage={3}
             pageRangeDisplayed={2}
             onPageChange={(e) => onPageChange(e.selected + 1)}
             breakClassName={styles.break}

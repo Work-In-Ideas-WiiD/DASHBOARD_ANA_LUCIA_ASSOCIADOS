@@ -10,6 +10,7 @@ import { CustomButton, EIconCustomButton } from "../../../../../components/custo
 import { TableEmptyMessage } from "../../../../../components/tableEmptyMessage";
 import { IGetEmpresasDataRes } from "../../../../../services/http/empresas/empresas.dto";
 import { getEmpresas } from "../../../../../services/http/empresas";
+import { TablePaginator } from "../../../../../components/tablePaginator";
 
 interface IProps {
     handleModal(option: boolean): void,
@@ -27,9 +28,10 @@ export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IP
 
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(0);
     const [noContent, setNoContent] = useState(false);
     const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
-    const { handleSubmit, control, setValue } = useForm<TFormSchema>({
+    const { handleSubmit, control, setValue, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
@@ -38,13 +40,14 @@ export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IP
     });
 
     useEffect(() => {
-        getData(page);
-    }, []);
+        getData(page, getValues("search"));
+    }, [page]);
 
     async function getData(pageParam: number, likeParam: string = "") {
         try {
             setFetching(true);
             const { data } = await getEmpresas(pageParam, likeParam);
+            setPages(data.from);
             setCompanies(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
@@ -68,19 +71,21 @@ export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IP
 
             return (
                 <tr key={item.id}>
-                    <Controller
-                        name="companyId"
-                        control={control}
-                        render={({ field }) => {
-                            return (
-                                <input
-                                    checked={field.value == item.id}
-                                    type="checkbox"
-                                    onClick={() => { setValue("companyId", item.id) }}
-                                />
-                            )
-                        }}
-                    />
+                    <td>
+                        <Controller
+                            name="companyId"
+                            control={control}
+                            render={({ field }) => {
+                                return (
+                                    <input
+                                        checked={field.value == item.id}
+                                        type="checkbox"
+                                        onClick={() => { setValue("companyId", item.id) }}
+                                    />
+                                )
+                            }}
+                        />
+                    </td>
                     <td>{item.nome} </td>
                     <td>{documentId}</td>
                     <td>{email}</td>
@@ -141,6 +146,7 @@ export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IP
                     </tbody>
                 </table>
                 <TableEmptyMessage show={noContent} />
+                <TablePaginator pageCount={pages} onPageChange={setPage} />
             </div>
         </Modal>
     )

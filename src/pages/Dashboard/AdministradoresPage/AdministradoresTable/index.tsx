@@ -11,6 +11,7 @@ import { getAdministradores } from '../../../../services/http/administradores';
 import { IGetAdministradoresDataRes } from '../../../../services/http/administradores/administradores.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
+import { TablePaginator } from '../../../../components/tablePaginator';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -23,10 +24,11 @@ export function AdministradoresTable() {
 
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(0);
     const [admins, setAdmins] = useState<IGetAdministradoresDataRes[]>([]);
     const [noContent, setNoContent] = useState(false);
     const navigate = useNavigate();
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, control, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
@@ -34,13 +36,14 @@ export function AdministradoresTable() {
     });
 
     useEffect(() => {
-        getData(page);
-    }, []);
+        getData(page, getValues("search"));
+    }, [page])
 
     async function getData(pageParam: number, likeParam: string = "") {
         try {
             setFetching(true);
             const { data } = await getAdministradores(pageParam, likeParam);
+            setPages(data.from);
             setAdmins(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
@@ -111,6 +114,7 @@ export function AdministradoresTable() {
 
             </table>
             <TableEmptyMessage show={noContent} />
+            <TablePaginator pageCount={pages} onPageChange={setPage} />
         </section>
     )
 }

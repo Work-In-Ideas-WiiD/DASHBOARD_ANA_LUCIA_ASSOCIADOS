@@ -14,6 +14,7 @@ import { IGetAssinaturasData } from '../../../../services/http/assinaturas/assin
 import { toast } from 'react-toastify';
 import { postSendToClicksign } from '../../../../services/http/contratos';
 import { openFile } from '../../../../utils/openFIle';
+import { TablePaginator } from '../../../../components/tablePaginator';
 
 
 const formSchema = zod.object({
@@ -32,9 +33,10 @@ export function AssinaturasTable() {
     const [fetching, setFetching] = useState(false);
     const navigate = useNavigate();
     const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(0);
     const [signatures, setSignatures] = useState<IGetAssinaturasData[]>([]);
     const [noContent, setNoContent] = useState(false);
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, control, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
@@ -42,13 +44,14 @@ export function AssinaturasTable() {
     });
 
     useEffect(() => {
-        getData(page);
-    }, []);
+        getData(page, getValues("search"));
+    }, [page]);
 
     async function getData(pageParam: number, likeParam: string = "") {
         try {
             setFetching(true);
             const { data } = await getAssinaturas(pageParam, likeParam);
+            setPages(data.from);
             setSignatures(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
@@ -181,6 +184,7 @@ export function AssinaturasTable() {
                 </tbody>
             </table>
             <TableEmptyMessage show={noContent} />
+            <TablePaginator pageCount={pages} onPageChange={setPage} />
         </section>
     )
 }

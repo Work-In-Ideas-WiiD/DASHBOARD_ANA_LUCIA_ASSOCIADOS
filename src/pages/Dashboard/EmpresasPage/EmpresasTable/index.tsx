@@ -10,6 +10,7 @@ import { getEmpresas } from '../../../../services/http/empresas';
 import { IGetEmpresasDataRes, IGetEmpresasRes } from '../../../../services/http/empresas/empresas.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
+import { TablePaginator } from '../../../../components/tablePaginator';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -22,10 +23,11 @@ export function EmpresasTable() {
 
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
+    const [pages, setPages] = useState(0);
     const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
     const navigate = useNavigate();
     const [noContent, setNoContent] = useState(false);
-    const { handleSubmit, control } = useForm<TFormSchema>({
+    const { handleSubmit, control, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
@@ -33,13 +35,14 @@ export function EmpresasTable() {
     })
 
     useEffect(() => {
-        getData(page);
-    }, [])
+        getData(page, getValues("search"));
+    }, [page])
 
     async function getData(pageParam: number, likeParam: string = "") {
         try {
             setFetching(true);
             const { data } = await getEmpresas(pageParam, likeParam);
+            setPages(data.from);
             setCompanies(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
@@ -117,6 +120,7 @@ export function EmpresasTable() {
                 </tbody>
             </table>
             <TableEmptyMessage show={noContent} />
+            <TablePaginator pageCount={pages} onPageChange={setPage} />
         </section>
     )
 }
