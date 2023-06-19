@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { Modal } from "../../../../../components/modal";
 import styles from './styles.module.scss';
-import { getClientes } from "../../../../../services/http/clientes";
-import { IGetClientesDataRes } from "../../../../../services/http/clientes/cliente.dto";
 import * as zod from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
@@ -10,30 +8,32 @@ import { IUserReqProps } from "../../../../../services/http/user/user.dto";
 import { SearchBar } from "../../../../../components/inputs/searchBar";
 import { CustomButton, EIconCustomButton } from "../../../../../components/customButton";
 import { TableEmptyMessage } from "../../../../../components/tableEmptyMessage";
+import { IGetEmpresasDataRes } from "../../../../../services/http/empresas/empresas.dto";
+import { getEmpresas } from "../../../../../services/http/empresas";
 
 interface IProps {
     handleModal(option: boolean): void,
     showModal: boolean,
-    handleSubmitForm(customerId: string): Promise<void>
+    handleSubmitForm(companyId: string): Promise<void>
 }
 const formSchema = zod.object({
     search: zod.string(),
-    customerId: zod.string()
+    companyId: zod.string()
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: IProps) {
+export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IProps) {
 
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [noContent, setNoContent] = useState(false);
-    const [customers, setCustomers] = useState<IGetClientesDataRes[]>([]);
+    const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
     const { handleSubmit, control, setValue } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
-            customerId: ''
+            companyId: ''
         }
     });
 
@@ -44,8 +44,8 @@ export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: I
     async function getData(pageParam: number, likeParam: string = "") {
         try {
             setFetching(true);
-            const { data } = await getClientes(pageParam, likeParam);
-            setCustomers(data.data);
+            const { data } = await getEmpresas(pageParam, likeParam);
+            setCompanies(data.data);
             setNoContent(data.data.length == 0);
             setFetching(false);
         } catch (error) {
@@ -59,7 +59,7 @@ export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: I
     }
 
 
-    function _renderItem(itens: IUserReqProps[]) {
+    function _renderItem(itens: IGetEmpresasDataRes[]) {
         return itens.map((item) => {
 
             let documentId = item.cnpj ? item.cnpj : item.cpf;
@@ -69,14 +69,14 @@ export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: I
             return (
                 <tr key={item.id}>
                     <Controller
-                        name="customerId"
+                        name="companyId"
                         control={control}
                         render={({ field }) => {
                             return (
                                 <input
                                     checked={field.value == item.id}
                                     type="checkbox"
-                                    onClick={() => { setValue("customerId", item.id) }}
+                                    onClick={() => { setValue("companyId", item.id) }}
                                 />
                             )
                         }}
@@ -91,10 +91,10 @@ export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: I
     }
 
     function handleSendData(_data: TFormSchema) {
-        if (_data.customerId == "") {
+        if (_data.companyId == "") {
             return
         }
-        handleSubmitForm(_data.customerId);
+        handleSubmitForm(_data.companyId);
         handleModal(false);
     }
 
@@ -103,7 +103,7 @@ export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: I
     }
 
     return (
-        <Modal title="Adicionar cliente" handleModal={handleModal} >
+        <Modal title="Adicionar empresa" handleModal={handleModal} >
             <div className={styles.table}>
                 <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
                     <SearchBar
@@ -136,7 +136,7 @@ export function ModalAddCustomer({ handleModal, showModal, handleSubmitForm }: I
                     </thead>
                     <tbody>
                         {
-                            _renderItem(customers)
+                            _renderItem(companies)
                         }
                     </tbody>
                 </table>

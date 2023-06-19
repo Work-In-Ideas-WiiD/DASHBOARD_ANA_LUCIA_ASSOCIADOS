@@ -7,7 +7,6 @@ import { TableSelectInput } from '../../../../components/inputs/tableSelectInput
 import { StatusBadge } from '../../../../components/statusBadge/statusBadge';
 import { TableCustomButton } from '../../../../components/tableCustomButton';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
-import { ModalAddCustomer } from '../components/modalAddCustomer';
 import * as zod from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -20,6 +19,8 @@ import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
 import { getArquivos } from '../../../../services/http/arquivos';
+import { ModalAddCompany } from '../components/modalAddCompany';
+import { IGetArquivosDataRes } from '../../../../services/http/arquivos/aquivos.dto';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -34,8 +35,8 @@ export function ArquivosTable() {
     const [page, setPage] = useState(1);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [noContent, setNoContent] = useState(false);
-    const [files, setFiles] = useState<IGetContratosDataRes[]>([]);
-    const [currentFile, setCurrentFile] = useState<IGetContratosDataRes>()
+    const [files, setFiles] = useState<IGetArquivosDataRes[]>([]);
+    const [currentFile, setCurrentFile] = useState<IGetArquivosDataRes>()
     const navigate = useNavigate();
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -74,42 +75,38 @@ export function ArquivosTable() {
         navigate('novo');
     }
 
-    function _renderItem(data: IGetContratosDataRes[]) {
+    function _renderItem(data: IGetArquivosDataRes[]) {
 
-        function checkTableBtnText(data: IGetContratosDataRes) {
-            if (isAdmin) {
-                return "re-enviar para empresa";
+        function renderButton(data: IGetArquivosDataRes) {
+            if (!isAdmin) {
+                return (<></>)
             }
-            if (data.assinantes.length > 1) {
-                return "re-enviar para cliente";
-            }
-            return "enviar para cliente";
+            return (
+                <TableCustomButton title={"enviar para empresa"} onClick={() => { checkBtnAction(data) }} />
+            )
+
         }
 
-        function setIsSigned(data: IGetContratosDataRes) {
-            if (!data.empresa || data.assinantes.length <= 1) {
-                return "Pendente";
-            }
-            for (let assiantes of data.assinantes) {
-                if (assiantes.has_signed == false) {
-                    return "Pendente";
-                }
+        function setIsSigned(data: IGetArquivosDataRes) {
+            if (data.status == "assinado") {
+                return "Assinado";
             }
 
-            return "Assinado";
+            return "Pendente";
         }
 
         return data.map((item) => {
 
             const signed = setIsSigned(item);
-            const btn_text = checkTableBtnText(item);
-            const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
+            //const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
             return (
                 <tr>
                     <td>{item.descricao} </td>
-                    <td>{cnpj_empresa}</td>
-                    {/* <td><StatusBadge status={signed} /></td> */}
-                    <td><TableCustomButton title={btn_text} onClick={() => { checkBtnAction(item) }} /></td>
+                    <td>{'n/a'}</td>
+                    <td><StatusBadge status={signed} /></td>
+                    <td>
+                        {renderButton(item)}
+                    </td>
                     <td>
                         <button
                             type='button'
@@ -124,52 +121,21 @@ export function ArquivosTable() {
         })
     }
 
-    async function checkBtnAction(contract: IGetContratosDataRes) {
-        //botao apenas para adm
-        //abrir modal e selecionar empresa
-        //enviar para empresa
-
-        if (isAdmin) {
-            await addCompanyToContract(contract);
-        } else {
-            if (contract.assinantes.length <= 1) {
-                setCurrentFile(contract);
-                handleModal(true);
-            } else {
-                await sendContractToSign(contract.id);
-            }
-
-        }
+    async function checkBtnAction(contract: IGetArquivosDataRes) {
+        setCurrentFile(contract);
+        handleModal(true);
     }
 
-    async function sendContractToSign(fileId: string) {
-        try {
-            setFetching(true);
-            await postSendToClicksign(fileId);
-            toast.success("Enviado para assinatura");
-            setFetching(false);
-        } catch (error) {
-            setFetching(false);
-            toast.error("Erro ao enviar para assinatura");
-        }
-    }
-
-    async function handleSubmitContractToCustomer(customerId: string) {
-        const contract = currentFile!;
-        if (!contract.empresa) {
-            toast.error("Falha ao re-enviar contrato");
-            return
-        }
-
-        await addCustomerToContract(contract.id, customerId);
-        await sendContractToSign(contract.id);
+    async function handleAddCompanyToFile(customerId: string) {
+        const file = currentFile!;
+        await addCompanyToFile(file.id, customerId);
         await getData(page);
     }
 
-    async function addCustomerToContract(fileId: string, customerId: string) {
+    async function addCompanyToFile(fileId: string, companyId: string) {
         try {
             setFetching(true);
-            await postAddUserContract(fileId, [customerId]);
+            await postAddEmpresaToContratoOrArquivo(fileId, companyId);
             toast.success("Contrato enviado para o cliente");
             setFetching(false);
 
@@ -179,30 +145,16 @@ export function ArquivosTable() {
         }
     }
 
-    async function addCompanyToContract(data: IGetContratosDataRes) {
-        if (fetching) {
-            return
-        }
-        if (!data.empresa) {
-            return toast.error("Falha ao re-enviar contrato");
-        }
-        try {
-            setFetching(true);
-            await postAddEmpresaToContratoOrArquivo(data.empresa.id, data.id);
-            setFetching(false);
-        } catch (error) {
-            toast.error("Falha ao re-enviar contrato");
-            setFetching(false);
-        }
-    }
-
     function renderAdminOptions(value: boolean) {
 
         if (value) {
             return (
-                <>
-                    <CustomButton onClick={navigateTo} title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
-                </>
+                <CustomButton
+                    onClick={navigateTo}
+                    title='NOVO CADASTRO'
+                    icon={EIconCustomButton.MdCreateNewFolder}
+                    type='button'
+                />
             )
         }
         return (
@@ -213,7 +165,7 @@ export function ArquivosTable() {
     return (
 
         <section className={styles.table}>
-            <ModalAddCustomer handleSubmitForm={handleSubmitContractToCustomer} showModal={modalIsOpen} handleModal={handleModal} />
+            <ModalAddCompany handleSubmitForm={handleAddCompanyToFile} showModal={modalIsOpen} handleModal={handleModal} />
             <h2 className={`${styles.title} dashboard_title`}>ARQUIVOS</h2>
             <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
                 <SearchBar

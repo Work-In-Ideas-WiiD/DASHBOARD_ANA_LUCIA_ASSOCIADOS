@@ -111,7 +111,7 @@ export function AssinaturasTable() {
             const signatureDate = new Date(item.updated_at).toLocaleDateString();
             const statusSignatureCustomer = checkSignature(item, "cliente");
             const statusSignatureCompany = checkSignature(item, "empresa");
-            const renderButton = statusSignatureCompany == "Assinado" && statusSignatureCompany == "Assinado" ?
+            const renderButton = statusSignatureCustomer == "Assinado" && statusSignatureCompany == "Assinado" ?
                 <TableCustomButton title='Reenviar e-mails' onClick={() => { sendContractToSign(item.id) }} />
                 : <></>;
 
