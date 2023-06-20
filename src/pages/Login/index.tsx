@@ -76,7 +76,7 @@ export function LoginPage() {
                         _renderBtnContent("Entrar", fetching)
                     }
                 </button>
-                <Link className={`react-router-Link ${styles.first_access}`} to={'/'}>É seu primeiro acesso? <span>Cadastrar senha.</span></Link>
+                <Link className={`react-router-Link ${styles.first_access}`} to={'/primeiroacesso'}>É seu primeiro acesso? <span>Cadastrar senha.</span></Link>
             </form>
         </main>
     )

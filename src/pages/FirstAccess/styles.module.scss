@@ -1,0 +1,44 @@
+@import "../../styles/Global.scss";
+
+.main {
+    width: 100%;
+    height: 100%;
+    min-height: 100vh;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+
+    header {
+        width: 100%;
+        height: 136px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: var(--color-blue-700);
+
+        @media (max-width: 900px) {
+            height: auto;
+
+            img {
+                height: 80px;
+            }
+        }
+    }
+
+    .backbtn_container {
+        width: 100%;
+        padding: 5px;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        max-width: 600px;
+        width: 100%;
+        padding: 30px 20px;
+        @include background-opacity($color-orange-100, 0.1);
+    }
+}

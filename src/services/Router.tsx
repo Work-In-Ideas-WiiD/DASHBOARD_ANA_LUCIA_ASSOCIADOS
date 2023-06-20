@@ -21,6 +21,7 @@ import { ContextRoute } from "../pages/ContextRoute";
 import { ArquivosPage } from "../pages/Dashboard/ArquivosPage";
 import { ArquivosTable } from "../pages/Dashboard/ArquivosPage/ArquivosTable";
 import { NovoArquivo } from "../pages/Dashboard/ArquivosPage/NovoArquivo";
+import { FirstAccessPage } from "../pages/FirstAccess";
 
 const router = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             {
                 path: "/assinar/:id",
                 element: <Assinatura />,
+            },
+            {
+                path: "/primeiroacesso",
+                element: <FirstAccessPage />,
             },
             {
                 path: "/dashboard",
