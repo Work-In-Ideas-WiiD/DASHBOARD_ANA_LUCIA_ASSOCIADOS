@@ -26,3 +26,9 @@ export async function postClienteStore(data: IPostClienteModel): Promise<AxiosRe
 
     return res;
 }
+
+export async function getClickSignKey(id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.get(`/cliente/buscar/key/${id}`);
+
+    return res;
+}

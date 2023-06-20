@@ -14,7 +14,6 @@ import { NovoAdministrador } from "../pages/Dashboard/AdministradoresPage/NovoAd
 import { EmpresasTable } from "../pages/Dashboard/EmpresasPage/EmpresasTable";
 import { NovaEmpresa } from "../pages/Dashboard/EmpresasPage/NovaEmpresa";
 import { Assinatura } from "../pages/Assinatura";
-import { AssinaturaForm } from "../pages/Assinatura/Form";
 import { ClientesPage } from "../pages/Dashboard/ClientesPage";
 import { ClienteTable } from "../pages/Dashboard/ClientesPage/ClientesTable";
 import { NovoCliente } from "../pages/Dashboard/ClientesPage/NovoCliente";
@@ -32,14 +31,8 @@ const router = createBrowserRouter([
                 element: <LoginPage />
             },
             {
-                path: "/assinatura",
+                path: "/assinatura/:id",
                 element: <Assinatura />,
-                children: [
-                    {
-                        path: "cadastro",
-                        element: <AssinaturaForm />
-                    }
-                ]
             },
             {
                 path: "/dashboard",

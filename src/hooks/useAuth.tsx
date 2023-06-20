@@ -3,7 +3,7 @@ import { IUserProps } from "../services/http/auth/auth.dto";
 import { postLogin, postMe } from "../services/http/auth";
 import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import { setAuthToken } from '../services/http/api';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
 import router from "../services/Router";
 
@@ -29,6 +29,7 @@ export function signOut() {
 
 export function AuthContextData({ children }: IAuthContextDataProps) {
     const navigate = useNavigate();
+    const location = useLocation();
     const [me, setMe] = useState<IUserProps>({
         id: "",
         nome: "",
@@ -50,6 +51,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
     const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
+        console.log("location:", location);
 
         const { 'ana_lucia.token': token } = parseCookies();
         if (token) {
@@ -58,12 +60,15 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
                 const { data: user_data } = response;
                 setUserData(user_data);
                 setIsAdmin(user_data.type == 'administrador');
-                navigate("/dashboard/home");
+                if (!location.pathname.includes("assinatura")) {
+                    navigate("/dashboard/home");
+                }
             }).catch(() => {
                 destroyCookie(undefined, 'ana_lucia.token');
-                navigate("/");
+                if (!location.pathname.includes("assinatura")) {
+                    navigate("/");
+                }
             });
-
         }
     }, [])
 
