@@ -31,7 +31,7 @@ const router = createBrowserRouter([
                 element: <LoginPage />
             },
             {
-                path: "/assinatura/:id",
+                path: "/assinar/:id",
                 element: <Assinatura />,
             },
             {

@@ -1,71 +1,67 @@
 import styles from './styles.module.scss';
 import Logo from '../../assets/imgs/logo_ana.png';
-import { useEffect, useRef } from 'react';
-
-
-declare global {
-    class Clicksign {
-
-        constructor(id: string)
-        endpoint: any;
-        origin: any;
-        mount: any;
-    }
-}
+import { useEffect, useState } from 'react';
+import { Clicksign } from "../../utils/clicksign";
+import { useParams } from 'react-router-dom';
+import { getClickSignKey } from '../../services/http/clientes';
+import { toast } from 'react-toastify';
+import { SignedMessage } from './components/signedMessage';
 
 export function Assinatura() {
-
-    const ref = useRef();
+    const params = useParams();
+    const [documentSigned, setDocumentSigned] = useState(false);
+    let widgetController: any = null;
 
     useEffect(() => {
         startClickSign();
     }, []);
 
-    function startClickSign() {
+    function clearContainer() {
+        const container = document.querySelector("#container");
+        container!.innerHTML = "";
+    }
 
-        const script = document.createElement('script');
-        const body = document.getElementsByTagName('body')[0];
-        script.type = 'text/javascript';
-        script.async = true;
-        script.src = "https://raw.githubusercontent.com/clicksign/embedded/main/build/embedded.js";
-        body.appendChild(script)
-        script.addEventListener('load', (e) => {
-            setTimeout(() => {
-                console.log(e);
+    async function startClickSign() {
+        clearContainer();
+        try {
 
-                // Carrega o widget embedded com a request_signature_key
-                var widget = new Clicksign('');
+            const id = params.id as string;
+            const { data } = await getClickSignKey(id);
+            let widget = Clicksign(data.key);
+            if (widgetController) return;
+            widgetController = widget;
+            // Define o endpoint https://sandbox.clicksign.com ou https://app.clicksign.com
+            widget.endpoint = 'https://sandbox.clicksign.com';
+            widget.origin = 'http://localhost:5173';
+            widget.mount('container');
+            widget.on('loaded', () => {
+                console.log('loaded!');
+            });
+            widget.on('signed', () => {
+                setDocumentSigned(true);
+                closeWidget();
+            });
+        } catch (error) {
+            closeWidget();
+            toast.error("Erro ao efetuar assinatura, contate o administrador.");
+        }
 
-                // // Define o endpoint https://sandbox.clicksign.com ou https://app.clicksign.com
-                // widget.endpoint = 'https://sandbox.clicksign.com';
+    }
 
-                // // Define a URL de origem (parametro necessário para utilizar através de WebView)
-                // widget.origin = 'https://localhost:5173';
+    function closeWidget() {
+        if (widgetController) {
+            widgetController.unmount();
+        }
+    }
 
-                // // Monta o widget no div
-                // widget.mount('container');
-            }, 3000)
-        });
+    function _renderMessage(value: boolean) {
+        if (value) {
+            return (
+                <SignedMessage />
+            )
+        }
 
-        // // Callback que será disparado quando o documento for carregado
-        // widget.on('loaded', function (ev: any) {
-        //     console.log('loaded!');
-        // });
-
-        // // Callback que será disparado quando o documento for assinado
-        // widget.on('signed', function (ev: any) {
-        //     console.log('signed!');
-        //     return location.assign("http://www.example.com");
-        // });
-
-        // /* Callback que será disparado nas etapas de informar dados do signatário
-        // e token, retornando a altura (height) dessas páginas para ajuste do container
-        // onde o iframe se encontra. */
-        // widget.on('resized', function (height: any) {
-        //     console.log('resized!');
-        //     document.getElementById('container')!.style.height = height + 'px';
-        // });
-
+        return (<></>)
     }
 
     return (
@@ -73,9 +69,8 @@ export function Assinatura() {
             <header>
                 <img src={Logo} alt="Ana Lúcia e Associados" />
             </header>
-            <div id='container'>
-
-            </div>
+            <div className={styles.container} id='container'> </div>
+            {_renderMessage(documentSigned)}
         </main>
     )
 }

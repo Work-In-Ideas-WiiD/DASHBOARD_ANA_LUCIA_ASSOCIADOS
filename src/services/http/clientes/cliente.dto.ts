@@ -39,3 +39,7 @@ export interface IGetClientesDataRes {
     endereco_id: null | string,
     endereco: null | string,
 }
+
+export interface IGetClickSignKeyRes {
+    key: string
+}

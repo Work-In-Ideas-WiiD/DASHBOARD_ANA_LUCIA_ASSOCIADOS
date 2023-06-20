@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { api } from "../api";
-import { IGetClientesDataRes, IGetClientesRes, IPostClienteModel } from "./cliente.dto";
+import { IGetClickSignKeyRes, IGetClientesDataRes, IGetClientesRes, IPostClienteModel } from "./cliente.dto";
 
 export async function getCliente(id: string): Promise<AxiosResponse<IGetClientesDataRes, any>> {
 
@@ -27,7 +27,7 @@ export async function postClienteStore(data: IPostClienteModel): Promise<AxiosRe
     return res;
 }
 
-export async function getClickSignKey(id: string): Promise<AxiosResponse<any, AxiosError>> {
+export async function getClickSignKey(id: string): Promise<AxiosResponse<IGetClickSignKeyRes, AxiosError>> {
     const res = await api.get(`/cliente/buscar/key/${id}`);
 
     return res;
