@@ -21,12 +21,13 @@ export function LoginPage() {
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: 'wcostaprijo@hotmail.com',
-            password: '123456789',
+            email: '',
+            password: '',
         }
     })
+    // test
     // email: 'wcostaprijo@hotmail.com',
-    //     password: '123456789',
+    // password: '123456789',
     async function handleLogin(_data: TFormSchema) {
         await signIn(_data.email, _data.password);
     }
