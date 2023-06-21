@@ -40,3 +40,10 @@ export async function getClickSignKey(id: string): Promise<AxiosResponse<IGetCli
 
     return res;
 }
+
+export async function delCliente(id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.delete(`/cliente/${id}`);
+
+    return res;
+}
+
