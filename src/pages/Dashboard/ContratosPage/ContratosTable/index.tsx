@@ -107,7 +107,7 @@ export function ContratosTable() {
             const btn_text = checkTableBtnText(item);
             const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
             return (
-                <tr>
+                <tr key={item.id}>
                     <td>{item.descricao} </td>
                     <td>{cnpj_empresa}</td>
                     <td><StatusBadge status={signed} /></td>

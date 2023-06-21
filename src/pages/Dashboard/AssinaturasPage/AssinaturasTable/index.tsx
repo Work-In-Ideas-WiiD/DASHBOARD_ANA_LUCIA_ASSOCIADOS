@@ -119,7 +119,7 @@ export function AssinaturasTable() {
                 : <></>;
 
             return (
-                <tr>
+                <tr key={item.id}>
                     <td>{item.descricao}</td>
                     <td>{checkName(item, "empresa")}</td>
                     <td>{checkName(item, "cliente")}</td>

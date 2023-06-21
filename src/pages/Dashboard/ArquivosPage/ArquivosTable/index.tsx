@@ -95,7 +95,7 @@ export function ArquivosTable() {
             const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
             const company_name = item.empresa && item.empresa.nome_empresa ? item.empresa.nome_empresa : 'n/a';
             return (
-                <tr>
+                <tr key={item.id}>
                     <td>{item.descricao} </td>
                     <td>{company_name} </td>
                     <td>{cnpj_empresa}</td>

@@ -24,7 +24,7 @@ interface IAuthContextData {
 export function signOut() {
     destroyCookie(undefined, 'ana_lucia.token');
     setAuthToken(" ");
-    router.navigate("/");
+    location.reload();
 }
 
 export function AuthContextData({ children }: IAuthContextDataProps) {
@@ -51,8 +51,6 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
     const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
-        console.log("location:", location);
-
         const { 'ana_lucia.token': token } = parseCookies();
         if (token) {
             setAuthToken(token);
@@ -60,7 +58,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
                 const { data: user_data } = response;
                 setUserData(user_data);
                 setIsAdmin(user_data.type == 'administrador');
-                if (!location.pathname.includes("assinatura")) {
+                if (!location.pathname.includes("assinar")) {
                     navigate("/dashboard/home");
                 }
             }).catch(() => {
@@ -69,6 +67,10 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
                     navigate("/");
                 }
             });
+        } else {
+            if (location.pathname != "/") {
+                navigate("/");
+            }
         }
     }, [])
 
