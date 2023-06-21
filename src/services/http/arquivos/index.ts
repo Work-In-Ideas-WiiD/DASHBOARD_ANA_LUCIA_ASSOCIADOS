@@ -22,3 +22,9 @@ export async function postArquivo(formData: FormData): Promise<AxiosResponse<any
 
     return res;
 }
+
+export async function delArquivo(id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.delete(`/arquivo/${id}`);
+
+    return res;
+}
