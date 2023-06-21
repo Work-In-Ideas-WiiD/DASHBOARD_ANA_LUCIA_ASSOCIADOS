@@ -6,7 +6,7 @@ export interface IPostClienteModel {
     contato: string,
     cnpj?: null | string,
     nome_empresa?: null | string,
-    endereco: {
+    endereco?: {
         cep: string,
         rua: string,
         bairro: string,

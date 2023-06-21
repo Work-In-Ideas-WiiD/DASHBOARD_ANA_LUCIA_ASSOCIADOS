@@ -42,6 +42,7 @@ export function ClienteTable() {
             search: '',
         }
     })
+
     useEffect(() => {
         getData(page, getValues("search"));
     }, [page])
@@ -105,13 +106,13 @@ export function ClienteTable() {
                             >
                                 <FaPenAlt fill="#C7633B" size={19} />
                             </button>
-                            <button
+                            {/* <button
                                 type='button'
                                 className={styles.action_button}
                                 onClick={() => { _handleRemoveBnt(item) }}
                             >
                                 <FaTrash fill="#D64646" size={19} />
-                            </button>
+                            </button> */}
                         </div>
 
                     </td>

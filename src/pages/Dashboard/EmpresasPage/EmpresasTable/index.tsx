@@ -11,6 +11,7 @@ import { IGetEmpresasDataRes, IGetEmpresasRes } from '../../../../services/http/
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { TablePaginator } from '../../../../components/tablePaginator';
+import { FaPenAlt } from 'react-icons/fa';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -76,6 +77,24 @@ export function EmpresasTable() {
                     <td>{documentId}</td>
                     <td>{email}</td>
                     <td>{phone}</td>
+                    <td>
+                        <div className={styles.action_btn_container}>
+                            <button
+                                type='button'
+                                className={styles.action_button}
+                                onClick={() => { navigate(`editar/${item.id}`) }}
+                            >
+                                <FaPenAlt fill="#C7633B" size={19} />
+                            </button>
+                            {/* <button
+                                type='button'
+                                className={styles.action_button}
+                                onClick={() => { _handleRemoveBnt(item) }}
+                            >
+                                <FaTrash fill="#D64646" size={19} />
+                            </button> */}
+                        </div>
+                    </td>
                 </tr>
             )
         })
@@ -110,6 +129,9 @@ export function EmpresasTable() {
                         </th>
                         <th>
                             Celular
+                        </th>
+                        <th>
+                            Ações
                         </th>
                     </tr>
                 </thead>

@@ -1,12 +1,12 @@
 export interface IPostEmpresaModel {
     type: "cliente" | "empresa" | "administrador",
-    email: string,
+    email?: string,
     cpf?: string | null,
     nome: string,
     contato: string,
     cnpj?: null | string,
     nome_empresa?: null | string,
-    endereco: {
+    endereco?: {
         cep: string,
         rua: string,
         bairro: string,
@@ -34,4 +34,11 @@ export interface IGetEmpresasDataRes {
     contato: string | null,
     cnpj: string | null,
     nome_empresa: string | null,
+}
+
+export interface IPatchEmpresaStoreModel {
+    cnpj: string,
+    cpf?: string,
+    nome_empresa: string,
+    contato: string,
 }

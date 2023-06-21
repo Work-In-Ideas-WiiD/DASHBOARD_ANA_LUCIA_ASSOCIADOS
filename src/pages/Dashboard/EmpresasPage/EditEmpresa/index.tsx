@@ -6,14 +6,17 @@ import { CustomButton } from '../../../../components/customButton';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PageTitle } from '../../../../components/pageTitle';
 
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import { IPostClienteModel } from '../../../../services/http/clientes/cliente.dto';
-import { postClienteStore } from '../../../../services/http/clientes';
+import { getCliente, patchClienteStore } from '../../../../services/http/clientes';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { getEmpresa, patchEmpresaStore } from '../../../../services/http/empresas';
+import { IPatchEmpresaStoreModel } from '../../../../services/http/empresas/empresas.dto';
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -30,27 +33,27 @@ const formSchema = zod.object({
     contato: zod.string({
         required_error: "Campo obrigatório",
     }),
-    endereco: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    numero: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    bairro: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    cidade: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    estado: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    complemento: zod.string({
-        required_error: "Campo obrigatório",
-    }),
-    cep: zod.string({
-        required_error: "Campo obrigatório",
-    }),
+    // endereco: zod.string({
+    //     required_error: "Campo obrigatório",
+    // }),
+    // numero: zod.string({
+    //     required_error: "Campo obrigatório",
+    // }),
+    // bairro: zod.string({
+    //     required_error: "Campo obrigatório",
+    // }),
+    // cidade: zod.string({
+    //     required_error: "Campo obrigatório",
+    // }),
+    // estado: zod.string({
+    //     required_error: "Campo obrigatório",
+    // }),
+    // complemento: zod.string({
+    //     required_error: "Campo obrigatório",
+    // }),
+    // cep: zod.string({
+    //     required_error: "Campo obrigatório",
+    // }),
 }).superRefine((val, ctx) => {
 
     if (!val.cnpj && val.nome_empresa) {
@@ -88,10 +91,11 @@ const formSchema = zod.object({
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-export function NovoCliente() {
+export function EditEmpresa() {
+    const params = useParams();
     const { handleFetching, fetching } = useAuth();
     const navigate = useNavigate();
-    const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
+    const { handleSubmit, formState: { errors }, control, reset } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             nome: undefined,
@@ -100,15 +104,39 @@ export function NovoCliente() {
             cnpj: undefined,
             email: undefined,
             contato: undefined,
-            endereco: undefined,
-            numero: undefined,
-            bairro: undefined,
-            cidade: undefined,
-            estado: undefined,
-            complemento: undefined,
-            cep: undefined,
+            // endereco: undefined,
+            // numero: undefined,
+            // bairro: undefined,
+            // cidade: undefined,
+            // estado: undefined,
+            // complemento: undefined,
+            // cep: undefined,
         }
     })
+
+    useEffect(() => {
+        const id = params.id as string;
+        getData(id);
+    }, []);
+
+    async function getData(id: string) {
+        const { data } = await getEmpresa(id);
+        reset({
+            nome: data.nome,
+            cpf: data.cpf ? data.cpf : undefined,
+            nome_empresa: data.nome_empresa ? data.nome_empresa : undefined,
+            cnpj: data.cnpj ? data.cnpj : undefined,
+            email: data.email,
+            contato: data.contato!,
+            // endereco: data.endereco.rua,
+            // numero: String(data.endereco.numero),
+            // bairro: data.endereco.bairro,
+            // cidade: data.endereco.cidade,
+            // estado: data.endereco.estado,
+            // complemento: data.endereco.complemento ? data.endereco.complemento : undefined,
+            // cep: data.endereco.cep
+        });
+    }
 
     async function handleCreate(_data: TFormSchema) {
         if (fetching) {
@@ -121,24 +149,24 @@ export function NovoCliente() {
                 nome: _data.nome,
                 nome_empresa: _data.nome_empresa,
                 cpf: _data.cpf,
-                email: _data.email,
                 contato: _data.contato,
                 cnpj: _data.cnpj,
-                endereco: {
-                    bairro: _data.bairro,
-                    cep: _data.cep,
-                    cidade: _data.cidade,
-                    estado: _data.estado,
-                    rua: _data.endereco
-                }
+                // endereco: {
+                //     bairro: _data.bairro,
+                //     cep: _data.cep,
+                //     cidade: _data.cidade,
+                //     estado: _data.estado,
+                //     rua: _data.endereco,
+                //     complemento: _data.complemento
+                // }
             }
-
-            await postClienteStore(model);
+            const id = params.id!;
+            await patchEmpresaStore(model, id);
             handleFetching(false);
-            toast.success("Cliente cadastrado!");
+            toast.success("Empresa editada.");
             setTimeout(() => {
                 goBack();
-            }, 3000);
+            }, 2000);
 
         } catch (error) {
             console.log(error);
@@ -147,21 +175,21 @@ export function NovoCliente() {
                 if (error.response?.data.message) {
                     return toast.error(error.response?.data.message);
                 }
-                toast.error("Erro ao cadastrar novo cliente");
+                toast.error("Erro ao editar");
             }
-            toast.error("Erro ao cadastrar novo cliente");
+            toast.error("Erro ao editar");
         }
     }
 
     function goBack() {
-        navigate("/dashboard/clientes");
+        navigate("/dashboard/empresas");
     }
 
     return (
         <section className={styles.new_contract}>
             <PageTitle
                 backFunction={goBack}
-                title='NOVO CADASTRO'
+                title='EDITAR EMPRESA'
                 showBackButton={true}
             />
 
@@ -207,6 +235,7 @@ export function NovoCliente() {
                     </div>
                     <div className={styles.input_container}>
                         <InputText
+                            disabled
                             fieldName='email'
                             control={control}
                             title='E-mail'
@@ -222,7 +251,7 @@ export function NovoCliente() {
                             errors={errors}
                         />
                     </div>
-                    <div className={styles.input_container}>
+                    {/* <div className={styles.input_container}>
                         <InputText
                             fieldName='endereco'
                             control={control}
@@ -276,7 +305,7 @@ export function NovoCliente() {
                             title='CEP'
                             errors={errors}
                         />
-                    </div>
+                    </div> */}
                     <div className={styles.btn_container}>
                         <CustomButton
                             variation='3'
