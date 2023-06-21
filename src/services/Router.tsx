@@ -22,6 +22,9 @@ import { ArquivosPage } from "../pages/Dashboard/ArquivosPage";
 import { ArquivosTable } from "../pages/Dashboard/ArquivosPage/ArquivosTable";
 import { NovoArquivo } from "../pages/Dashboard/ArquivosPage/NovoArquivo";
 import { FirstAccessPage } from "../pages/FirstAccess";
+import { ForgotPassword } from "../pages/ForgotPassword";
+import { ResetPasswordFirstStep } from "../pages/ForgotPassword/ResetPasswordFirstStep";
+import { ResetPasswordSecondStep } from "../pages/ForgotPassword/ResetPasswordSecondStep";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +41,20 @@ const router = createBrowserRouter([
             {
                 path: "/primeiroacesso",
                 element: <FirstAccessPage />,
+            },
+            {
+                path: "/recuperar",
+                element: <ForgotPassword />,
+                children: [
+                    {
+                        path: "",
+                        element: <ResetPasswordFirstStep />,
+                    },
+                    {
+                        path: "token/:id",
+                        element: <ResetPasswordSecondStep />,
+                    },
+                ]
             },
             {
                 path: "/dashboard",

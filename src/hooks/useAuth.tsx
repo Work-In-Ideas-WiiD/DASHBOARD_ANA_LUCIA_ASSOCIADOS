@@ -5,7 +5,7 @@ import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import { setAuthToken } from '../services/http/api';
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
-import router from "../services/Router";
+
 
 interface IAuthContextDataProps {
     children: ReactNode
@@ -68,7 +68,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
                 }
             });
         } else {
-            if (location.pathname != "/") {
+            if (location.pathname.includes("dashboard")) {
                 navigate("/");
             }
         }

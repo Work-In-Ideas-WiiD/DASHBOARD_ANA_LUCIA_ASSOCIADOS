@@ -1,0 +1,12 @@
+@import "../../../styles/Global.scss";
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+    max-width: 600px;
+    width: 100%;
+    padding: 30px 20px;
+    @include background-opacity($color-orange-100, 0.1);
+}

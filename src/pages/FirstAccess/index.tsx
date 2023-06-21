@@ -22,9 +22,13 @@ const formSchema = zod.object({
     }),
     password: zod.string({
         required_error: "Campo obrigatório",
+    }).min(8, {
+        message: "Mínimo de 8 caracteres"
     }),
     password_confirmation: zod.string({
         required_error: "Campo obrigatório",
+    }).min(8, {
+        message: "Mínimo de 8 caracteres"
     }),
 
 }).superRefine((val, ctx) => {
@@ -68,6 +72,7 @@ export function FirstAccessPage() {
             await signIn(data.email, data.password);
             handleFetching(false);
         } catch (error) {
+            handleFetching(false);
             toast.error("Erro ao enviar, verifique os dados e tente novamente.");
         }
     }
