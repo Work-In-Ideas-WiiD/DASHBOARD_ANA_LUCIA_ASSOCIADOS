@@ -21,8 +21,8 @@ export function LoginPage() {
     const { handleSubmit, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            email: '',
-            password: '',
+            email: 'wcostaprijo@hotmail.com',
+            password: '123456789',
         }
     })
     // test

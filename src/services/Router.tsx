@@ -25,6 +25,7 @@ import { FirstAccessPage } from "../pages/FirstAccess";
 import { ForgotPassword } from "../pages/ForgotPassword";
 import { ResetPasswordFirstStep } from "../pages/ForgotPassword/ResetPasswordFirstStep";
 import { ResetPasswordSecondStep } from "../pages/ForgotPassword/ResetPasswordSecondStep";
+import { EditCliente } from "../pages/Dashboard/ClientesPage/EditCliente";
 
 const router = createBrowserRouter([
     {
@@ -140,6 +141,10 @@ const router = createBrowserRouter([
                             {
                                 path: "novo",
                                 element: <NovoCliente />
+                            },
+                            {
+                                path: "editar/:id",
+                                element: <EditCliente />
                             },
                         ]
                     },

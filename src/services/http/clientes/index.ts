@@ -1,8 +1,10 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { api } from "../api";
-import { IGetClickSignKeyRes, IGetClientesDataRes, IGetClientesRes, IPostClienteModel } from "./cliente.dto";
+import { IGetClickSignKeyRes, IGetClienteRes, IGetClientesDataRes, IGetClientesRes, IPostClienteModel } from "./cliente.dto";
 
-export async function getCliente(id: string): Promise<AxiosResponse<IGetClientesDataRes, any>> {
+
+
+export async function getCliente(id: string): Promise<AxiosResponse<IGetClienteRes, any>> {
 
     const res = await api.get(`/cliente/${id}`);
 
@@ -23,6 +25,12 @@ export async function getClientes(page: number = 1, like: string = ""): Promise<
 
 export async function postClienteStore(data: IPostClienteModel): Promise<AxiosResponse<any, AxiosError>> {
     const res = await api.post("/cliente", data);
+
+    return res;
+}
+
+export async function patchClienteStore(data: IPostClienteModel, id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.patch(`/cliente/${id}`, data);
 
     return res;
 }

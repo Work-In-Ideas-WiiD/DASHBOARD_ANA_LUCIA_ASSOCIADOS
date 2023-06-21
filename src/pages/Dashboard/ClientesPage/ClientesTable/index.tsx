@@ -12,6 +12,8 @@ import { IGetClientesDataRes } from '../../../../services/http/clientes/cliente.
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { TablePaginator } from '../../../../components/tablePaginator';
+import { FaPenAlt } from 'react-icons/fa';
+import { useAuth } from '../../../../hooks/useAuth';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -21,6 +23,7 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ClienteTable() {
     const navigate = useNavigate();
+    const { isAdmin } = useAuth()
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
@@ -59,6 +62,26 @@ export function ClienteTable() {
     }
 
     function _renderItem(itens: IUserReqProps[]) {
+
+
+        function _renderEditButton(item: IUserReqProps) {
+            if (isAdmin) {
+                return (<></>)
+            }
+
+            return (
+                <td>
+                    <button
+                        type='button'
+                        className={styles.action_button}
+                        onClick={() => { navigate(`editar/${item.id}`) }}
+                    >
+                        <FaPenAlt fill="#C7633B" size={19} />
+                    </button>
+                </td>
+            )
+        }
+
         return itens.map((item) => {
 
             let documentId = item.cpf ? formatCnpjCpf(item.cpf!) : formatCnpjCpf(item.cnpj!);
@@ -73,6 +96,7 @@ export function ClienteTable() {
                     <td>{documentId}</td>
                     <td>{email}</td>
                     <td>{item.contato}</td>
+                    {_renderEditButton(item)}
                 </tr>
             )
         })
@@ -108,6 +132,9 @@ export function ClienteTable() {
                         <th>
                             Celular
                         </th>
+                        {
+                            !isAdmin && (<th>Ações</th>)
+                        }
                     </tr>
                 </thead>
                 <tbody>

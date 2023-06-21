@@ -1,6 +1,6 @@
 export interface IPostClienteModel {
     type: "cliente" | "empresa" | "administrador",
-    email: string,
+    email?: string,
     cpf?: string | null,
     nome: string,
     contato: string,
@@ -12,6 +12,7 @@ export interface IPostClienteModel {
         bairro: string,
         cidade: string,
         estado: string,
+        complemento?: string
     }
 }
 
@@ -42,4 +43,24 @@ export interface IGetClientesDataRes {
 
 export interface IGetClickSignKeyRes {
     key: string
+}
+
+export interface IGetClienteRes {
+    id: string,
+    nome: string,
+    email: string,
+    cpf: string,
+    contato: string,
+    cnpj: string,
+    nome_empresa: string,
+    endereco: {
+        id: string,
+        cep: string,
+        rua: string,
+        numero: number,
+        bairro: string,
+        complemento: string,
+        cidade: string,
+        estado: string,
+    }
 }
