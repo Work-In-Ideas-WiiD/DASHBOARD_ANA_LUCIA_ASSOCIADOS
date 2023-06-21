@@ -32,7 +32,8 @@ export function Assinatura() {
             widgetController = widget;
             // Define o endpoint https://sandbox.clicksign.com ou https://app.clicksign.com
             widget.endpoint = 'https://sandbox.clicksign.com';
-            widget.origin = 'http://localhost:5173';
+            // Define a origem https://ana.sistema.wiid.com.br/ ou http://localhost:5173
+            widget.origin = 'https://ana.sistema.wiid.com.br/';
             widget.mount('container');
             widget.on('loaded', () => {
                 console.log('loaded!');
