@@ -69,8 +69,9 @@ export function Assinatura() {
             <header>
                 <img src={Logo} alt="Ana Lúcia e Associados" />
             </header>
-            <div className={styles.container} id='container'> </div>
             {_renderMessage(documentSigned)}
+            <div className={styles.container} id='container'> </div>
+
         </main>
     )
 }

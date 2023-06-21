@@ -32,3 +32,9 @@ export async function patchEmpresaStore(data: IPostEmpresaModel, id: string): Pr
 
     return res;
 }
+
+export async function delEmpresa(id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.delete(`/user/${id}`);
+
+    return res;
+}

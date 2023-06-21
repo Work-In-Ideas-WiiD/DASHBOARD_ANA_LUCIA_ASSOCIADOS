@@ -12,11 +12,10 @@ import { PageTitle } from '../../../../components/pageTitle';
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import { IPostClienteModel } from '../../../../services/http/clientes/cliente.dto';
-import { getCliente, patchClienteStore } from '../../../../services/http/clientes';
 import axios from 'axios';
 import { useEffect } from 'react';
 import { getEmpresa, patchEmpresaStore } from '../../../../services/http/empresas';
-import { IPatchEmpresaStoreModel } from '../../../../services/http/empresas/empresas.dto';
+
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -33,27 +32,27 @@ const formSchema = zod.object({
     contato: zod.string({
         required_error: "Campo obrigatório",
     }),
-    // endereco: zod.string({
-    //     required_error: "Campo obrigatório",
-    // }),
-    // numero: zod.string({
-    //     required_error: "Campo obrigatório",
-    // }),
-    // bairro: zod.string({
-    //     required_error: "Campo obrigatório",
-    // }),
-    // cidade: zod.string({
-    //     required_error: "Campo obrigatório",
-    // }),
-    // estado: zod.string({
-    //     required_error: "Campo obrigatório",
-    // }),
-    // complemento: zod.string({
-    //     required_error: "Campo obrigatório",
-    // }),
-    // cep: zod.string({
-    //     required_error: "Campo obrigatório",
-    // }),
+    endereco: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    numero: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    bairro: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    cidade: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    estado: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    complemento: zod.string({
+        required_error: "Campo obrigatório",
+    }),
+    cep: zod.string({
+        required_error: "Campo obrigatório",
+    }),
 }).superRefine((val, ctx) => {
 
     if (!val.cnpj && val.nome_empresa) {
@@ -104,13 +103,13 @@ export function EditEmpresa() {
             cnpj: undefined,
             email: undefined,
             contato: undefined,
-            // endereco: undefined,
-            // numero: undefined,
-            // bairro: undefined,
-            // cidade: undefined,
-            // estado: undefined,
-            // complemento: undefined,
-            // cep: undefined,
+            endereco: undefined,
+            numero: undefined,
+            bairro: undefined,
+            cidade: undefined,
+            estado: undefined,
+            complemento: undefined,
+            cep: undefined,
         }
     })
 
@@ -128,13 +127,13 @@ export function EditEmpresa() {
             cnpj: data.cnpj ? data.cnpj : undefined,
             email: data.email,
             contato: data.contato!,
-            // endereco: data.endereco.rua,
-            // numero: String(data.endereco.numero),
-            // bairro: data.endereco.bairro,
-            // cidade: data.endereco.cidade,
-            // estado: data.endereco.estado,
-            // complemento: data.endereco.complemento ? data.endereco.complemento : undefined,
-            // cep: data.endereco.cep
+            endereco: data.endereco.rua,
+            numero: String(data.endereco.numero),
+            bairro: data.endereco.bairro,
+            cidade: data.endereco.cidade,
+            estado: data.endereco.estado,
+            complemento: data.endereco.complemento ? data.endereco.complemento : undefined,
+            cep: data.endereco.cep
         });
     }
 
@@ -151,14 +150,14 @@ export function EditEmpresa() {
                 cpf: _data.cpf,
                 contato: _data.contato,
                 cnpj: _data.cnpj,
-                // endereco: {
-                //     bairro: _data.bairro,
-                //     cep: _data.cep,
-                //     cidade: _data.cidade,
-                //     estado: _data.estado,
-                //     rua: _data.endereco,
-                //     complemento: _data.complemento
-                // }
+                endereco: {
+                    bairro: _data.bairro,
+                    cep: _data.cep,
+                    cidade: _data.cidade,
+                    estado: _data.estado,
+                    rua: _data.endereco,
+                    complemento: _data.complemento
+                }
             }
             const id = params.id!;
             await patchEmpresaStore(model, id);
@@ -251,7 +250,7 @@ export function EditEmpresa() {
                             errors={errors}
                         />
                     </div>
-                    {/* <div className={styles.input_container}>
+                    <div className={styles.input_container}>
                         <InputText
                             fieldName='endereco'
                             control={control}
@@ -305,7 +304,7 @@ export function EditEmpresa() {
                             title='CEP'
                             errors={errors}
                         />
-                    </div> */}
+                    </div>
                     <div className={styles.btn_container}>
                         <CustomButton
                             variation='3'

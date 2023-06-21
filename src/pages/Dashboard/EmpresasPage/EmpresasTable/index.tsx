@@ -6,12 +6,15 @@ import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getEmpresas } from '../../../../services/http/empresas';
+import { delEmpresa, getEmpresas } from '../../../../services/http/empresas';
 import { IGetEmpresasDataRes, IGetEmpresasRes } from '../../../../services/http/empresas/empresas.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { TablePaginator } from '../../../../components/tablePaginator';
-import { FaPenAlt } from 'react-icons/fa';
+import { FaPenAlt, FaTrash } from 'react-icons/fa';
+import { useAuth } from '../../../../hooks/useAuth';
+import { toast } from 'react-toastify';
+import { ModaDeleteCompany } from './components/modalDeleteCompany';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -21,12 +24,17 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 
 export function EmpresasTable() {
-
+    const navigate = useNavigate();
+    const { handleFetching } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
+    const [modalRemoveItem, setModalRemoveItem] = useState(false);
     const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
-    const navigate = useNavigate();
+    const [currentCompany, setCurrentCompany] = useState<IGetEmpresasDataRes>({
+        id: "",
+        nome: ""
+    } as IGetEmpresasDataRes);
     const [noContent, setNoContent] = useState(false);
     const { handleSubmit, control, getValues } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -61,8 +69,27 @@ export function EmpresasTable() {
         navigate("novo");
     }
 
+    async function removeCustomer(id: string) {
+        setModalRemoveItem(false);
+        try {
+            handleFetching(true);
+            await delEmpresa(id);
+            toast.success("Empresa excluída.");
+            getData(page, getValues("search"));
+            handleFetching(false);
+        } catch (error) {
+            handleFetching(false);
+            toast.error("Erro ao deletar empresa.");
+        }
+    }
 
     function _renderItem(itens: IGetEmpresasDataRes[]) {
+
+        function _handleRemoveBnt(customer: IGetEmpresasDataRes) {
+            setCurrentCompany(customer);
+            setModalRemoveItem(true);
+        }
+
         return itens.map((item) => {
 
             let documentId = item.cnpj ? formatCnpjCpf(item.cnpj) : formatCnpjCpf(item.cpf!);
@@ -86,13 +113,13 @@ export function EmpresasTable() {
                             >
                                 <FaPenAlt fill="#C7633B" size={19} />
                             </button>
-                            {/* <button
+                            <button
                                 type='button'
                                 className={styles.action_button}
                                 onClick={() => { _handleRemoveBnt(item) }}
                             >
                                 <FaTrash fill="#D64646" size={19} />
-                            </button> */}
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -102,6 +129,12 @@ export function EmpresasTable() {
 
     return (
         <section className={styles.table}>
+            <ModaDeleteCompany
+                handleDelete={removeCustomer}
+                handleModal={setModalRemoveItem}
+                show={modalRemoveItem}
+                company={currentCompany}
+            />
             <h2 className={`${styles.title} dashboard_title`}>EMPRESAS</h2>
             <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
                 <SearchBar

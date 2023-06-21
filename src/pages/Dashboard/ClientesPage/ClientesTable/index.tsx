@@ -25,7 +25,7 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ClienteTable() {
     const navigate = useNavigate();
-    const { isAdmin, handleFetching } = useAuth()
+    const { isAdmin, handleFetching } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
@@ -106,13 +106,13 @@ export function ClienteTable() {
                             >
                                 <FaPenAlt fill="#C7633B" size={19} />
                             </button>
-                            {/* <button
+                            <button
                                 type='button'
                                 className={styles.action_button}
                                 onClick={() => { _handleRemoveBnt(item) }}
                             >
                                 <FaTrash fill="#D64646" size={19} />
-                            </button> */}
+                            </button>
                         </div>
 
                     </td>
