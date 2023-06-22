@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 const controller = new AbortController();
 
 const api = axios.create({
-    baseURL: 'https://sandbox.analucia.garen.wiid.com.br/api',
+    baseURL: import.meta.env.VITE_API_URL,
     signal: controller.signal
 });
 
