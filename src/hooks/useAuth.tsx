@@ -16,6 +16,7 @@ interface IAuthContextData {
     handleFetching: (option: boolean) => void,
     signIn: (email: string, password: string) => Promise<void>,
     signOut: () => void,
+    refreshUserData: () => Promise<void>,
     me: IUserProps,
     fetching: boolean,
     isAdmin: boolean
@@ -45,7 +46,15 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
         deleted_at: "",
         created_at: "",
         updated_at: "",
-        endereco: "",
+        endereco: {
+            bairro: "",
+            cep: "",
+            cidade: "",
+            estado: "",
+            numero: "",
+            rua: "",
+            complemento: "",
+        }
     })
     const [isAdmin, setIsAdmin] = useState(false);
     const [fetching, setFetching] = useState(false);
@@ -73,6 +82,11 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             }
         }
     }, [])
+
+    async function refreshUserData() {
+        const { data } = await postMe();
+        setUserData(data);
+    }
 
     function setUserData(data: IUserProps) {
         setMe(data);
@@ -120,7 +134,15 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             deleted_at: "",
             created_at: "",
             updated_at: "",
-            endereco: "",
+            endereco: {
+                bairro: "",
+                cep: "",
+                cidade: "",
+                numero: "",
+                estado: "",
+                rua: "",
+                complemento: "",
+            }
         });
         setAuthToken(" ");
         navigate("/");
@@ -131,6 +153,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
         handleFetching,
         signIn,
         signOut,
+        refreshUserData,
         me,
         fetching,
         isAdmin

@@ -27,6 +27,7 @@ import { ResetPasswordFirstStep } from "../pages/ForgotPassword/ResetPasswordFir
 import { ResetPasswordSecondStep } from "../pages/ForgotPassword/ResetPasswordSecondStep";
 import { EditCliente } from "../pages/Dashboard/ClientesPage/EditCliente";
 import { EditEmpresa } from "../pages/Dashboard/EmpresasPage/EditEmpresa";
+import { ProfilePage } from "../pages/Dashboard/ProfilePage";
 
 const router = createBrowserRouter([
     {
@@ -152,6 +153,10 @@ const router = createBrowserRouter([
                                 element: <EditCliente />
                             },
                         ]
+                    },
+                    {
+                        path: "perfil",
+                        element: <ProfilePage />
                     },
                     {
                         path: "error",

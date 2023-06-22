@@ -41,6 +41,7 @@ export function SidebarItem({
         if (route === "/logout") {
             return signOut();
         }
+
         navigate('/dashboard' + route);
     }
 

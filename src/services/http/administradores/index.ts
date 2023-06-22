@@ -35,3 +35,9 @@ export async function postAddEmpresaToContratoOrArquivo(empresa_id: string, arqu
 
     return res;
 }
+
+export async function patchAdministrador(model: IPostAdministradorModel, id: string): Promise<AxiosResponse<IPostAdministradorRes, AxiosError>> {
+    const res = await api.patch(`/user/${id}`, model);
+
+    return res;
+}
