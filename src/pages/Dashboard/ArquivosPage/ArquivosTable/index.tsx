@@ -13,11 +13,13 @@ import { toast } from 'react-toastify';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
-import { getArquivos } from '../../../../services/http/arquivos';
+import { delArquivo, getArquivos } from '../../../../services/http/arquivos';
 import { ModalAddCompany } from '../components/modalAddCompany';
 import { IGetArquivosDataRes } from '../../../../services/http/arquivos/aquivos.dto';
 import { TablePaginator } from '../../../../components/tablePaginator';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
+import { FaTrash } from 'react-icons/fa';
+import { ModaDeleteArquivo } from './components/modalDeleteArquivo';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -27,7 +29,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ArquivosTable() {
-    const { isAdmin } = useAuth();
+    const { isAdmin, handleFetching } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
@@ -43,6 +45,11 @@ export function ArquivosTable() {
             fileId: ''
         }
     })
+    const [modalRemoveItem, setModalRemoveItem] = useState(false);
+    const [delFileData, setDelFileDate] = useState<IGetArquivosDataRes>({
+        id: "",
+        descricao: ""
+    } as IGetArquivosDataRes);
 
     useEffect(() => {
         getData(page, getValues("search"));
@@ -74,6 +81,20 @@ export function ArquivosTable() {
         navigate('novo');
     }
 
+    async function removeFile(id: string) {
+        setModalRemoveItem(false);
+        try {
+            handleFetching(true);
+            await delArquivo(id);
+            toast.success("Arquivo excluído.");
+            getData(page, getValues("search"));
+            handleFetching(false);
+        } catch (error) {
+            handleFetching(false);
+            toast.error("Erro ao deletar arquivo.");
+        }
+    }
+
     function _renderItem(data: IGetArquivosDataRes[]) {
 
         function renderButton(data: IGetArquivosDataRes) {
@@ -90,6 +111,11 @@ export function ArquivosTable() {
 
         }
 
+        function _handleRemoveBnt(file: IGetArquivosDataRes) {
+            setDelFileDate(file);
+            setModalRemoveItem(true);
+        }
+
         return data.map((item) => {
 
             const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
@@ -103,13 +129,22 @@ export function ArquivosTable() {
                         {renderButton(item)}
                     </td>
                     <td>
-                        <button
-                            type='button'
-                            className={styles.download_button}
-                            onClick={() => { openFile(item.url) }}
-                        >
-                            <MdDownload color="#C7633B" size={19} />
-                        </button>
+                        <div className={styles.action_btn_container}>
+                            <button
+                                type='button'
+                                className={styles.action_button}
+                                onClick={() => { openFile(item.url) }}
+                            >
+                                <MdDownload color="#C7633B" size={19} />
+                            </button>
+                            <button
+                                type='button'
+                                className={styles.action_button}
+                                onClick={() => { _handleRemoveBnt(item) }}
+                            >
+                                <FaTrash fill="#D64646" size={19} />
+                            </button>
+                        </div>
                     </td>
                 </tr>
             )
@@ -160,6 +195,12 @@ export function ArquivosTable() {
     return (
 
         <section className={styles.table}>
+            <ModaDeleteArquivo
+                handleDelete={removeFile}
+                handleModal={setModalRemoveItem}
+                show={modalRemoveItem}
+                file={delFileData}
+            />
             <ModalAddCompany handleSubmitForm={handleAddCompanyToFile} showModal={modalIsOpen} handleModal={handleModal} />
             <h2 className={`${styles.title} dashboard_title`}>ARQUIVOS</h2>
             <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>

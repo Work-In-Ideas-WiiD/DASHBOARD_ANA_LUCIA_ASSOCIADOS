@@ -19,8 +19,8 @@ export interface IGetAdministradoresDataRes {
 }
 
 export interface IPostAdministradorModel {
-    type: "administrador",
-    email: string,
+    type?: "administrador",
+    email?: string,
     cpf: string,
     nome: string,
     contato: string,

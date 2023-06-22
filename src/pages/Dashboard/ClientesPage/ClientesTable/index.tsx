@@ -7,11 +7,15 @@ import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IUserReqProps } from '../../../../services/http/user/user.dto';
-import { getClientes } from '../../../../services/http/clientes';
+import { delCliente, getClientes } from '../../../../services/http/clientes';
 import { IGetClientesDataRes } from '../../../../services/http/clientes/cliente.dto';
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { TablePaginator } from '../../../../components/tablePaginator';
+import { FaPenAlt, FaTrash } from 'react-icons/fa';
+import { useAuth } from '../../../../hooks/useAuth';
+import { ModaDeleteCustomer } from './components/modalDeleteCustomer';
+import { toast } from 'react-toastify';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -21,9 +25,15 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ClienteTable() {
     const navigate = useNavigate();
+    const { isAdmin, handleFetching } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
+    const [modalRemoveItem, setModalRemoveItem] = useState(false);
+    const [currentCustomer, setCurrentCustomer] = useState<IGetClientesDataRes>({
+        id: "",
+        nome: ""
+    } as IGetClientesDataRes);
     const [noContent, setNoContent] = useState(false);
     const [customers, setCustomers] = useState<IGetClientesDataRes[]>([]);
     const { handleSubmit, control, getValues } = useForm<TFormSchema>({
@@ -32,6 +42,7 @@ export function ClienteTable() {
             search: '',
         }
     })
+
     useEffect(() => {
         getData(page, getValues("search"));
     }, [page])
@@ -58,7 +69,58 @@ export function ClienteTable() {
         navigate("novo");
     }
 
+    async function removeCustomer(id: string) {
+        setModalRemoveItem(false);
+        try {
+            handleFetching(true);
+            await delCliente(id);
+            toast.success("Cliente excluído.");
+            getData(page, getValues("search"));
+            handleFetching(false);
+        } catch (error) {
+            handleFetching(false);
+            toast.error("Erro ao deletar cliente.");
+        }
+    }
+
     function _renderItem(itens: IUserReqProps[]) {
+
+        function _handleRemoveBnt(customer: IUserReqProps) {
+            setCurrentCustomer(customer);
+            setModalRemoveItem(true);
+        }
+
+        function _renderButtons(item: IUserReqProps) {
+            if (isAdmin) {
+                return (<></>)
+            }
+
+            return (
+                <>
+                    <td>
+                        <div className={styles.action_btn_container}>
+                            <button
+                                type='button'
+                                className={styles.action_button}
+                                onClick={() => { navigate(`editar/${item.id}`) }}
+                            >
+                                <FaPenAlt fill="#C7633B" size={19} />
+                            </button>
+                            <button
+                                type='button'
+                                className={styles.action_button}
+                                onClick={() => { _handleRemoveBnt(item) }}
+                            >
+                                <FaTrash fill="#D64646" size={19} />
+                            </button>
+                        </div>
+
+                    </td>
+                </>
+
+            )
+        }
+
         return itens.map((item) => {
 
             let documentId = item.cpf ? formatCnpjCpf(item.cpf!) : formatCnpjCpf(item.cnpj!);
@@ -73,6 +135,7 @@ export function ClienteTable() {
                     <td>{documentId}</td>
                     <td>{email}</td>
                     <td>{item.contato}</td>
+                    {_renderButtons(item)}
                 </tr>
             )
         })
@@ -80,6 +143,13 @@ export function ClienteTable() {
 
     return (
         <section className={styles.table}>
+            <ModaDeleteCustomer
+                handleDelete={removeCustomer}
+                handleModal={setModalRemoveItem}
+                show={modalRemoveItem}
+                customer={currentCustomer}
+
+            />
             <h2 className={`${styles.title} dashboard_title`}>CLIENTES</h2>
             <form className={styles.table_header} onSubmit={handleSubmit(searchData)}>
                 <SearchBar
@@ -108,6 +178,9 @@ export function ClienteTable() {
                         <th>
                             Celular
                         </th>
+                        {
+                            !isAdmin && (<th>Ações</th>)
+                        }
                     </tr>
                 </thead>
                 <tbody>

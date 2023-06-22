@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { api } from "../api";
-import { IGetEmpresasRes, IPostEmpresaModel } from "./empresas.dto";
+import { IGetEmpresasRes, IPatchEmpresaStoreModel, IPostEmpresaModel } from "./empresas.dto";
 
 export async function getEmpresas(page: number = 1, like: string = ""): Promise<AxiosResponse<IGetEmpresasRes, AxiosError>> {
 
@@ -23,6 +23,18 @@ export async function getEmpresa(id: string): Promise<AxiosResponse<any, AxiosEr
 
 export async function postEmpresaStore(data: IPostEmpresaModel): Promise<AxiosResponse<any, AxiosError>> {
     const res = await api.post("/user", data);
+
+    return res;
+}
+
+export async function patchEmpresaStore(data: IPostEmpresaModel, id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.patch(`/user/${id}`, data);
+
+    return res;
+}
+
+export async function delEmpresa(id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.delete(`/user/${id}`);
 
     return res;
 }

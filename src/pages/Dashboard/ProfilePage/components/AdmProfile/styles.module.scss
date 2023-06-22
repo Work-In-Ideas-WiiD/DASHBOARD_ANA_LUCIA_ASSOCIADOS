@@ -1,0 +1,32 @@
+@import "../../../../../styles/Global.scss";
+
+.new_contract {
+
+    .form_wrapper {
+        margin-top: 42px;
+        width: 100%;
+        max-width: 1050px;
+        @include background-opacity($color-orange-100, 0.1);
+        padding-top: 197px;
+        padding-bottom: 218px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        form {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            max-width: 440px;
+            gap: 20px;
+
+            .btn_container {
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            padding: 20px 13px;
+        }
+    }
+}

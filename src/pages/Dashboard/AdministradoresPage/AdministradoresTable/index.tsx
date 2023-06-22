@@ -2,7 +2,6 @@ import styles from './styles.module.scss';
 import { CustomButton, EIconCustomButton } from "../../../../components/customButton";
 import { SearchBar } from '../../../../components/inputs/searchBar';
 import { useEffect, useState } from 'react';
-import { TableSelectInput } from '../../../../components/inputs/tableSelectInput';
 import { useNavigate } from 'react-router-dom';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
@@ -67,13 +66,14 @@ export function AdministradoresTable() {
             let documentId = item.cnpj ? formatCnpjCpf(item.cnpj!) : formatCnpjCpf(item.cpf!);
             if (!item.cnpj && !item.cpf) documentId = "n/a";
             const email = item.email ? item.email : 'n/a';
+            const contato = item.contato ? item.contato : 'n/a';
 
             return (
                 <tr key={item.id}>
                     <td>{item.nome} </td>
                     <td>{documentId}</td>
+                    <td>{contato}</td>
                     <td>{email}</td>
-                    <td>Administradores - Empresa</td>
                 </tr>
             )
         })
@@ -98,13 +98,13 @@ export function AdministradoresTable() {
                             Nome
                         </th>
                         <th>
-                            CPF/CNPJ
+                            CPF
+                        </th>
+                        <th>
+                            Contato
                         </th>
                         <th>
                             E-mail
-                        </th>
-                        <th>
-                            Tipo
                         </th>
                     </tr>
                 </thead>

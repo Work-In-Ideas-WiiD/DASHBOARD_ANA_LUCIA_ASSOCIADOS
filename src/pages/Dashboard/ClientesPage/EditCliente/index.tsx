@@ -6,14 +6,15 @@ import { CustomButton } from '../../../../components/customButton';
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { PageTitle } from '../../../../components/pageTitle';
 
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
 import { IPostClienteModel } from '../../../../services/http/clientes/cliente.dto';
-import { postClienteStore } from '../../../../services/http/clientes';
+import { getCliente, patchClienteStore } from '../../../../services/http/clientes';
 import axios from 'axios';
+import { useEffect } from 'react';
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -88,10 +89,11 @@ const formSchema = zod.object({
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-export function NovoCliente() {
+export function EditCliente() {
+    const params = useParams();
     const { handleFetching, fetching } = useAuth();
     const navigate = useNavigate();
-    const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
+    const { handleSubmit, formState: { errors }, control, reset } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             nome: undefined,
@@ -110,6 +112,30 @@ export function NovoCliente() {
         }
     })
 
+    useEffect(() => {
+        const id = params.id as string;
+        getData(id);
+    }, []);
+
+    async function getData(id: string) {
+        const { data } = await getCliente(id);
+        reset({
+            nome: data.nome,
+            cpf: data.cpf ? data.cpf : undefined,
+            nome_empresa: data.nome_empresa ? data.nome_empresa : undefined,
+            cnpj: data.cnpj ? data.cnpj : undefined,
+            email: data.email,
+            contato: data.contato!,
+            endereco: data.endereco.rua,
+            numero: String(data.endereco.numero),
+            bairro: data.endereco.bairro,
+            cidade: data.endereco.cidade,
+            estado: data.endereco.estado,
+            complemento: data.endereco.complemento ? data.endereco.complemento : undefined,
+            cep: data.endereco.cep
+        });
+    }
+
     async function handleCreate(_data: TFormSchema) {
         if (fetching) {
             return
@@ -121,7 +147,6 @@ export function NovoCliente() {
                 nome: _data.nome,
                 nome_empresa: _data.nome_empresa,
                 cpf: _data.cpf,
-                email: _data.email,
                 contato: _data.contato,
                 cnpj: _data.cnpj,
                 endereco: {
@@ -129,16 +154,17 @@ export function NovoCliente() {
                     cep: _data.cep,
                     cidade: _data.cidade,
                     estado: _data.estado,
-                    rua: _data.endereco
+                    rua: _data.endereco,
+                    complemento: _data.complemento
                 }
             }
-
-            await postClienteStore(model);
+            const id = params.id!;
+            await patchClienteStore(model, id);
             handleFetching(false);
-            toast.success("Cliente cadastrado!");
+            toast.success("Cliente editado.");
             setTimeout(() => {
                 goBack();
-            }, 3000);
+            }, 2000);
 
         } catch (error) {
             console.log(error);
@@ -161,7 +187,7 @@ export function NovoCliente() {
         <section className={styles.new_contract}>
             <PageTitle
                 backFunction={goBack}
-                title='NOVO CADASTRO'
+                title='EDITAR CLIENTE'
                 showBackButton={true}
             />
 
@@ -207,6 +233,7 @@ export function NovoCliente() {
                     </div>
                     <div className={styles.input_container}>
                         <InputText
+                            disabled
                             fieldName='email'
                             control={control}
                             title='E-mail'

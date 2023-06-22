@@ -30,21 +30,27 @@
         }
     }
 
-    .download_button {
-        border-radius: 50%;
+    .action_btn_container {
         display: flex;
-        justify-content: center;
+        flex-direction: row;
         align-items: center;
-        width: 30px;
-        height: 30px;
-        border: none;
-        outline: none;
-        background-color: transparent;
 
-        &:hover {
-            transition: 0.1s;
-            background-color: var(--color-white-100);
-            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.065));
+        .action_button {
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 30px;
+            height: 30px;
+            border: none;
+            outline: none;
+            background-color: transparent;
+
+            &:hover {
+                transition: 0.1s;
+                background-color: var(--color-white-100);
+                filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.065));
+            }
         }
     }
 }

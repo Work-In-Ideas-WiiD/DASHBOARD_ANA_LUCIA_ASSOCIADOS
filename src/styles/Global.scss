@@ -87,9 +87,9 @@ a {
 
 .last_item {
     position: absolute;
-    bottom: 119px;
+    bottom: 100px;
 
-    @media (max-height: 900px) {
+    @media (max-height: 1000px) {
         position: initial;
         bottom: 0;
     }

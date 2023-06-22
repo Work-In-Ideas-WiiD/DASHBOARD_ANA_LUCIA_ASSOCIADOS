@@ -1,19 +1,21 @@
-import { CustomInputMask } from '../../../../components/inputs/customInputMask';
-import { InputText } from '../../../../components/inputs/inputText';
+import { CustomInputMask } from '../../../../../components/inputs/customInputMask';
+import { InputText } from '../../../../../components/inputs/inputText';
 import styles from './styles.module.scss';
-import { CustomButton } from '../../../../components/customButton';
+import { CustomButton } from '../../../../../components/customButton';
 
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from 'react-router-dom';
-import { PageTitle } from '../../../../components/pageTitle';
+import { PageTitle } from '../../../../../components/pageTitle';
 
-import { useAuth } from '../../../../hooks/useAuth';
+import { useAuth } from '../../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
-import { IPostClienteModel } from '../../../../services/http/clientes/cliente.dto';
-import { postClienteStore } from '../../../../services/http/clientes';
+import { IPostClienteModel } from '../../../../../services/http/clientes/cliente.dto';
 import axios from 'axios';
+import { useEffect } from 'react';
+import { getEmpresa, patchEmpresaStore } from '../../../../../services/http/empresas';
+
 
 const formSchema = zod.object({
     nome: zod.string({
@@ -88,10 +90,10 @@ const formSchema = zod.object({
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
-export function NovoCliente() {
-    const { handleFetching, fetching } = useAuth();
+export function CompanyProfile() {
+    const { handleFetching, fetching, me, refreshUserData } = useAuth();
     const navigate = useNavigate();
-    const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
+    const { handleSubmit, formState: { errors }, control, reset } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             nome: undefined,
@@ -110,6 +112,29 @@ export function NovoCliente() {
         }
     })
 
+    useEffect(() => {
+        setUserData();
+    }, []);
+
+    function setUserData() {
+
+        reset({
+            nome: me.nome,
+            cpf: me.cpf ? me.cpf : undefined,
+            nome_empresa: me.nome_empresa ? me.nome_empresa : undefined,
+            cnpj: me.cnpj ? me.cnpj : undefined,
+            email: me.email,
+            contato: me.contato!,
+            endereco: me.endereco.rua ? me.endereco.rua : undefined,
+            numero: me.endereco.numero ? String(me.endereco.numero) : undefined,
+            bairro: me.endereco.bairro ? me.endereco.bairro : undefined,
+            cidade: me.endereco.cidade ? me.endereco.cidade : undefined,
+            estado: me.endereco.estado ? me.endereco.estado : undefined,
+            complemento: me.endereco.complemento ? me.endereco.complemento : undefined,
+            cep: me.endereco.cep ? me.endereco.cep : undefined
+        });
+    }
+
     async function handleCreate(_data: TFormSchema) {
         if (fetching) {
             return
@@ -121,7 +146,6 @@ export function NovoCliente() {
                 nome: _data.nome,
                 nome_empresa: _data.nome_empresa,
                 cpf: _data.cpf,
-                email: _data.email,
                 contato: _data.contato,
                 cnpj: _data.cnpj,
                 endereco: {
@@ -129,16 +153,18 @@ export function NovoCliente() {
                     cep: _data.cep,
                     cidade: _data.cidade,
                     estado: _data.estado,
-                    rua: _data.endereco
+                    rua: _data.endereco,
+                    complemento: _data.complemento
                 }
             }
-
-            await postClienteStore(model);
+            const id = me.id;
+            await patchEmpresaStore(model, id);
+            await refreshUserData();
             handleFetching(false);
-            toast.success("Cliente cadastrado!");
+            toast.success("Empresa editada.");
             setTimeout(() => {
                 goBack();
-            }, 3000);
+            }, 2000);
 
         } catch (error) {
             console.log(error);
@@ -147,21 +173,21 @@ export function NovoCliente() {
                 if (error.response?.data.message) {
                     return toast.error(error.response?.data.message);
                 }
-                toast.error("Erro ao cadastrar novo cliente");
+                toast.error("Erro ao editar");
             }
-            toast.error("Erro ao cadastrar novo cliente");
+            toast.error("Erro ao editar");
         }
     }
 
     function goBack() {
-        navigate("/dashboard/clientes");
+        navigate("/dashboard/home");
     }
 
     return (
         <section className={styles.new_contract}>
             <PageTitle
                 backFunction={goBack}
-                title='NOVO CADASTRO'
+                title='PERFIL'
                 showBackButton={true}
             />
 
@@ -207,6 +233,7 @@ export function NovoCliente() {
                     </div>
                     <div className={styles.input_container}>
                         <InputText
+                            disabled
                             fieldName='email'
                             control={control}
                             title='E-mail'

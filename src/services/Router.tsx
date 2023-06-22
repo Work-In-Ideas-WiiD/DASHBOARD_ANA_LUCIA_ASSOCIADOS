@@ -25,6 +25,9 @@ import { FirstAccessPage } from "../pages/FirstAccess";
 import { ForgotPassword } from "../pages/ForgotPassword";
 import { ResetPasswordFirstStep } from "../pages/ForgotPassword/ResetPasswordFirstStep";
 import { ResetPasswordSecondStep } from "../pages/ForgotPassword/ResetPasswordSecondStep";
+import { EditCliente } from "../pages/Dashboard/ClientesPage/EditCliente";
+import { EditEmpresa } from "../pages/Dashboard/EmpresasPage/EditEmpresa";
+import { ProfilePage } from "../pages/Dashboard/ProfilePage";
 
 const router = createBrowserRouter([
     {
@@ -80,7 +83,11 @@ const router = createBrowserRouter([
                             {
                                 path: "novo",
                                 element: <NovaEmpresa />
-                            }
+                            },
+                            {
+                                path: "editar/:id",
+                                element: <EditEmpresa />
+                            },
                         ]
                     },
                     {
@@ -141,7 +148,15 @@ const router = createBrowserRouter([
                                 path: "novo",
                                 element: <NovoCliente />
                             },
+                            {
+                                path: "editar/:id",
+                                element: <EditCliente />
+                            },
                         ]
+                    },
+                    {
+                        path: "perfil",
+                        element: <ProfilePage />
                     },
                     {
                         path: "error",

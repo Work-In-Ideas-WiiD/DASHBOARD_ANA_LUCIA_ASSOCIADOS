@@ -134,7 +134,7 @@ export function NovaEmpresa() {
 
             await postEmpresaStore(model);
             handleFetching(false);
-            toast("Cliente cadastrado!");
+            toast("Empresa cadastrada");
             setTimeout(() => {
                 goBack();
             }, 3000);
@@ -146,9 +146,9 @@ export function NovaEmpresa() {
                 if (error.response?.data.message) {
                     return toast.error(error.response?.data.message);
                 }
-                toast.error("Erro ao cadastrar novo cliente");
+                toast.error("Erro ao cadastrar nova empresa");
             }
-            toast.error("Erro ao cadastrar novo cliente");
+            toast.error("Erro ao cadastrar nova empresa");
         }
     }
 
