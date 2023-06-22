@@ -7,7 +7,7 @@ import { ImHome } from 'react-icons/im';
 import { FaBuilding, FaPenAlt } from 'react-icons/fa';
 import { IoDocument, IoFileTrayStackedSharp } from 'react-icons/io5';
 import { IoPersonSharp } from 'react-icons/io5';
-import { BsPersonVcardFill } from 'react-icons/bs';
+import { BsPersonCircle, BsPersonVcardFill } from 'react-icons/bs';
 import { AsideItem } from './asideItem';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
@@ -70,6 +70,13 @@ const itens: IItens[] = [
         Icon: <IoPersonSharp fill="White" size={20} />,
         ActiveIcon: <IoPersonSharp fill="#1E3F49" size={20} />,
         path: "/clientes",
+        adm: false
+    },
+    {
+        title: "Perfil",
+        Icon: <BsPersonCircle fill="white" size={25} />,
+        ActiveIcon: <BsPersonCircle fill="#1E3F49" size={25} />,
+        path: "/perfil",
         adm: false
     },
     {
