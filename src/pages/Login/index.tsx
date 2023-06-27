@@ -1,6 +1,6 @@
 import { IconInput } from '../../components/inputs/IconInput';
 import styles from './styles.module.scss';
-import Logo from "../../assets/imgs/logo_ana.png";
+import Logo from "../../assets/imgs/logo_ana_login.png";
 import { Link } from 'react-router-dom'
 import * as zod from "zod";
 import { useForm } from 'react-hook-form';
@@ -51,7 +51,7 @@ export function LoginPage() {
     return (
         <main className={styles.main}>
             <form onSubmit={handleSubmit(handleLogin)}>
-                <img src={Logo} alt="logo" />
+                <img className={styles.logo} src={Logo} alt="logo" />
                 <div className={styles.input_container}>
                     <IconInput
                         autoComplete="email"
