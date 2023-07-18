@@ -20,6 +20,7 @@ import { TablePaginator } from '../../../../components/tablePaginator';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { FaTrash } from 'react-icons/fa';
 import { ModaDeleteArquivo } from './components/modalDeleteArquivo';
+import { TUserTypes } from '../../../../services/http/auth/auth.dto';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -29,7 +30,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ArquivosTable() {
-    const { isAdmin, handleFetching } = useAuth();
+    const { userRole, handleFetching } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
@@ -98,7 +99,7 @@ export function ArquivosTable() {
     function _renderItem(data: IGetArquivosDataRes[]) {
 
         function renderButton(data: IGetArquivosDataRes) {
-            if (!isAdmin) {
+            if (!userRole.includes("administrador")) {
                 return (<></>)
             }
 
@@ -175,9 +176,9 @@ export function ArquivosTable() {
         }
     }
 
-    function renderAdminOptions(value: boolean) {
+    function renderAdminOptions(role: TUserTypes) {
 
-        if (value) {
+        if (role.includes("administrador")) {
             return (
                 <CustomButton
                     onClick={navigateTo}
@@ -210,7 +211,7 @@ export function ArquivosTable() {
                     placeholder='Pesquisar por ID, nome, e-mail e número de documento…'
                     fetching={fetching}
                 />
-                {renderAdminOptions(isAdmin)}
+                {renderAdminOptions(userRole)}
             </form>
             <table className='table_style'>
                 <thead >

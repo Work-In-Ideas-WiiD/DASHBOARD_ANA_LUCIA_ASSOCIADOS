@@ -1,6 +1,6 @@
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { IUserProps } from "../services/http/auth/auth.dto";
-import { postLogin, postMe } from "../services/http/auth";
+import { IUserProps, TUserTypes } from "../services/http/auth/auth.dto";
+import { postLogin, postLoginCustomer, postMe } from "../services/http/auth";
 import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import { setAuthToken } from '../services/http/api';
 import { useNavigate, useLocation } from "react-router-dom";
@@ -11,15 +11,17 @@ interface IAuthContextDataProps {
     children: ReactNode
 }
 
+
 interface IAuthContextData {
     setUserData: (data: IUserProps) => void,
     handleFetching: (option: boolean) => void,
     signIn: (email: string, password: string) => Promise<void>,
+    signInCustomer: (email: string, password: string, companyId: string) => Promise<void>,
     signOut: () => void,
     refreshUserData: () => Promise<void>,
     me: IUserProps,
     fetching: boolean,
-    isAdmin: boolean
+    userRole: TUserTypes
 }
 
 export function signOut() {
@@ -56,7 +58,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             complemento: "",
         }
     })
-    const [isAdmin, setIsAdmin] = useState(false);
+    const [userRole, setUserRole] = useState<TUserTypes>("");
     const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
@@ -66,7 +68,7 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             postMe().then((response) => {
                 const { data: user_data } = response;
                 setUserData(user_data);
-                setIsAdmin(user_data.type == 'administrador');
+                setUserRole(user_data.type);
                 if (!location.pathname.includes("assinar")) {
                     navigate("/dashboard/home");
                 }
@@ -96,13 +98,30 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
         setFetching(option);
     }
 
+    async function signInCustomer(email: string, password: string, companyId: string) {
+        try {
+            handleFetching(true);
+            const { data: login_data } = await postLoginCustomer(email, password, companyId);
+            setAuthToken(login_data.access_token);
+            const { data: user } = await postMe();
+            setUserRole(user.type);
+            setUserData(user);
+            handleFetching(false);
+            navigate("/dashboard/home");
+        } catch (err) {
+            console.log(err);
+            handleFetching(false);
+            toast.error("E-mail ou senha inválidos.");
+        }
+    }
+
     async function signIn(email: string, password: string) {
         try {
             handleFetching(true);
             const { data: login_data } = await postLogin(email, password);
             setAuthToken(login_data.access_token);
             const { data: user } = await postMe();
-            setIsAdmin(user.type == 'administrador');
+            setUserRole(user.type);
             setUserData(user);
             setCookie(undefined, "ana_lucia.token", login_data.access_token, {
                 maxAge: 60 * 60,
@@ -154,9 +173,10 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
         signIn,
         signOut,
         refreshUserData,
+        signInCustomer,
         me,
         fetching,
-        isAdmin
+        userRole
     }}>
         {children}
     </AuthContext.Provider>

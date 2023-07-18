@@ -69,7 +69,9 @@ export function FirstAccessPage() {
         try {
             handleFetching(true);
             await postFirstAcess(data.token, data.email, data.password, data.password_confirmation);
-            await signIn(data.email, data.password);
+            //await signIn(data.email, data.password);
+            toast.success("Cadastro aprovado");
+            navigate('/');
             handleFetching(false);
         } catch (error) {
             handleFetching(false);

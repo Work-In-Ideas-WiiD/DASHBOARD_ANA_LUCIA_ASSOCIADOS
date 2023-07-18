@@ -20,6 +20,7 @@ import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
 import { TablePaginator } from '../../../../components/tablePaginator';
+import { TUserTypes } from '../../../../services/http/auth/auth.dto';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -29,7 +30,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ContratosTable() {
-    const { isAdmin } = useAuth();
+    const { userRole } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
@@ -79,7 +80,7 @@ export function ContratosTable() {
     function _renderItem(data: IGetContratosDataRes[]) {
 
         function checkTableBtnText(data: IGetContratosDataRes) {
-            if (isAdmin) {
+            if (userRole.includes("administrador")) {
                 return "re-enviar para empresa";
             }
             if (data.assinantes.length > 1) {
@@ -128,7 +129,7 @@ export function ContratosTable() {
 
     async function checkBtnAction(contract: IGetContratosDataRes) {
 
-        if (isAdmin) {
+        if (userRole.includes("administrador")) {
             await addCompanyToContract(contract);
         } else {
             if (contract.assinantes.length <= 1) {
@@ -197,9 +198,9 @@ export function ContratosTable() {
 
 
 
-    function renderAdminOptions(value: boolean) {
+    function renderAdminOptions(role: TUserTypes) {
 
-        if (value) {
+        if (role.includes("administrador")) {
             return (
                 <>
                     <CustomButton onClick={navigateTo} title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
@@ -224,7 +225,7 @@ export function ContratosTable() {
                     placeholder='Pesquisar por ID, nome, e-mail e número de documento…'
                     fetching={fetching}
                 />
-                {renderAdminOptions(isAdmin)}
+                {renderAdminOptions(userRole)}
             </form>
             <table className='table_style'>
                 <thead >

@@ -2,12 +2,13 @@ import { Control, Controller } from 'react-hook-form';
 import styles from './styles.module.scss';
 export interface IIconInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     type: string;
-    icon?: "login" | "password";
+    icon?: "login" | "password" | "building";
     inputClass?: string;
     fieldName: string;
     control: Control<any>
 }
 import { IoPersonSharp, IoLockClosed } from 'react-icons/io5';
+import { FaBuilding } from 'react-icons/fa';
 
 export function IconInput({
     type = "text",
@@ -24,6 +25,8 @@ export function IconInput({
                 return (<IoPersonSharp className={styles.icon} size="22" />)
             case 'password':
                 return (<IoLockClosed className={styles.icon} size="22" />)
+            case 'building':
+                return (<FaBuilding className={styles.icon} size="22" />)
             default:
                 break
         }

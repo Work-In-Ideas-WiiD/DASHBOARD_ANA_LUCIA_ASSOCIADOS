@@ -28,6 +28,7 @@ import { ResetPasswordSecondStep } from "../pages/ForgotPassword/ResetPasswordSe
 import { EditCliente } from "../pages/Dashboard/ClientesPage/EditCliente";
 import { EditEmpresa } from "../pages/Dashboard/EmpresasPage/EditEmpresa";
 import { ProfilePage } from "../pages/Dashboard/ProfilePage";
+import { LoginCustomer } from "../pages/Login/LoginCustomer";
 
 const router = createBrowserRouter([
     {
@@ -36,6 +37,10 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: <LoginPage />
+            },
+            {
+                path: "/cliente",
+                element: <LoginCustomer />
             },
             {
                 path: "/assinar/:id",

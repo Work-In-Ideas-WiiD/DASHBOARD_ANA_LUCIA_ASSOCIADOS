@@ -3,13 +3,14 @@ export interface IPostLoginRes {
     token_type: string,
     expires_in: number
 }
+export type TUserTypes = "empresa" | "administrador" | "cliente" | "";
 
 export interface IUserProps {
     id: string
     nome: string
     email: string
     email_verified_at: null | string
-    type: string
+    type: TUserTypes,
     cpf: null | string
     contato: null | string
     cnpj: null | string

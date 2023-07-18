@@ -12,6 +12,7 @@ import { AsideItem } from './asideItem';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { RiLogoutBoxRLine } from 'react-icons/ri';
 import { useAuth } from '../../hooks/useAuth';
+import { TUserTypes } from '../../services/http/auth/auth.dto';
 
 interface IItens {
     title: string,
@@ -19,7 +20,7 @@ interface IItens {
     ActiveIcon: ReactNode,
     path: string,
     classname?: string,
-    adm: boolean
+    roles: TUserTypes[]
 }
 
 const itens: IItens[] = [
@@ -28,56 +29,56 @@ const itens: IItens[] = [
         Icon: <ImHome fill="White" size={20} />,
         ActiveIcon: <ImHome fill="#1E3F49" size={20} />,
         path: "/home",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Administradores",
         Icon: <BsPersonVcardFill fill="White" size={20} />,
         ActiveIcon: <BsPersonVcardFill fill="#1E3F49" size={20} />,
         path: "/admins",
-        adm: true
+        roles: ['administrador']
     },
     {
         title: "Empresas",
         Icon: <FaBuilding fill="White" size={20} />,
         ActiveIcon: <FaBuilding fill="#1E3F49" size={20} />,
         path: "/empresas",
-        adm: true
+        roles: ['administrador']
     },
     {
         title: "Contratos",
         Icon: <IoDocument fill="White" size={20} />,
         ActiveIcon: <IoDocument fill="#1E3F49" size={20} />,
         path: "/contratos",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Arquivos",
         Icon: <IoFileTrayStackedSharp fill="White" size={20} />,
         ActiveIcon: <IoFileTrayStackedSharp fill="#1E3F49" size={20} />,
         path: "/arquivos",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Assinaturas",
         Icon: <FaPenAlt fill="White" size={20} />,
         ActiveIcon: <FaPenAlt fill="#1E3F49" size={20} />,
         path: "/assinaturas",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Clientes",
         Icon: <IoPersonSharp fill="White" size={20} />,
         ActiveIcon: <IoPersonSharp fill="#1E3F49" size={20} />,
         path: "/clientes",
-        adm: false
+        roles: ['administrador', 'empresa']
     },
     {
         title: "Perfil",
         Icon: <BsPersonCircle fill="white" size={25} />,
         ActiveIcon: <BsPersonCircle fill="#1E3F49" size={25} />,
         path: "/perfil",
-        adm: false
+        roles: ['administrador', 'empresa']
     },
     {
         title: "Sair",
@@ -85,17 +86,17 @@ const itens: IItens[] = [
         ActiveIcon: <RiLogoutBoxRLine fill="#1E3F49" size={20} />,
         path: "/logout",
         classname: "last_item",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
-
 ]
+
 type TMenuIsOpen = "menu_mobile_close" | "menu_mobile_open";
 
 export function MobileHeader() {
     const { pathname } = useLocation();
     const [menuIsOpen, setMenuIsOpen] = useState<TMenuIsOpen>("menu_mobile_close");
     const navigate = useNavigate();
-    const { isAdmin } = useAuth();
+    const { userRole } = useAuth();
 
     function handleClick(option: TMenuIsOpen) {
         setMenuIsOpen(option);
@@ -123,7 +124,7 @@ export function MobileHeader() {
     function _renderItem(_data: IItens[]) {
         return _data.map((item) => {
 
-            if (item.adm && !isAdmin) {
+            if (!item.roles.includes(userRole)) {
                 return (
                     <></>
                 )

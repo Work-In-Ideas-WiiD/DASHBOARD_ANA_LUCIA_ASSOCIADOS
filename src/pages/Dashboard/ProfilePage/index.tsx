@@ -2,12 +2,13 @@ import styles from './styles.module.scss';
 import { useAuth } from "../../../hooks/useAuth"
 import { AdmProfile } from "./components/AdmProfile";
 import { CompanyProfile } from "./components/CompanyProfile";
+import { TUserTypes } from '../../../services/http/auth/auth.dto';
 
 export function ProfilePage() {
-    const { isAdmin } = useAuth();
+    const { userRole } = useAuth();
 
-    function _renderPage(adm: boolean) {
-        if (adm) {
+    function _renderPage(userRole: TUserTypes) {
+        if (userRole.includes("administrador")) {
             return (
                 <AdmProfile />
             )
@@ -18,7 +19,7 @@ export function ProfilePage() {
 
     return (
         <main className={`${styles.main} dashboard_padding`}>
-            {_renderPage(isAdmin)}
+            {_renderPage(userRole)}
         </main>
     )
 }

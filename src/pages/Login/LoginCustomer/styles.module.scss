@@ -1,0 +1,122 @@
+.main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-blue-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    form {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        max-width: 400px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        justify-content: center;
+
+        @media (max-width: 480px) {
+            position: initial;
+            transform: none;
+            padding: 2%;
+            top: 0;
+        }
+
+        .logo {
+            width: 100%;
+        }
+
+        .input_container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+
+            .input_search {
+                position: relative;
+                width: 100%;
+                margin-bottom: 25px;
+
+                .company_list {
+                    background-color: var(--color-white-100);
+                    width: 100%;
+                    position: absolute;
+                    bottom: 0;
+                    overflow: auto;
+                    max-height: 100px;
+                    transform: translateY(100%);
+
+                    .item {
+                        height: 33px;
+                        display: flex;
+                        align-items: center;
+                        padding-left: 21px;
+                        width: 100%;
+
+                        span {
+                            font-weight: 400;
+                            font-size: 0.938rem;
+                            color: var(--color-blue-700);
+                        }
+                    }
+                }
+            }
+        }
+
+        .forgot_password {
+            font-size: 0.875rem;
+            margin-top: 13px;
+            align-self: flex-end;
+            color: var(--color-orange-600);
+
+            @media (max-width: 480px) {
+                font-size: 1.25rem;
+            }
+        }
+
+        .first_access {
+            font-size: 0.875rem;
+            margin-top: 55px;
+            color: var(--color-white-100);
+
+            span {
+                color: var(--color-orange-600);
+            }
+
+            @media (max-width: 480px) {
+                font-size: 1.25rem;
+            }
+        }
+
+        .submit_button {
+            width: 182px;
+            height: 52px;
+            border: none;
+            background-color: var(--color-white-100);
+            color: var(--color-blue-700);
+            filter: drop-shadow(0px 3px 6px rgba(0, 0, 0, 0.161));
+            font-size: 0.938rem;
+            margin-top: 59px;
+            outline: none;
+
+            @media (max-width: 480px) {
+                font-size: 1.25rem;
+            }
+
+            &:hover {
+                background-color: var(--color-white-300);
+            }
+
+            &:active {
+                background-color: var(--color-gray-500);
+            }
+        }
+    }
+}

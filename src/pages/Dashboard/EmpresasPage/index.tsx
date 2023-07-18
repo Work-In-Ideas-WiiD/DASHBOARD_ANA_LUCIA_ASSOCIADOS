@@ -4,10 +4,10 @@ import { useAuth } from '../../../hooks/useAuth';
 import { useEffect } from 'react';
 
 export function EmpresasPage() {
-    const { isAdmin, signOut } = useAuth();
+    const { userRole, signOut } = useAuth();
 
     useEffect(() => {
-        if (!isAdmin) {
+        if (!userRole.includes("administrador")) {
             signOut();
         }
     }, []);

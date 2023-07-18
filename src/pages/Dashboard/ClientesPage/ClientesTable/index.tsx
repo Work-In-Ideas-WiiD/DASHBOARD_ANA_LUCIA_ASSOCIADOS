@@ -25,7 +25,7 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ClienteTable() {
     const navigate = useNavigate();
-    const { isAdmin, handleFetching } = useAuth();
+    const { userRole, handleFetching } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
@@ -91,7 +91,7 @@ export function ClienteTable() {
         }
 
         function _renderButtons(item: IUserReqProps) {
-            if (isAdmin) {
+            if (userRole.includes("administrador")) {
                 return (<></>)
             }
 
@@ -179,7 +179,7 @@ export function ClienteTable() {
                             Celular
                         </th>
                         {
-                            !isAdmin && (<th>Ações</th>)
+                            !userRole.includes("administrador") && (<th>Ações</th>)
                         }
                     </tr>
                 </thead>

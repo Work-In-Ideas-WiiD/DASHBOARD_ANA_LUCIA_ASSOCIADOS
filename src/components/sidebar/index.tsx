@@ -11,6 +11,8 @@ import { SidebarItem } from './sidebarItem';
 import { useLocation } from 'react-router-dom';
 import { ReactNode } from 'react';
 import { useAuth } from '../../hooks/useAuth';
+import { TUserTypes } from '../../services/http/auth/auth.dto';
+
 
 interface IItens {
     title: string,
@@ -18,7 +20,7 @@ interface IItens {
     ActiveIcon: ReactNode,
     path: string,
     classname?: string,
-    adm: boolean
+    roles: TUserTypes[]
 }
 
 const itens: IItens[] = [
@@ -27,56 +29,56 @@ const itens: IItens[] = [
         Icon: <ImHome fill="White" size={25} />,
         ActiveIcon: <ImHome fill="#1E3F49" size={25} />,
         path: "/home",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Administradores",
         Icon: <BsPersonVcardFill fill="White" size={25} />,
         ActiveIcon: <BsPersonVcardFill fill="#1E3F49" size={25} />,
         path: "/admins",
-        adm: true
+        roles: ['administrador']
     },
     {
         title: "Empresas",
         Icon: <FaBuilding fill="White" size={25} />,
         ActiveIcon: <FaBuilding fill="#1E3F49" size={25} />,
         path: "/empresas",
-        adm: true
+        roles: ['administrador']
     },
     {
         title: "Contratos",
         Icon: <IoDocument fill="White" size={25} />,
         ActiveIcon: <IoDocument fill="#1E3F49" size={25} />,
         path: "/contratos",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Arquivos",
         Icon: <IoFileTrayStackedSharp fill="White" size={25} />,
         ActiveIcon: <IoFileTrayStackedSharp fill="#1E3F49" size={25} />,
         path: "/arquivos",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Assinaturas",
         Icon: <FaPenAlt fill="White" size={25} />,
         ActiveIcon: <FaPenAlt fill="#1E3F49" size={25} />,
         path: "/assinaturas",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Clientes",
         Icon: <IoPersonSharp fill="White" size={25} />,
         ActiveIcon: <IoPersonSharp fill="#1E3F49" size={25} />,
         path: "/clientes",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
     {
         title: "Perfil",
         Icon: <BsPersonCircle fill="white" size={25} />,
         ActiveIcon: <BsPersonCircle fill="#1E3F49" size={25} />,
         path: "/perfil",
-        adm: false
+        roles: ['administrador', 'empresa']
     },
     {
         title: "Sair",
@@ -84,7 +86,7 @@ const itens: IItens[] = [
         ActiveIcon: <SlLogout fill="#1E3F49" size={25} />,
         path: "/logout",
         classname: "last_item",
-        adm: false
+        roles: ['administrador', 'cliente', 'empresa']
     },
 
 ]
@@ -92,12 +94,12 @@ const itens: IItens[] = [
 export function Sidebar() {
 
     const { pathname } = useLocation();
-    const { isAdmin } = useAuth();
+    const { userRole } = useAuth();
 
     function _renderItem(_data: IItens[]) {
         return _data.map((item) => {
 
-            if (item.adm && !isAdmin) {
+            if (!item.roles.includes(userRole)) {
                 return (
                     <></>
                 )

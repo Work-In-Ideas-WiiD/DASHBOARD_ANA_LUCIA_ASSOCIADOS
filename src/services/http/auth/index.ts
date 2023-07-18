@@ -17,6 +17,16 @@ export async function postLogin(email: string, password: string): Promise<AxiosR
     return res;
 }
 
+export async function postLoginCustomer(email: string, password: string, companyId: string): Promise<AxiosResponse<IPostLoginRes, any>> {
+    const res = await api.post("/auth/login", {
+        email,
+        password,
+        empresa_id: companyId
+    });
+
+    return res;
+}
+
 export async function postLogout(): Promise<AxiosResponse<any, any>> {
     const res = await api.post("/auth/logout");
 

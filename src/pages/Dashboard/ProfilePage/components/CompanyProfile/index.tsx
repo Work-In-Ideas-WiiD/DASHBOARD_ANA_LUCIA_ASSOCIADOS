@@ -125,13 +125,13 @@ export function CompanyProfile() {
             cnpj: me.cnpj ? me.cnpj : undefined,
             email: me.email,
             contato: me.contato!,
-            endereco: me.endereco.rua ? me.endereco.rua : undefined,
-            numero: me.endereco.numero ? String(me.endereco.numero) : undefined,
-            bairro: me.endereco.bairro ? me.endereco.bairro : undefined,
-            cidade: me.endereco.cidade ? me.endereco.cidade : undefined,
-            estado: me.endereco.estado ? me.endereco.estado : undefined,
-            complemento: me.endereco.complemento ? me.endereco.complemento : undefined,
-            cep: me.endereco.cep ? me.endereco.cep : undefined
+            endereco: me.endereco && me.endereco.rua ? me.endereco.rua : undefined,
+            numero: me.endereco && me.endereco.numero ? String(me.endereco.numero) : undefined,
+            bairro: me.endereco && me.endereco.bairro ? me.endereco.bairro : undefined,
+            cidade: me.endereco && me.endereco.cidade ? me.endereco.cidade : undefined,
+            estado: me.endereco && me.endereco.estado ? me.endereco.estado : undefined,
+            complemento: me.endereco && me.endereco.complemento ? me.endereco.complemento : undefined,
+            cep: me.endereco && me.endereco.cep ? me.endereco.cep : undefined
         });
     }
 
