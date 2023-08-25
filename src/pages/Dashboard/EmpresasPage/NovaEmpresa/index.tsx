@@ -50,38 +50,6 @@ const formSchema = zod.object({
     cep: zod.string({
         required_error: "Campo obrigatório",
     }),
-}).superRefine((val, ctx) => {
-
-    if (!val.cnpj && val.nome_empresa) {
-        ctx.addIssue({
-            message: "Informe o CNPJ da empresa",
-            path: ["cnpj"],
-            code: 'custom'
-        });
-        return zod.NEVER;
-    }
-
-    if (val.cnpj && !val.nome_empresa) {
-        ctx.addIssue({
-            message: "Informe o nome da empresa",
-            path: ["nome_empresa"],
-            code: 'custom'
-        });
-        return zod.NEVER;
-    }
-
-    if (!val.cpf && !val.cnpj) {
-        ctx.addIssue({
-            message: "Informe CPF ou CNPJ",
-            path: ["cpf"],
-            code: 'custom'
-        });
-        ctx.addIssue({
-            message: "Informe CPF ou CNPJ",
-            path: ["cnpj"],
-            code: 'custom'
-        });
-    }
 })
 
 type TFormSchema = zod.infer<typeof formSchema>;
