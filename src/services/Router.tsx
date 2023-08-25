@@ -29,6 +29,7 @@ import { EditCliente } from "../pages/Dashboard/ClientesPage/EditCliente";
 import { EditEmpresa } from "../pages/Dashboard/EmpresasPage/EditEmpresa";
 import { ProfilePage } from "../pages/Dashboard/ProfilePage";
 import { LoginCustomer } from "../pages/Login/LoginCustomer";
+import { ShowCustomerInfo } from "../pages/Dashboard/ClientesPage/VisualizarCliente";
 
 const router = createBrowserRouter([
     {
@@ -157,6 +158,10 @@ const router = createBrowserRouter([
                                 path: "editar/:id",
                                 element: <EditCliente />
                             },
+                            {
+                                path: "visualizar/:id",
+                                element: <ShowCustomerInfo />
+                            }
                         ]
                     },
                     {

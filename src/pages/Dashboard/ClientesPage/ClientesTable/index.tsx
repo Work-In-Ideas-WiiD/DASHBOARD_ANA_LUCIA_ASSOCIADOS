@@ -13,6 +13,7 @@ import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { TablePaginator } from '../../../../components/tablePaginator';
 import { FaPenAlt, FaTrash } from 'react-icons/fa';
+import { BsEyeFill } from 'react-icons/bs';
 import { useAuth } from '../../../../hooks/useAuth';
 import { ModaDeleteCustomer } from './components/modalDeleteCustomer';
 import { toast } from 'react-toastify';
@@ -92,7 +93,21 @@ export function ClienteTable() {
 
         function _renderButtons(item: IUserReqProps) {
             if (userRole.includes("administrador")) {
-                return (<></>)
+                return (
+                    <>
+                        <td>
+                            <div className={styles.action_btn_container}>
+                                <button
+                                    type='button'
+                                    className={styles.action_button}
+                                    onClick={() => { navigate(`visualizar/${item.id}`) }}
+                                >
+                                    <BsEyeFill fill="#C7633B" size={19} />
+                                </button>
+                            </div>
+                        </td>
+                    </>
+                )
             }
 
             return (
