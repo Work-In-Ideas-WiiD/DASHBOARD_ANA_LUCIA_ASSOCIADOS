@@ -57,7 +57,7 @@ const router = createBrowserRouter([
                 element: <ForgotPassword />,
                 children: [
                     {
-                        path: "",
+                        path: "email/:target",
                         element: <ResetPasswordFirstStep />,
                     },
                     {

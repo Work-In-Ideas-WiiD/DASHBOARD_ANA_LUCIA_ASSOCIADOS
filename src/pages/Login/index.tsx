@@ -71,7 +71,7 @@ export function LoginPage() {
                     ></IconInput>
                 </div>
 
-                <Link className={`react-router-Link ${styles.forgot_password}`} to={'/recuperar'}>Esqueci a senha.</Link>
+                <Link className={`react-router-Link ${styles.forgot_password}`} to={'/recuperar/email/empresa'}>Esqueci a senha.</Link>
                 <Link className={`react-router-Link ${styles.forgot_password}`} to={'/cliente'}>Entrar como cliente</Link>
                 <button type='submit' className={styles.submit_button}>
                     {

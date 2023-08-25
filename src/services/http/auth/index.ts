@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { api } from "../api";
-import { IPostLoginRes, IUserProps } from "./auth.dto";
+import { IPostLoginRes, IPostRequestResetPasswordModel, IUserProps } from "./auth.dto";
 
 export async function postMe(): Promise<AxiosResponse<IUserProps, any>> {
     const res = await api.post("/auth/me");
@@ -35,13 +35,13 @@ export async function postLogout(): Promise<AxiosResponse<any, any>> {
 
 export async function postResetPassword(
     token: string,
-    email: string,
+    id: string,
     password: string,
     password_confirmation: string
 ): Promise<AxiosResponse<any, any>> {
     const res = await api.post("/auth/reset/password", {
         token,
-        email,
+        id,
         password,
         password_confirmation
     });
@@ -50,11 +50,9 @@ export async function postResetPassword(
 }
 
 export async function postRequestResetPassword(
-    email: string,
+    model: IPostRequestResetPasswordModel,
 ): Promise<AxiosResponse<any, any>> {
-    const res = await api.post("/auth/reset-password", {
-        email,
-    });
+    const res = await api.post("/auth/reset-password", model);
 
     return res;
 }

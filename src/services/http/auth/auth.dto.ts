@@ -30,3 +30,9 @@ export interface IUserProps {
         complemento?: string
     }
 }
+
+export interface IPostRequestResetPasswordModel {
+    empresa_id?: string,
+    email: string,
+}
+

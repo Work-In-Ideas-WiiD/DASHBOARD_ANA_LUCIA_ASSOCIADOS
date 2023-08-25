@@ -1,6 +1,6 @@
 import styles from './styles.module.scss';
 import * as zod from "zod";
-import { useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { InputText } from '../../../components/inputs/inputText';
@@ -8,6 +8,7 @@ import { CustomButton } from '../../../components/customButton';
 import { postResetPassword } from '../../../services/http/auth';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../../hooks/useAuth';
+import { useEffect } from 'react';
 
 const formSchema = zod.object({
     email: zod.string({
@@ -41,6 +42,7 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ResetPasswordSecondStep() {
     const params = useParams();
+    const { search } = useLocation();
     const { handleFetching, fetching, signIn } = useAuth();
     const { handleSubmit, formState: { errors }, control } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
@@ -50,6 +52,8 @@ export function ResetPasswordSecondStep() {
             password_confirmation: undefined
         }
     })
+
+
     async function handleCreate(data: TFormSchema) {
         if (fetching) {
             return
@@ -57,7 +61,9 @@ export function ResetPasswordSecondStep() {
         try {
             handleFetching(true);
             const token = params.id as string;
-            await postResetPassword(token, data.email, data.password, data.password_confirmation);
+            const companyId = new URLSearchParams(search).get('id');
+
+            await postResetPassword(token, companyId!, data.password, data.password_confirmation);
             handleFetching(false);
             toast.success("Senha alterada.")
             await signIn(data.email, data.password);
