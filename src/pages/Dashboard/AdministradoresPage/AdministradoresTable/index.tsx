@@ -11,6 +11,7 @@ import { IGetAdministradoresDataRes } from '../../../../services/http/administra
 import { TableEmptyMessage } from '../../../../components/tableEmptyMessage';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { TablePaginator } from '../../../../components/tablePaginator';
+import { FaPenAlt } from 'react-icons/fa';
 
 const formSchema = zod.object({
     search: zod.string(),
@@ -74,6 +75,17 @@ export function AdministradoresTable() {
                     <td>{documentId}</td>
                     <td>{contato}</td>
                     <td>{email}</td>
+                    <td>
+                        <div className={styles.action_btn_container}>
+                            <button
+                                type='button'
+                                className={styles.action_button}
+                                onClick={() => { navigate(`editar/${item.id}`) }}
+                            >
+                                <FaPenAlt fill="#C7633B" size={19} />
+                            </button>
+                        </div>
+                    </td>
                 </tr>
             )
         })

@@ -30,6 +30,7 @@ import { EditEmpresa } from "../pages/Dashboard/EmpresasPage/EditEmpresa";
 import { ProfilePage } from "../pages/Dashboard/ProfilePage";
 import { LoginCustomer } from "../pages/Login/LoginCustomer";
 import { ShowCustomerInfo } from "../pages/Dashboard/ClientesPage/VisualizarCliente";
+import { EditAdmin } from "../pages/Dashboard/AdministradoresPage/EditarAdministrador";
 
 const router = createBrowserRouter([
     {
@@ -107,7 +108,11 @@ const router = createBrowserRouter([
                             {
                                 path: "novo",
                                 element: <NovoAdministrador />
-                            }
+                            },
+                            {
+                                path: "editar/:id",
+                                element: <EditAdmin />
+                            },
                         ]
                     },
                     {
