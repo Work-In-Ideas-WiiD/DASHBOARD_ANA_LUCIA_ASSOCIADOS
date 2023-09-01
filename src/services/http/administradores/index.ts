@@ -1,6 +1,6 @@
 import { AxiosError, AxiosResponse } from "axios";
 import { api } from "../api";
-import { IGetAdministradoresDataRes, IGetAdministradoresRes, IPostAdministradorModel, IPostAdministradorRes } from "./administradores.dto";
+import { IGetAdministradoresDataRes, IGetAdministradoresRes, IPostAddEmpresaToContratoOrArquivoRes, IPostAdministradorModel, IPostAdministradorRes } from "./administradores.dto";
 
 export async function getAdministradores(page: number = 1, like: string = ""): Promise<AxiosResponse<IGetAdministradoresRes, AxiosError>> {
 
@@ -27,7 +27,7 @@ export async function postAdministrador(model: IPostAdministradorModel): Promise
     return res;
 }
 
-export async function postAddEmpresaToContratoOrArquivo(empresa_id: string, arquivo_contrato_id: string) {
+export async function postAddEmpresaToContratoOrArquivo(empresa_id: string, arquivo_contrato_id: string): Promise<AxiosResponse<IPostAddEmpresaToContratoOrArquivoRes, AxiosError>> {
     const res = await api.post('/add/empresa/contrato/arquivo', {
         empresa_id,
         arquivo_contrato_id

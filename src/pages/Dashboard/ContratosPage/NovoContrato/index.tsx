@@ -17,6 +17,7 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../../../hooks/useAuth';
 import { postContrato } from '../../../../services/http/contratos';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
+import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 // validacao de arquivo
 const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = ["application/pdf"];
@@ -45,22 +46,37 @@ type TFormSchema = zod.infer<typeof formSchema>;
 
 export function NovoContrato() {
     const navigate = useNavigate();
-    const { handleFetching, fetching } = useAuth();
+    const { handleFetching, fetching, me, userRole, setNewContract } = useAuth();
     const [debounceValue, setDebounceValue] = useState("");
     const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
     const [debouncedText] = useDebounce(debounceValue, 500);
     const [companyId, setCompanyId] = useState<string | null>(null);
-    const { handleSubmit, formState: { errors }, control, setValue } = useForm<TFormSchema>({
+    const { handleSubmit, formState: { errors }, control, setValue, reset } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             descricao: undefined,
             empresa: undefined,
         }
-    })
+    });
+
+
 
     useEffect(() => {
-        searchCompany()
-    }, [debouncedText])
+        searchCompany();
+    }, [debouncedText]);
+
+    function checkUser() {
+        if (userRole.includes("empresa")) {
+            reset({
+                empresa: me.nome ? me.nome : me.nome_empresa!
+            });
+            setCompanyId(me.id);
+        }
+    }
+    useEffect(() => {
+        checkUser();
+    }, [])
+
 
     async function handleCreate(data: TFormSchema) {
         if (fetching) {
@@ -75,12 +91,13 @@ export function NovoContrato() {
             formData.append("descricao", data.descricao);
             formData.append("file", data.file[0]);
             const { data: contractRes } = await postContrato(formData);//registra o contrato
+            if (userRole.includes("empresa")) {
+                setNewContract(contractRes);
+            }
             await postAddEmpresaToContratoOrArquivo(companyId, contractRes.id);//marca empresa no contrato
-            toast.success("Contrato cadastrado!")
+            toast.success("Contrato cadastrado!");
             handleFetching(false);
-            setTimeout(() => {
-                goBack();
-            }, 3000);
+            goBack();
 
         } catch (err) {
             handleFetching(false);
@@ -165,6 +182,7 @@ export function NovoContrato() {
                             placeholder='Empresa'
                             errors={errors}
                             onChange={setDebounce}
+                            disabled={userRole.includes("empresa")}
                         />
                         <div className={styles.company_list}>
                             {renderCompanyList(companies)}

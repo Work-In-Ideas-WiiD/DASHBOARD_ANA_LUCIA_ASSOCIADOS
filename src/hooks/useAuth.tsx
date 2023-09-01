@@ -5,6 +5,7 @@ import { setCookie, parseCookies, destroyCookie } from 'nookies';
 import { setAuthToken } from '../services/http/api';
 import { useNavigate, useLocation } from "react-router-dom";
 import { toast } from "react-toastify";
+import { IGetContratosDataRes, IPostContratoRes } from "../services/http/contratos/contratos.dto";
 
 
 interface IAuthContextDataProps {
@@ -19,6 +20,8 @@ interface IAuthContextData {
     signInCustomer: (email: string, password: string, companyId: string) => Promise<void>,
     signOut: () => void,
     refreshUserData: () => Promise<void>,
+    setNewContract: (_contract: IPostContratoRes) => void,
+    getNewContract: () => IPostContratoRes | undefined,
     me: IUserProps,
     fetching: boolean,
     userRole: TUserTypes
@@ -33,6 +36,7 @@ export function signOut() {
 export function AuthContextData({ children }: IAuthContextDataProps) {
     const navigate = useNavigate();
     const location = useLocation();
+    const [currentContract, setCurrentContract] = useState<IPostContratoRes>()
     const [me, setMe] = useState<IUserProps>({
         id: "",
         nome: "",
@@ -84,6 +88,16 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
             }
         }
     }, [])
+
+    function setNewContract(_contract: IPostContratoRes) {
+        setCurrentContract(_contract);
+    }
+
+    function getNewContract(): IPostContratoRes | undefined {
+        const contract = currentContract;
+        setCurrentContract(undefined);
+        return contract;
+    }
 
     async function refreshUserData() {
         const { data } = await postMe();
@@ -174,6 +188,8 @@ export function AuthContextData({ children }: IAuthContextDataProps) {
         signOut,
         refreshUserData,
         signInCustomer,
+        setNewContract,
+        getNewContract,
         me,
         fetching,
         userRole

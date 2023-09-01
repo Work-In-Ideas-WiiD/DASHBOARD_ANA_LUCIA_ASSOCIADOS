@@ -35,3 +35,9 @@ export interface IPostAdministradorRes {
     cnpj: null | string,
     nome_empresa: null | string,
 }
+
+export interface IPostAddEmpresaToContratoOrArquivoRes {
+    empresa_id: string,
+    arquivo_contrato_id: string,
+}
+

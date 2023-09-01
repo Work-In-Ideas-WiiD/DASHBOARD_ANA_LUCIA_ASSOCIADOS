@@ -30,7 +30,7 @@ const formSchema = zod.object({
 type TFormSchema = zod.infer<typeof formSchema>;
 
 export function ContratosTable() {
-    const { userRole } = useAuth();
+    const { userRole, getNewContract, me } = useAuth();
     const [fetching, setFetching] = useState(false);
     const [page, setPage] = useState(1);
     const [pages, setPages] = useState(0);
@@ -44,6 +44,19 @@ export function ContratosTable() {
         defaultValues: {
             search: '',
             contractId: ''
+        }
+    })
+
+    useEffect(() => {
+        const newContract = getNewContract();
+        if (newContract && userRole.includes("empresa")) {
+            setCurrentContract({
+                id: newContract.id,
+                empresa: {
+                    id: me.id
+                }
+            } as IGetContratosDataRes);
+            setModalIsOpen(true);
         }
     })
 
@@ -200,7 +213,7 @@ export function ContratosTable() {
 
     function renderAdminOptions(role: TUserTypes) {
 
-        if (role.includes("administrador")) {
+        if (role.includes("administrador") || role.includes("empresa")) {
             return (
                 <>
                     <CustomButton onClick={navigateTo} title='NOVO CADASTRO' icon={EIconCustomButton.MdCreateNewFolder} type='button' />
