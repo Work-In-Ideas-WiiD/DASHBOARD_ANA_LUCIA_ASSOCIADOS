@@ -18,7 +18,7 @@ import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/adm
 import { postArquivo } from '../../../../services/http/arquivos';
 // validacao de arquivo
 
-const MAX_FILE_SIZE = 5000000;
+const MAX_FILE_SIZE = 500000000;
 const ACCEPTED_IMAGE_TYPES = ["application/pdf", "image/png", "image/jpeg", "audio/mp3", "video/mp4", "audio/wav"];
 
 const formSchema = zod.object({
@@ -28,7 +28,7 @@ const formSchema = zod.object({
     empresa: zod.string({}).optional(),
     file: zod.any()
         .refine((files) => files?.length == 1, "Arquivo obrigatório.")
-        .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Tamanho maximo do arquivo é 50mb.`)
+        .refine((files) => files?.[0]?.size <= MAX_FILE_SIZE, `Tamanho maximo do arquivo é 5gb.`)
         .refine(
             (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
             "Arquivo no formato inválido, arquivos válidos: .png, .jpeg, .mp3, .wav, .pdf, .mp4"
