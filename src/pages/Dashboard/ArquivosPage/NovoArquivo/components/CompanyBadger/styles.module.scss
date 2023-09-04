@@ -1,0 +1,27 @@
+ @import "../../../../../../styles/Global.scss";
+
+ .badger_container {
+     border-radius: 30px;
+     height: 44px;
+     padding: 0 12px;
+     @include background-opacity($color-orange-500, 0.9);
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     gap: 5px;
+     flex-direction: row;
+
+     button {
+         outline: none;
+         background-color: transparent;
+         display: flex;
+         border: none;
+         font-size: 30px;
+         justify-content: center;
+         align-items: center;
+     }
+
+     span {
+         color: var(--color-white-100);
+     }
+ }

@@ -16,9 +16,11 @@ import { toast } from 'react-toastify';
 import { useAuth } from '../../../../hooks/useAuth';
 import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
 import { postArquivo } from '../../../../services/http/arquivos';
+import { CompanyBadger } from './components/CompanyBadger';
+
 // validacao de arquivo
 
-const MAX_FILE_SIZE = 500000000;
+const MAX_FILE_SIZE = 5 * 1024 * 1024 * 1024;
 const ACCEPTED_IMAGE_TYPES = ["application/pdf", "image/png", "image/jpeg", "audio/mp3", "video/mp4", "audio/wav"];
 
 const formSchema = zod.object({
@@ -37,13 +39,18 @@ const formSchema = zod.object({
 
 type TFormSchema = zod.infer<typeof formSchema>;
 
+interface ICompaniesSelected {
+    id: string,
+    name: string
+}
+
 export function NovoArquivo() {
     const navigate = useNavigate();
     const { handleFetching, fetching } = useAuth();
     const [debounceValue, setDebounceValue] = useState("");
     const [companies, setCompanies] = useState<IGetEmpresasDataRes[]>([]);
     const [debouncedText] = useDebounce(debounceValue, 500);
-    const [companyId, setCompanyId] = useState<string | null>(null);
+    const [companyId, setCompanyId] = useState<ICompaniesSelected[]>([]);
     const { handleSubmit, formState: { errors }, control, setValue } = useForm<TFormSchema>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -57,6 +64,7 @@ export function NovoArquivo() {
     }, [debouncedText])
 
     async function handleCreate(data: TFormSchema) {
+
         if (fetching) {
             return
         }
@@ -68,7 +76,8 @@ export function NovoArquivo() {
             formData.append("file", data.file[0]);
             const { data: fileRes } = await postArquivo(formData);//registra o contrato
             if (companyId) {
-                await postAddEmpresaToContratoOrArquivo(companyId, fileRes.id);//marca empresa no contrato
+                const id = companyId.length > 0 ? companyId[0].id : '';//remover 
+                await postAddEmpresaToContratoOrArquivo(id, fileRes.id);//marca empresa no contrato
             }
             toast.success("Arquivo cadastrado!")
             handleFetching(false);
@@ -105,7 +114,28 @@ export function NovoArquivo() {
 
     function selectCompany(value: IGetEmpresasDataRes) {
         setValue("empresa", value.nome_empresa!);
-        setCompanyId(value.id);
+
+        const findCompany = companyId.findIndex((c) => c.id == value.id);
+
+        if (findCompany == -1) {
+
+            const newCompany: ICompaniesSelected = {
+                id: value.id,
+                name: value.nome_empresa!,
+            };
+            const newArray = companyId;
+            newArray.push(newCompany);
+            setCompanyId(newArray);
+        }
+    };
+
+    function removeCompany(id: string) {
+        if (companyId.length == 0) return;
+
+        const newArr = companyId.filter((c) => c.id != id);
+
+        setCompanyId(newArr);
+
     }
 
     function renderCompanyList(list: IGetEmpresasDataRes[]) {
@@ -122,6 +152,12 @@ export function NovoArquivo() {
                 </div>
             )
         })
+    }
+
+    function renderCompaniesSelected(list: ICompaniesSelected[]) {
+        return list.map((c) => (
+            <CompanyBadger key={c.id} company={c} remove={removeCompany} />
+        ))
     }
 
     function clearCompanies() {
@@ -162,6 +198,9 @@ export function NovoArquivo() {
                         <div className={styles.company_list}>
                             {renderCompanyList(companies)}
                         </div>
+                    </div>
+                    <div className={styles.company_badge_list}>
+                        {renderCompaniesSelected(companyId)}
                     </div>
                     <div className={styles.input_file_wrapper}>
                         <label htmlFor="upload-file">

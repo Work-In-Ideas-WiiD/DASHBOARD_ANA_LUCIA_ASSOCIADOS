@@ -69,6 +69,13 @@
                 }
             }
 
+            .company_badge_list {
+                display: flex;
+                gap: 5px;
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+
             .input_file_wrapper {
                 display: flex;
                 justify-content: center;
