@@ -15,7 +15,7 @@ import { getContratos, postAddUserContract, postSendToClicksign } from '../../..
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
-import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
+import { postAddEmpresaToContrato } from '../../../../services/http/administradores';
 import { formatCnpjCpf } from '../../../../utils/formatCpfCnpj';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
@@ -201,7 +201,7 @@ export function ContratosTable() {
         }
         try {
             setFetching(true);
-            await postAddEmpresaToContratoOrArquivo(data.empresa.id, data.id);
+            await postAddEmpresaToContrato(data.empresa.id, data.id);
             setFetching(false);
         } catch (error) {
             toast.error("Falha ao re-enviar contrato");

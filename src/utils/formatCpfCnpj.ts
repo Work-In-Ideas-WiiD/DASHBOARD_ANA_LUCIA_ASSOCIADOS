@@ -1,6 +1,6 @@
 export function formatCnpjCpf(value: string) {
     if (value == null || value == undefined) {
-        return undefined
+        return 'n/a'
     }
 
     const cnpjCpf = value.replace(/\D/g, '');

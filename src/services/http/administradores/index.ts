@@ -27,10 +27,19 @@ export async function postAdministrador(model: IPostAdministradorModel): Promise
     return res;
 }
 
-export async function postAddEmpresaToContratoOrArquivo(empresa_id: string, arquivo_contrato_id: string): Promise<AxiosResponse<IPostAddEmpresaToContratoOrArquivoRes, AxiosError>> {
-    const res = await api.post('/add/empresa/contrato/arquivo', {
-        empresa_id,
-        arquivo_contrato_id
+export async function postAddEmpresaToArquivo(empresa_id: string[], arquivo_id: string): Promise<AxiosResponse<IPostAddEmpresaToContratoOrArquivoRes, AxiosError>> {
+    const res = await api.post('/add/empresa/arquivo', {
+        empresas: empresa_id,
+        arquivo_id
+    })
+
+    return res;
+}
+
+export async function postAddEmpresaToContrato(empresa_id: string, contrato_id: string): Promise<AxiosResponse<any, AxiosError>> {
+    const res = await api.post('/add/empresa/contrato', {
+        empresa_id: empresa_id,
+        contrato_id
     })
 
     return res;

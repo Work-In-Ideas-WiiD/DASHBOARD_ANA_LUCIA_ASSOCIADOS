@@ -14,7 +14,7 @@ import { IGetEmpresasDataRes } from '../../../../services/http/empresas/empresas
 import { ErrorMessage } from '@hookform/error-message';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../../../hooks/useAuth';
-import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
+import { postAddEmpresaToArquivo } from '../../../../services/http/administradores';
 import { postArquivo } from '../../../../services/http/arquivos';
 import { CompanyBadger } from './components/CompanyBadger';
 
@@ -75,15 +75,13 @@ export function NovoArquivo() {
             formData.append("descricao", data.descricao);
             formData.append("file", data.file[0]);
             const { data: fileRes } = await postArquivo(formData);//registra o contrato
-            if (companyId) {
-                const id = companyId.length > 0 ? companyId[0].id : '';//remover 
-                await postAddEmpresaToContratoOrArquivo(id, fileRes.id);//marca empresa no contrato
+            if (companyId.length > 0) {
+                const ids = companyId.map((item) => item.id);
+                await postAddEmpresaToArquivo(ids, fileRes.id);//marca empresa no contrato
             }
             toast.success("Arquivo cadastrado!")
             handleFetching(false);
-            setTimeout(() => {
-                goBack();
-            }, 1000);
+            goBack();
         } catch (err) {
             handleFetching(false);
             toast.error("Erro ao cadastrar arquivo");

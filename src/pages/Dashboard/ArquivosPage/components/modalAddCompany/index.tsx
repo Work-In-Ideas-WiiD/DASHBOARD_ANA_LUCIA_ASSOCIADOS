@@ -15,11 +15,11 @@ import { TablePaginator } from "../../../../../components/tablePaginator";
 interface IProps {
     handleModal(option: boolean): void,
     showModal: boolean,
-    handleSubmitForm(companyId: string): Promise<void>
+    handleSubmitForm(companyId: string[]): Promise<void>
 }
 const formSchema = zod.object({
     search: zod.string(),
-    companyId: zod.string()
+    companyId: zod.string().array()
 });
 
 type TFormSchema = zod.infer<typeof formSchema>;
@@ -35,13 +35,27 @@ export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IP
         resolver: zodResolver(formSchema),
         defaultValues: {
             search: '',
-            companyId: ''
+            companyId: []
         }
     });
 
     useEffect(() => {
         getData(page, getValues("search"));
     }, [page]);
+
+    function handleChks(id: string) {
+        const values = getValues("companyId");
+
+        const isIn = values.includes(id);
+        if (isIn) {
+            const newArr = values.filter((item) => item != id);
+            setValue("companyId", newArr);
+        } else {
+            values.push(id);
+            setValue("companyId", values);
+        }
+    }
+
 
     async function getData(pageParam: number, likeParam: string = "") {
         try {
@@ -78,9 +92,9 @@ export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IP
                             render={({ field }) => {
                                 return (
                                     <input
-                                        checked={field.value == item.id}
+                                        checked={field.value.includes(item.id)}
                                         type="checkbox"
-                                        onClick={() => { setValue("companyId", item.id) }}
+                                        onClick={() => { handleChks(item.id) }}
                                     />
                                 )
                             }}
@@ -96,7 +110,7 @@ export function ModalAddCompany({ handleModal, showModal, handleSubmitForm }: IP
     }
 
     function handleSendData(_data: TFormSchema) {
-        if (_data.companyId == "") {
+        if (_data.companyId.length == 0) {
             return
         }
         handleSubmitForm(_data.companyId);

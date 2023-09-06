@@ -10,7 +10,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';
-import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
+import { postAddEmpresaToArquivo } from '../../../../services/http/administradores';
 import { MdDownload } from "react-icons/md";
 import { openFile } from '../../../../utils/openFIle';
 import { delArquivo, getArquivos } from '../../../../services/http/arquivos';
@@ -103,7 +103,7 @@ export function ArquivosTable() {
                 return (<></>)
             }
 
-            if (data.empresa?.cnpj) {
+            if (data.empresas && data.empresas.length > 0) {
                 return (<></>)
             }
             return (
@@ -119,8 +119,28 @@ export function ArquivosTable() {
 
         return data.map((item) => {
 
-            const cnpj_empresa = item.empresa ? formatCnpjCpf(item.empresa.cnpj!) : 'n/a';
-            const company_name = item.empresa && item.empresa.nome_empresa ? item.empresa.nome_empresa : 'n/a';
+            function getComanyNames(_file: IGetArquivosDataRes) {
+                if (item.empresas && item.empresas.length > 0) {
+                    const nameArr = item.empresas.map((empresa) => empresa.empresa.nome_empresa ? empresa.empresa.nome_empresa : 'n/a');
+
+                    return nameArr.join(' ');
+                }
+
+                return 'n/a';
+            }
+
+            function checkCnpj(_file: IGetArquivosDataRes) {
+                if (item.empresas && item.empresas.length > 0) {
+                    const nameArr = item.empresas.map((empresa) => formatCnpjCpf(empresa.empresa.cnpj!));
+
+                    return nameArr.join(' ');
+                }
+
+                return 'n/a';
+            }
+
+            const cnpj_empresa = checkCnpj(item);
+            const company_name = getComanyNames(item);
             return (
                 <tr key={item.id}>
                     <td>{item.descricao} </td>
@@ -157,16 +177,16 @@ export function ArquivosTable() {
         handleModal(true);
     }
 
-    async function handleAddCompanyToFile(companyId: string) {
+    async function handleAddCompanyToFile(companyId: string[]) {
         const file = currentFile!;
         await addCompanyToFile(file.id, companyId);
         await getData(page);
     }
 
-    async function addCompanyToFile(fileId: string, companyId: string) {
+    async function addCompanyToFile(fileId: string, companyId: string[]) {
         try {
             setFetching(true);
-            await postAddEmpresaToContratoOrArquivo(companyId, fileId);
+            await postAddEmpresaToArquivo(companyId, fileId);
             toast.success("Arquivo enviado");
             setFetching(false);
 

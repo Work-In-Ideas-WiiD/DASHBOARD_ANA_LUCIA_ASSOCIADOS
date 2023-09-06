@@ -16,7 +16,7 @@ import { ErrorMessage } from '@hookform/error-message';
 import { toast } from 'react-toastify';
 import { useAuth } from '../../../../hooks/useAuth';
 import { postContrato } from '../../../../services/http/contratos';
-import { postAddEmpresaToContratoOrArquivo } from '../../../../services/http/administradores';
+import { postAddEmpresaToContrato } from '../../../../services/http/administradores';
 import { IGetContratosDataRes } from '../../../../services/http/contratos/contratos.dto';
 // validacao de arquivo
 const MAX_FILE_SIZE = 500000;
@@ -94,7 +94,7 @@ export function NovoContrato() {
             if (userRole.includes("empresa")) {
                 setNewContract(contractRes);
             }
-            await postAddEmpresaToContratoOrArquivo(companyId, contractRes.id);//marca empresa no contrato
+            await postAddEmpresaToContrato(companyId, contractRes.id);//marca empresa no contrato
             toast.success("Contrato cadastrado!");
             handleFetching(false);
             goBack();
