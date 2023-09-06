@@ -25,9 +25,7 @@ export function LoginPage() {
             password: '',
         }
     })
-    // test
-    // email: 'wcostaprijo@hotmail.com',
-    // password: '123456789',
+
     async function handleLogin(_data: TFormSchema) {
         await signIn(_data.email, _data.password);
     }
