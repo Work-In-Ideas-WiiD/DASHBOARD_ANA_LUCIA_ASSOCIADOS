@@ -9,7 +9,7 @@ export function AssinaturaFormSteper({ active = 1 }: IAssinaturaFormSteperProps)
 
     if (active == 1) {
         return (
-            <div className={styles.steper_container}>
+            <div className={styles.steper_container} data-testid="steper1">
                 <div className={`${styles.steper_active} ${styles.first}`}></div>
                 <div className={`${styles.steper} ${styles.last}`}></div>
                 <div className={styles.line}></div>
@@ -21,7 +21,7 @@ export function AssinaturaFormSteper({ active = 1 }: IAssinaturaFormSteperProps)
 
     if (active == 2) {
         return (
-            <div className={styles.steper_container}>
+            <div className={styles.steper_container} data-testid="steper2">
                 <div className={`${styles.steper_active} ${styles.first}`}></div>
                 <div className={`${styles.steper_active} ${styles.last}`}></div>
                 <div className={styles.line}></div>
