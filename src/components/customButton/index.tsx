@@ -15,8 +15,8 @@ interface ICustomButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const Icons = {
-    0: <MdCreateNewFolder size={24} color="#fff" />,
-    1: <IoPersonSharp fill="#fff" size={23} />,
+    0: <MdCreateNewFolder size={24} color="#fff" data-testid="icon1" />,
+    1: <IoPersonSharp fill="#fff" size={23} data-testid="icon2" />,
 }
 
 export function CustomButton({ title, icon, variation = "1", ...rest }: ICustomButtonProps) {
@@ -30,8 +30,6 @@ export function CustomButton({ title, icon, variation = "1", ...rest }: ICustomB
                 return styles.button_variation_2;
             case "3":
                 return styles.button_variation_3;
-            default:
-                return styles.button_variation_1;
         }
     }
 

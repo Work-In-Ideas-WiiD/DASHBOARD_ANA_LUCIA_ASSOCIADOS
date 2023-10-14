@@ -20,7 +20,7 @@ export interface IUserProps {
     deleted_at: null | string
     created_at: string
     updated_at: string
-    endereco: {
+    endereco?: {
         cep: string,
         rua: string,
         bairro: string,

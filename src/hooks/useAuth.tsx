@@ -13,7 +13,7 @@ interface IAuthContextDataProps {
 }
 
 
-interface IAuthContextData {
+export interface IAuthContextData {
     setUserData: (data: IUserProps) => void,
     handleFetching: (option: boolean) => void,
     signIn: (email: string, password: string) => Promise<void>,

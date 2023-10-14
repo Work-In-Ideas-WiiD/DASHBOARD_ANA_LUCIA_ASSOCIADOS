@@ -1,4 +1,4 @@
-import '../../setup-test';
+import '@testing-library/jest-dom';
 import { render, screen } from "@testing-library/react"
 import { AssinaturaFormSteper } from "."
 

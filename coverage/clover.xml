@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1695584975200" clover="3.2.0">
-  <project timestamp="1695584975200" name="All files">
-    <metrics statements="281" coveredstatements="12" conditionals="47" coveredconditionals="4" methods="59" coveredmethods="3" elements="387" coveredelements="19" complexity="0" loc="281" ncloc="281" packages="21" files="21" classes="21"/>
+<coverage generated="1697297656020" clover="3.2.0">
+  <project timestamp="1697297656020" name="All files">
+    <metrics statements="280" coveredstatements="92" conditionals="46" coveredconditionals="18" methods="59" coveredmethods="19" elements="385" coveredelements="129" complexity="0" loc="280" ncloc="280" packages="21" files="21" classes="21"/>
     <package name="assinaturaFormSteper">
       <metrics statements="7" coveredstatements="6" conditionals="4" coveredconditionals="3" methods="1" coveredmethods="1"/>
       <file name="index.tsx" path="/Users/guerber/Documents/GitHub/DASHBOARD_ANA_LUCIA_ASSOCIADOS/src/components/assinaturaFormSteper/index.tsx">
@@ -28,53 +28,52 @@
       </file>
     </package>
     <package name="customButton">
-      <metrics statements="23" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="5" coveredmethods="0"/>
+      <metrics statements="22" coveredstatements="21" conditionals="9" coveredconditionals="8" methods="5" coveredmethods="5"/>
       <file name="index.tsx" path="/Users/guerber/Documents/GitHub/DASHBOARD_ANA_LUCIA_ASSOCIADOS/src/components/customButton/index.tsx">
-        <metrics statements="23" coveredstatements="0" conditionals="10" coveredconditionals="0" methods="5" coveredmethods="0"/>
-        <line num="1" count="0" type="stmt"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
-        <line num="6" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="22" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="23" count="0" type="stmt"/>
-        <line num="26" count="0" type="cond" truecount="0" falsecount="4"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="30" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
-        <line num="34" count="0" type="stmt"/>
-        <line num="40" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="41" count="0" type="stmt"/>
-        <line num="43" count="0" type="stmt"/>
-        <line num="47" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="48" count="0" type="stmt"/>
-        <line num="59" count="0" type="stmt"/>
-        <line num="62" count="0" type="stmt"/>
+        <metrics statements="22" coveredstatements="21" conditionals="9" coveredconditionals="8" methods="5" coveredmethods="5"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="22" count="4" type="cond" truecount="2" falsecount="0"/>
+        <line num="23" count="4" type="stmt"/>
+        <line num="26" count="4" type="cond" truecount="3" falsecount="0"/>
+        <line num="28" count="2" type="stmt"/>
+        <line num="30" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="38" count="4" type="cond" truecount="1" falsecount="0"/>
+        <line num="39" count="2" type="stmt"/>
+        <line num="41" count="2" type="stmt"/>
+        <line num="45" count="4" type="cond" truecount="0" falsecount="1"/>
+        <line num="46" count="0" type="stmt"/>
+        <line num="57" count="4" type="stmt"/>
+        <line num="60" count="4" type="stmt"/>
       </file>
     </package>
     <package name="homeInfoCard">
-      <metrics statements="15" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0"/>
+      <metrics statements="15" coveredstatements="15" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
       <file name="index.tsx" path="/Users/guerber/Documents/GitHub/DASHBOARD_ANA_LUCIA_ASSOCIADOS/src/components/homeInfoCard/index.tsx">
-        <metrics statements="15" coveredstatements="0" conditionals="2" coveredconditionals="0" methods="2" coveredmethods="0"/>
-        <line num="1" count="0" type="stmt"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="13" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="27" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="29" count="0" type="stmt"/>
-        <line num="32" count="0" type="stmt"/>
+        <metrics statements="15" coveredstatements="15" conditionals="2" coveredconditionals="2" methods="2" coveredmethods="2"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="13" count="1" type="cond" truecount="2" falsecount="0"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="27" count="6" type="stmt"/>
+        <line num="28" count="6" type="stmt"/>
+        <line num="29" count="6" type="stmt"/>
+        <line num="32" count="6" type="stmt"/>
       </file>
     </package>
     <package name="inputs.IconInput">
@@ -224,67 +223,67 @@
       </file>
     </package>
     <package name="mobileHeader">
-      <metrics statements="36" coveredstatements="0" conditionals="3" coveredconditionals="0" methods="9" coveredmethods="0"/>
+      <metrics statements="36" coveredstatements="30" conditionals="3" coveredconditionals="2" methods="9" coveredmethods="6"/>
       <file name="index.tsx" path="/Users/guerber/Documents/GitHub/DASHBOARD_ANA_LUCIA_ASSOCIADOS/src/components/mobileHeader/index.tsx">
-        <metrics statements="36" coveredstatements="0" conditionals="3" coveredconditionals="0" methods="9" coveredmethods="0"/>
-        <line num="1" count="0" type="stmt"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="3" count="0" type="stmt"/>
-        <line num="4" count="0" type="stmt"/>
-        <line num="5" count="0" type="stmt"/>
-        <line num="6" count="0" type="stmt"/>
-        <line num="7" count="0" type="stmt"/>
-        <line num="8" count="0" type="stmt"/>
-        <line num="9" count="0" type="stmt"/>
-        <line num="10" count="0" type="stmt"/>
-        <line num="11" count="0" type="stmt"/>
-        <line num="12" count="0" type="stmt"/>
-        <line num="13" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="26" count="0" type="stmt"/>
-        <line num="95" count="0" type="stmt"/>
-        <line num="96" count="0" type="stmt"/>
-        <line num="97" count="0" type="stmt"/>
-        <line num="98" count="0" type="stmt"/>
-        <line num="99" count="0" type="stmt"/>
-        <line num="102" count="0" type="stmt"/>
+        <metrics statements="36" coveredstatements="30" conditionals="3" coveredconditionals="2" methods="9" coveredmethods="6"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="7" count="1" type="stmt"/>
+        <line num="8" count="1" type="stmt"/>
+        <line num="9" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
+        <line num="96" count="7" type="stmt"/>
+        <line num="97" count="7" type="stmt"/>
+        <line num="98" count="7" type="stmt"/>
+        <line num="99" count="7" type="stmt"/>
+        <line num="102" count="3" type="stmt"/>
         <line num="105" count="0" type="stmt"/>
         <line num="106" count="0" type="cond" truecount="0" falsecount="1"/>
         <line num="107" count="0" type="stmt"/>
         <line num="109" count="0" type="stmt"/>
-        <line num="113" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="114" count="0" type="stmt"/>
+        <line num="113" count="7" type="cond" truecount="1" falsecount="0"/>
+        <line num="114" count="3" type="stmt"/>
         <line num="115" count="0" type="stmt"/>
-        <line num="118" count="0" type="stmt"/>
-        <line num="125" count="0" type="stmt"/>
-        <line num="127" count="0" type="cond" truecount="0" falsecount="1"/>
-        <line num="128" count="0" type="stmt"/>
-        <line num="133" count="0" type="stmt"/>
-        <line num="148" count="0" type="stmt"/>
-        <line num="152" count="0" type="stmt"/>
+        <line num="118" count="4" type="stmt"/>
+        <line num="125" count="7" type="stmt"/>
+        <line num="127" count="63" type="cond" truecount="1" falsecount="0"/>
+        <line num="128" count="21" type="stmt"/>
+        <line num="133" count="42" type="stmt"/>
+        <line num="148" count="7" type="stmt"/>
+        <line num="152" count="3" type="stmt"/>
         <line num="160" count="0" type="stmt"/>
       </file>
     </package>
     <package name="mobileHeader.asideItem">
-      <metrics statements="17" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="4" coveredmethods="0"/>
+      <metrics statements="17" coveredstatements="14" conditionals="4" coveredconditionals="2" methods="4" coveredmethods="3"/>
       <file name="index.tsx" path="/Users/guerber/Documents/GitHub/DASHBOARD_ANA_LUCIA_ASSOCIADOS/src/components/mobileHeader/asideItem/index.tsx">
-        <metrics statements="17" coveredstatements="0" conditionals="4" coveredconditionals="0" methods="4" coveredmethods="0"/>
-        <line num="2" count="0" type="stmt"/>
-        <line num="14" count="0" type="stmt"/>
-        <line num="15" count="0" type="stmt"/>
-        <line num="16" count="0" type="stmt"/>
-        <line num="17" count="0" type="stmt"/>
-        <line num="18" count="0" type="stmt"/>
-        <line num="19" count="0" type="stmt"/>
-        <line num="20" count="0" type="cond" truecount="0" falsecount="2"/>
-        <line num="21" count="0" type="stmt"/>
-        <line num="25" count="0" type="cond" truecount="0" falsecount="1"/>
+        <metrics statements="17" coveredstatements="14" conditionals="4" coveredconditionals="2" methods="4" coveredmethods="3"/>
+        <line num="2" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="42" type="stmt"/>
+        <line num="16" count="42" type="stmt"/>
+        <line num="17" count="42" type="stmt"/>
+        <line num="18" count="42" type="stmt"/>
+        <line num="19" count="42" type="stmt"/>
+        <line num="20" count="42" type="cond" truecount="2" falsecount="0"/>
+        <line num="21" count="42" type="stmt"/>
+        <line num="25" count="42" type="cond" truecount="0" falsecount="1"/>
         <line num="26" count="0" type="stmt"/>
-        <line num="28" count="0" type="stmt"/>
-        <line num="32" count="0" type="cond" truecount="0" falsecount="1"/>
+        <line num="28" count="42" type="stmt"/>
+        <line num="32" count="42" type="cond" truecount="0" falsecount="1"/>
         <line num="33" count="0" type="stmt"/>
-        <line num="36" count="0" type="stmt"/>
-        <line num="39" count="0" type="stmt"/>
+        <line num="36" count="42" type="stmt"/>
+        <line num="39" count="42" type="stmt"/>
         <line num="40" count="0" type="stmt"/>
       </file>
     </package>

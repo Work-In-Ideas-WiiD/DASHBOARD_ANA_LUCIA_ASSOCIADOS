@@ -37,7 +37,7 @@ export function AsideItem({
     }
 
     return (
-        <div className={`${classname} ${verifyItemActive()}`} onClick={() => { handleRoute(path) }} >
+        <div data-testid={title} className={`${classname} ${verifyItemActive()}`} onClick={() => { handleRoute(path) }} >
             {returnCurrentIcon(active)}
             <span>{title}</span>
         </div>

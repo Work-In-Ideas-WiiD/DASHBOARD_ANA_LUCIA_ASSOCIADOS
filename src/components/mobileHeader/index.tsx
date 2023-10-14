@@ -1,4 +1,4 @@
-import { ReactNode, useState } from 'react';
+import { Fragment, ReactNode, useState } from 'react';
 import Logo from '../../assets/imgs/logo_ana.png';
 import styles from './styles.module.scss';
 import { RxHamburgerMenu } from "react-icons/rx";
@@ -122,17 +122,17 @@ export function MobileHeader() {
 
 
     function _renderItem(_data: IItens[]) {
-        return _data.map((item) => {
+        return _data.map((item, i) => {
 
             if (!item.roles.includes(userRole)) {
                 return (
-                    <></>
+                    <Fragment key={i}></Fragment>
                 )
             }
 
             return (
                 <AsideItem
-                    key={item.title}
+                    key={i}
                     ActiveIcon={item.ActiveIcon}
                     Icon={item.Icon}
                     path={item.path}
@@ -147,9 +147,9 @@ export function MobileHeader() {
 
     return (
         <>
-            <header className={styles.header}>
+            <header className={styles.header} data-testid="header">
                 <img src={Logo} alt="Ana Lúcia e Associados" />
-                <button className={styles.menu_btn} onClick={() => { handleClick('menu_mobile_open') }}>
+                <button data-testid="hamburger" className={styles.menu_btn} onClick={() => { handleClick('menu_mobile_open') }}>
                     <RxHamburgerMenu color={"#fff"} size={25} />
                 </button>
             </header>

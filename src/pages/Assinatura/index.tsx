@@ -31,9 +31,11 @@ export function Assinatura() {
             if (widgetController) return;
             widgetController = widget;
             // Define o endpoint https://sandbox.clicksign.com ou https://app.clicksign.com
-            widget.endpoint = import.meta.env.VITE_CLICKSIGN_ENDPOINT;
+            widget.endpoint = ''
+            // import.meta.env.VITE_CLICKSIGN_ENDPOINT;
             // Define a origem https://sistema.alabadvogados.com.br/ ou http://localhost:5173
-            widget.origin = import.meta.env.VITE_CLICKSIGN_ORIGIN;
+            widget.origin = ''
+            //import.meta.env.VITE_CLICKSIGN_ORIGIN;
             widget.mount('container');
             widget.on('loaded', () => {
                 console.log('loaded!');
