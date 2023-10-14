@@ -9,7 +9,7 @@ import { BsPersonCircle, BsPersonVcardFill } from 'react-icons/bs';
 import { SlLogout } from 'react-icons/sl';
 import { SidebarItem } from './sidebarItem';
 import { useLocation } from 'react-router-dom';
-import { ReactNode } from 'react';
+import { Fragment, ReactNode } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { TUserTypes } from '../../services/http/auth/auth.dto';
 
@@ -97,11 +97,11 @@ export function Sidebar() {
     const { userRole } = useAuth();
 
     function _renderItem(_data: IItens[]) {
-        return _data.map((item) => {
+        return _data.map((item, i) => {
 
             if (!item.roles.includes(userRole)) {
                 return (
-                    <></>
+                    <Fragment key={i}></Fragment>
                 )
             }
 
@@ -120,7 +120,7 @@ export function Sidebar() {
     }
 
     return (
-        <aside className={styles.sidebar}>
+        <aside className={styles.sidebar} role='complementary'>
             <img className={styles.logo} src={Logo} alt="logo" />
             <nav>
                 {

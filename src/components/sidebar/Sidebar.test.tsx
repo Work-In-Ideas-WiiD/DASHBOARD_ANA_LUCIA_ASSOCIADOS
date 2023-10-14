@@ -1,10 +1,9 @@
-import { MobileHeader } from ".";
+import { Sidebar } from ".";
 import '@testing-library/jest-dom';
 import { render } from "../../utils/testUtils";
 import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { AuthContext, IAuthContextData } from "../../hooks/useAuth";
-
 
 const mockedUsedNavigate = jest.fn();
 
@@ -13,13 +12,12 @@ jest.mock('react-router-dom', () => ({
     useNavigate: () => mockedUsedNavigate,
 }));
 
-
-describe("Mobile Header", () => {
+describe("Sidebar", () => {
 
     it("Should renders correctly", () => {
-        render(<MobileHeader />);
-        const header = screen.getByTestId("header");
-        expect(header).toBeInTheDocument();
+        render(<Sidebar />);
+        const asideEl = screen.getByRole("complementary");
+        expect(asideEl).toBeInTheDocument();
     })
 
     it("Should render all itens", async () => {
@@ -29,12 +27,11 @@ describe("Mobile Header", () => {
         } as IAuthContextData;
         render(
             <AuthContext.Provider value={customContextData}>
-                <MobileHeader />
+                <Sidebar />
             </AuthContext.Provider>
         );
-        const hamburgerButton = screen.getByTestId("hamburger");
-        await userEvent.click(hamburgerButton);
-        expect(hamburgerButton).toBeInTheDocument();
+        const asideEl = screen.getByRole("complementary");
+        expect(asideEl).toBeInTheDocument();
         const asideItemHome = await screen.findByTestId("Home");
         expect(asideItemHome).toBeInTheDocument();
     })
@@ -46,12 +43,11 @@ describe("Mobile Header", () => {
         } as IAuthContextData;
         render(
             <AuthContext.Provider value={customContextData}>
-                <MobileHeader />
+                <Sidebar />
             </AuthContext.Provider>
         );
-        const hamburgerButton = screen.getByTestId("hamburger");
-        await userEvent.click(hamburgerButton);
-        expect(hamburgerButton).toBeInTheDocument();
+        const asideEl = screen.getByRole("complementary");
+        expect(asideEl).toBeInTheDocument();
         const asideItemContrato = await screen.findByTestId("Clientes");
         expect(asideItemContrato).toBeInTheDocument();
         const asideItemEmpresas = await screen.queryByTestId("Empresas");
@@ -65,17 +61,18 @@ describe("Mobile Header", () => {
         } as IAuthContextData;
         render(
             <AuthContext.Provider value={customContextData}>
-                <MobileHeader />
+                <Sidebar />
             </AuthContext.Provider>
         );
-        const hamburgerButton = screen.getByTestId("hamburger");
-        await userEvent.click(hamburgerButton);
-        expect(hamburgerButton).toBeInTheDocument();
+        //com erro possivelmente
+        const asideEl = screen.getByRole("complementary");
+        expect(asideEl).toBeInTheDocument();
         const asideItemContrato = await screen.findByTestId("Assinaturas");
         expect(asideItemContrato).toBeInTheDocument();
-        const asideItemEmpresas = await screen.queryByTestId("Clientes");
+        const asideItemEmpresas = await screen.queryByTestId("Perfil");
         expect(asideItemEmpresas).not.toBeInTheDocument();
-    })
+    });
+
     it("Should call route '/Profile' when button Perfil is clicked", async () => {
         userEvent.setup();
         let customContextData = {
@@ -84,7 +81,7 @@ describe("Mobile Header", () => {
         } as IAuthContextData;
         render(
             <AuthContext.Provider value={customContextData}>
-                <MobileHeader />
+                <Sidebar />
             </AuthContext.Provider>
         );
         const asideEl = screen.getByRole("complementary");
