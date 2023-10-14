@@ -9,6 +9,7 @@ interface ITablePaginatorProps {
 export function TablePaginator({ onPageChange, pageCount }: ITablePaginatorProps) {
     return (
         <ReactPaginate
+            data-testid="paginator"
             pageCount={pageCount}
             previousLabel="<"
             nextLabel=">"
