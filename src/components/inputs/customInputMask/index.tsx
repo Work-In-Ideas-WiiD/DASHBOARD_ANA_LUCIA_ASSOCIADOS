@@ -5,8 +5,6 @@ import { ErrorMessage } from '@hookform/error-message';
 
 interface ICustomInputMask extends Props {
     title: string,
-    placeholder?: string,
-    errorMsg?: string | null,
     containerClass?: string,
     mask: string;
     fieldName: string,
@@ -16,8 +14,6 @@ interface ICustomInputMask extends Props {
 
 export function CustomInputMask({
     title,
-    placeholder,
-    errorMsg,
     containerClass,
     mask,
     fieldName,
@@ -32,8 +28,10 @@ export function CustomInputMask({
             render={({ field }) => {
                 return (
                     <div className={`${styles.input_wrapper} ${containerClass}`}>
-                        <label>{title}</label>
+                        <label htmlFor={fieldName}>{title}</label>
                         <ReactInputMask
+                            id={fieldName}
+                            data-testid="inputmask"
                             value={field.value}
                             onChange={field.onChange}
                             mask={mask}

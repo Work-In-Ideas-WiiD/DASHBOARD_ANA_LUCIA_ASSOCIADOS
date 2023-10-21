@@ -7,7 +7,7 @@ import { CustomInputMask } from '../../../../components/inputs/customInputMask';
 import { CustomButton } from '../../../../components/customButton';
 import { PageTitle } from '../../../../components/pageTitle';
 import { useNavigate, useParams } from 'react-router-dom';
-import { getAdministrador, patchAdministrador, postAdministrador } from '../../../../services/http/administradores';
+import { getAdministrador, patchAdministrador } from '../../../../services/http/administradores';
 import { IPostAdministradorModel } from '../../../../services/http/administradores/administradores.dto';
 import { useAuth } from '../../../../hooks/useAuth';
 import { toast } from 'react-toastify';

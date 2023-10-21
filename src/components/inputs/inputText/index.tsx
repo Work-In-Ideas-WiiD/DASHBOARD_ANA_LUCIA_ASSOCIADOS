@@ -31,8 +31,9 @@ export function InputText({
             render={({ field }) => {
                 return (
                     <div className={`${styles.input_wrapper} ${containerClass}`}>
-                        <label>{title}</label>
+                        <label htmlFor={fieldName}>{title}</label>
                         <input
+                            id={fieldName}
                             onChange={field.onChange}
                             value={field.value}
                             type={type}

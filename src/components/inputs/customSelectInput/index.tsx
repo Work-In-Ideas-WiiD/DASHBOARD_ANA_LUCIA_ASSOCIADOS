@@ -36,14 +36,14 @@ export function CustomSelectInput({
                 return (
 
                     <div className={`${styles.input_wrapper} ${containerClass}`}>
-                        <label>{title}</label>
+                        <label htmlFor={fieldName}>{title}</label>
                         <Select
                             onChange={field.onChange}
                             options={options}
                             className="custom-select-container"
                             classNamePrefix="custom-select"
                             placeholder={placeholder}
-
+                            inputId={fieldName}
                         />
                         <ErrorMessage
                             errors={errors}

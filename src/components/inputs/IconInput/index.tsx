@@ -1,7 +1,7 @@
 import { Control, Controller } from 'react-hook-form';
 import styles from './styles.module.scss';
 export interface IIconInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
-    type: string;
+    type?: string;
     icon?: "login" | "password" | "building";
     inputClass?: string;
     fieldName: string;
@@ -22,11 +22,11 @@ export function IconInput({
     function returnIcon(icon: string) {
         switch (icon) {
             case 'login':
-                return (<IoPersonSharp className={styles.icon} size="22" />)
+                return (<IoPersonSharp className={styles.icon} size="22" data-testid="login" />)
             case 'password':
-                return (<IoLockClosed className={styles.icon} size="22" />)
+                return (<IoLockClosed className={styles.icon} size="22" data-testid="password" />)
             case 'building':
-                return (<FaBuilding className={styles.icon} size="22" />)
+                return (<FaBuilding className={styles.icon} size="22" data-testid="building" />)
             default:
                 break
         }

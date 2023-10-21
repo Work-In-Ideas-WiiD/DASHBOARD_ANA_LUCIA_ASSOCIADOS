@@ -10,7 +10,7 @@ interface IProps {
 
 export function Modal({ children, title, handleModal }: IProps) {
     return (
-        <div className={styles.modal_container}>
+        <div data-testid="modal" className={styles.modal_container}>
             <div className={styles.color_container}>
                 <div className={styles.modal_box}>
                     <header className={styles.header_modal}>
